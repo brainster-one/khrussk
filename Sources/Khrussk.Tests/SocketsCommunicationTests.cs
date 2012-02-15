@@ -3,6 +3,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Net;
 using System.Threading;
+using System.Diagnostics;
 
 namespace Khrussk.Network {
 
@@ -18,15 +19,21 @@ namespace Khrussk.Network {
 		ClientSocket _client = new ClientSocket();
 		ClientSocket _accepted;
 		ManualResetEvent _connectionEvent = new ManualResetEvent(false);
+		ManualResetEvent _receivedEvent = new ManualResetEvent(false);
+		SocketEventArgs _args;
 
 		/// <summary>Initialize.</summary>
 		[TestInitialize] public void Initialize() {
 			_listener.ClientSocketAccepted += _listener_ClientSocketAccepted;
+			_client.DataReceived += new EventHandler<SocketEventArgs>(_client_DataReceived);
+			_client.Connected += new EventHandler<SocketEventArgs>(_client_Connected);
 			_listener.Listen(_endpoint);
 			_client.Connect(_endpoint);
 			
 			_connectionEvent.WaitOne(1000);
-			Assert.IsTrue(_client.IsConnected);
+			Debug.Print("1:" + _client.IsConnected.ToString());
+			//Assert.IsTrue(_client.IsConnected);
+			Debug.Print("2:" + _client.IsConnected.ToString());
 		}
 
 		/// <summary>Cleanup.</summary>
@@ -41,17 +48,34 @@ namespace Khrussk.Network {
 		///</summary>
 		[TestMethod()]
 		public void ListenTest() {
-			Assert.IsTrue(_client.IsConnected);
+			Debug.Print("3:" + _client.IsConnected.ToString());
+			//Assert.IsTrue(_client.IsConnected);
+			Debug.Print("4:" + _client.IsConnected.ToString());
+		}
+
+		[TestMethod()]
+		public void SendTest() {
+			_accepted.Send(new byte[] { 1, 2, 3, 4, 5 }, 5);
+			_receivedEvent.WaitOne(5000);
+			Assert.IsNotNull(_args);
+			Assert.AreEqual(5, _args.Buffer.Length);
 		}
 
 
-		void client_Connected(object sender, SocketEventArgs e) {
-			return;
+		void _client_Connected(object sender, SocketEventArgs e) {
+			Debug.Print(_client.IsConnected.ToString());
+			_connectionEvent.Set();
 		}
 		
 		void _listener_ClientSocketAccepted(object sender, SocketEventArgs e) {
 			_accepted = e.ClientSocket;
-			_connectionEvent.Set();
+			
 		}
+
+		void _client_DataReceived(object sender, SocketEventArgs e) {
+			_receivedEvent.Set();
+			_args = e;
+		}
+
 	}
 }

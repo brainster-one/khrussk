@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Khrussk.Sockets {
 	public class SocketEventArgs : EventArgs {
+		private byte[] p;
+		private int p_2;
+
 		public SocketEventArgs() {
 
 		}
@@ -13,6 +16,13 @@ namespace Khrussk.Sockets {
 			ClientSocket = socket;
 		}
 
+		public SocketEventArgs(ClientSocket clientSocket, byte[] buffer, int count) {
+			ClientSocket = clientSocket;
+			Buffer = new byte[count];
+			System.Buffer.BlockCopy(buffer, 0, Buffer, 0, count);
+			
+		}
 		public ClientSocket ClientSocket { get; private set; }
+		public byte[] Buffer { get; private set; }
 	}
 }
