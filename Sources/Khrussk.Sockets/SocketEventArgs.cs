@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Uberball.Engine.Network.Sockets {
+namespace Khrussk.Sockets {
 	public class SocketEventArgs : EventArgs {
 		public SocketEventArgs() {
 

@@ -5,7 +5,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 
-namespace Uberball.Engine.Network.Sockets {
+namespace Khrussk.Sockets {
 	sealed class ListenerSocket {
 		public ListenerSocket() {
 			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);

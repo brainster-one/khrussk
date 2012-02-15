@@ -1,10 +1,10 @@
-﻿using Uberball.Engine.Network.Sockets;
+﻿using Khrussk.Sockets;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Net;
 using System.Threading;
 
-namespace Uberball.Tests.Engine.Network {
+namespace Khrussk.Network {
 
 
 	/// <summary>

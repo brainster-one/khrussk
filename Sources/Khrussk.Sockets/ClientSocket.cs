@@ -5,7 +5,7 @@ using System.Text;
 using System.Net.Sockets;
 using System.Net;
 
-namespace Uberball.Engine.Network.Sockets {
+namespace Khrussk.Sockets {
 	public sealed class ClientSocket {
 		internal ClientSocket(Socket socket) {
 			_socket = socket;
