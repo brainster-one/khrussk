@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>ab2c560d-2a0d-4eaa-a619-3fb30bac0077</ProjectGuid>
+    <ProjectGuid>{E5C504B2-32EF-46C6-A4F1-EA4354713C93}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Khrussk.Peers</RootNamespace>
@@ -40,8 +40,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="Interfaces\IPacket.cs" />
+    <Compile Include="Interfaces\IPacketSerializer.cs" />
+    <Compile Include="Interfaces\IProtocol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Protocol.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Khrussk.Sockets\Khrussk.Sockets.csproj">
+      <Project>{44356AEF-1C52-4A13-BB71-4986F133776B}</Project>
+      <Name>Khrussk.Sockets</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
