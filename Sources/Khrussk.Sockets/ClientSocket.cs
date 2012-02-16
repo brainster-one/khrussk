@@ -3,44 +3,50 @@ namespace Khrussk.Sockets {
 	using System;
 	using System.Net;
 	using System.Net.Sockets;
-	using System.Collections.Generic;
-	using System.Linq;
-	using System.Diagnostics;
 
+	/// <summary>Socket for client side.</summary>
 	public sealed class ClientSocket {
+		/// <summary>Initializes a new instance of the ClientSocket class using the specified socket.</summary>
+		/// <param name="socket">.net socket instance.</param>
 		internal ClientSocket(Socket socket) {
 			_socket = socket;
 			_socket.NoDelay = true;
 			BeginReceive();
-			//BeginSend();
 		}
 
+		/// <summary>Initializes a new instance of the ClientSocket class using.</summary>
 		public ClientSocket() {
 			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp) { NoDelay = true };
 			_socket.NoDelay = true;
 		}
 
+		/// <summary>Connects socket to specified endpoint.</summary>
+		/// <param name="endpoint">Endpoint to connect to.</param>
 		public void Connect(EndPoint endpoint) {
 			if (endpoint == null) throw new ArgumentNullException("endpoint");
 			if (IsConnected) throw new InvalidOperationException("Socket connected already.");
 			BeginConnect(endpoint);
 		}
 
+		/// <summary>Disconnects socket.</summary>
 		public void Disconnect() {
-			if (_socket == null) return;
-
 			var evnt = new SocketAsyncEventArgs();
-			evnt.Completed += new EventHandler<SocketAsyncEventArgs>(OnDisconnectComplete);
+			evnt.Completed += OnDisconnectComplete;
 			_socket.DisconnectAsync(evnt);
 		}
 
+		/// <summary>Sends data to remote host.</summary>
+		/// <param name="buffer">Data to send.</param>
+		/// <param name="count">Amount of bytes to send.</param>
 		public void Send(byte[] buffer, int count) {
+			// TODO copy buffer to temp storage
 			var evnt = new SocketAsyncEventArgs();
+			evnt.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendComplete);
 			evnt.SetBuffer(buffer, 0, count);
-			//evnt.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendComplete);
 			_socket.SendAsync(evnt);
 		}
 
+		/// <summary>Gets socket connection state.</summary>
 		public bool IsConnected {
 			get { return _socket != null && _socket.Connected; }
 		}
@@ -63,45 +69,39 @@ namespace Khrussk.Sockets {
 			_socket.ReceiveAsync(evnt);
 		}
 
-		/*void BeginSend() {
-			Debug.Print("SENDED: " + _send.Count);
-			var evnt = new SocketAsyncEventArgs();
-			evnt.BufferList = _send;
-			//evnt.SetBuffer(new byte[200], 0, 200);
-			evnt.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendComplete);
-			_socket.SendAsync(evnt);
-		}*/
-
 		void OnConnectComplete(object sender, SocketAsyncEventArgs e) {
-			Debug.Print("cc");
-			var evnt = e.SocketError == SocketError.Success ? Connected : ConnectionFailed;
-			if (evnt != null) evnt(this, new SocketEventArgs(this));
-			BeginReceive();
-			//BeginSend();
+			if (e.SocketError == SocketError.Success) {
+				var evnt = Connected;
+				if (evnt != null) evnt(this, new SocketEventArgs(this));
+				BeginReceive();
+			} else {
+				var evnt = ConnectionFailed;
+				if (evnt != null) evnt(this, new SocketEventArgs(this));
+			}
 		}
 
 		void OnDisconnectComplete(object sender, SocketAsyncEventArgs e) {
-			Debug.Print("dc");
 			var evnt = Disconnected;
 			if (evnt != null) evnt(this, new SocketEventArgs(this));
 		}
+		
+		void OnSendComplete(object sender, SocketAsyncEventArgs e) {
+			if (e.SocketError != SocketError.Success) Disconnect();
+		}
 
 		void OnReceiveComplete(object sender, SocketAsyncEventArgs e) {
-			Debug.Print("rc" + e.BytesTransferred);
-			var evnt = e.SocketError == SocketError.Success ? DataReceived : Disconnected;
-			if (evnt != null && e.BytesTransferred > 0) evnt(this, new SocketEventArgs(this, e.Buffer, e.BytesTransferred));
-			System.Threading.Thread.Sleep(500);
+			if (e.SocketError == SocketError.Success && e.BytesTransferred > 0) {
+				var evnt = DataReceived;
+				if (evnt != null) evnt(this, new SocketEventArgs(this, e.Buffer, e.BytesTransferred));
+			} else if (e.SocketError != SocketError.Success) {
+				var evnt = Disconnected;
+				if (evnt != null) evnt(this, new SocketEventArgs(this));
+			}
 			BeginReceive();
 		}
-		/*
-		void OnSendComplete(object sender, SocketAsyncEventArgs e) {
-			lock (_send) { _send.Clear(); }
-			BeginSend();
-		}
-		*/
+		
 		
 		Socket _socket;
-		List<ArraySegment<byte>> _send = new List<ArraySegment<byte>>();
 		byte[] _receiveBuffer = new byte[255];
 	}
 }
