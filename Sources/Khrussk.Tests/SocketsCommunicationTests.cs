@@ -35,6 +35,14 @@ using Khrussk.Tests;
 		}
 
 		/// <summary>Data from remote host should be read.</summary>
+		[TestMethod()] public void IsConnectedEqualsFalseAfterDisconnect() {
+			_context.ClientSocket.Disconnect();
+
+			Assert.IsTrue(_context.Wait.WaitOne(TimeSpan.FromSeconds(1)));
+			Assert.IsFalse(_context.ClientSocket.IsConnected);
+		}
+
+		/// <summary>Data from remote host should be read.</summary>
 		[TestMethod()] public void DataFromRemoteHostShouldBeRead() {
 			_context.Accepted.Send(new byte[] { 1, 2, 3, 4, 5 }, 5);
 			_context.ClientSocketDataReceivedEvent.WaitOne(TimeSpan.FromSeconds(1));
