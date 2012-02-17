@@ -5,7 +5,7 @@ namespace Khrussk.Sockets {
 	using System.Net.Sockets;
 
 	/// <summary>Socket for server side.</summary>
-	sealed class ListenerSocket {
+	public sealed class ListenerSocket {
 		/// <summary>Initializes a new instance of the ListenerSocket class.</summary>
 		public ListenerSocket() {
 			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
