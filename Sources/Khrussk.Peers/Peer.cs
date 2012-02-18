@@ -6,11 +6,11 @@ namespace Khrussk.Peers {
 	using Sockets;
 
 	/// <summary>ClientPeer to connect to ListenerPeer.</summary>
-	public sealed class ClientPeer /*: IDisposable */ {
+	public sealed class Peer /*: IDisposable */ {
 		/// <summary>Initializes a new instance of the ClientPeer class using the specified socket and protocol.</summary>
 		/// <param name="socket">Socket.</param>
 		/// <param name="protocol">Protocol.</param>
-		internal ClientPeer(ClientSocket socket, IProtocol protocol) {
+		internal Peer(ClientSocket socket, IProtocol protocol) {
 			_socket = socket;
 			_protocol = protocol;
 			_socket.Connected += new EventHandler<SocketEventArgs>(_socket_Connected);
@@ -21,7 +21,7 @@ namespace Khrussk.Peers {
 
 		/// <summary>Initializes a new instance of the ClientPeer class using the specified protocol.</summary>
 		/// <param name="protocol">Protocol.</param>
-		public ClientPeer(IProtocol protocol) {
+		public Peer(IProtocol protocol) {
 			_protocol = protocol;
 			_socket = new ClientSocket();
 			_socket.Connected += new EventHandler<SocketEventArgs>(_socket_Connected);
@@ -73,17 +73,17 @@ namespace Khrussk.Peers {
 
 		void _socket_Connected(object sender, SocketEventArgs e) {
 			var evnt = Connected;
-			if (evnt != null) evnt(this, new PeerEventArgs(this));
+			if (evnt != null) evnt(this, new PeerEventArgs(PeerEventType.Connection, this));
 		}
 
 		void _socket_ConnectionFailed(object sender, SocketEventArgs e) {
 			var evnt = ConnectionFailed;
-			if (evnt != null) evnt(this, new PeerEventArgs(this));
+			if (evnt != null) evnt(this, new PeerEventArgs(PeerEventType.Connection, this));
 		}
 
 		void _socket_Disconnected(object sender, SocketEventArgs e) {
 			var evnt = Disconnected;
-			if (evnt != null) evnt(this, new PeerEventArgs(this));
+			if (evnt != null) evnt(this, new PeerEventArgs(PeerEventType.Disconnection, this));
 		}
 
 		void _socket_DataReceived(object sender, SocketEventArgs e) {
@@ -94,7 +94,7 @@ namespace Khrussk.Peers {
 			var packet = _protocol.Read(_receiveStream);
 			
 			var evnt = PacketReceived;
-			if (evnt != null) evnt(this, new PeerEventArgs(this, packet));
+			if (evnt != null) evnt(this, new PeerEventArgs(PeerEventType.PacketReceived, this, packet));
 		}
 
 		/// <summary>Underlying socket.</summary>

@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Net;
-using Khrussk.Sockets;
-using System.Threading;
-using Khrussk.Peers;
-
+﻿
 namespace Khrussk.Tests {
+	using System;
+	using System.Net;
+	using System.Threading;
+	using Khrussk.Peers;
+
 	class PeerContext {
 		public PeerContext() {
-			ListenerPeer = new ListenerPeer(new Protocol());
-			ClientPeer = new ClientPeer(new Protocol());
+			ListenerPeer = new Listener(new Protocol());
+			ClientPeer = new Peer(new Protocol());
 
 			ClientPeer.Connected += ClientSocket_Connected;
 			ClientPeer.PacketReceived += ClientSocket_DataReceived;
@@ -37,7 +34,7 @@ namespace Khrussk.Tests {
 		}
 
 		void ListenerSocket_ClientSocketAccepted(object sender, PeerEventArgs e) {
-			Accepted = e.Client;
+			Accepted = e.Peer;
 			Accepted.PacketReceived += ClientSocket_DataReceived;
 			SocketEventArgs = e;
 			ClientSocketAccepted.Set();
@@ -55,9 +52,9 @@ namespace Khrussk.Tests {
 
 		public IPEndPoint EndPoint { get; set; }
 
-		public ListenerPeer ListenerPeer { get; set; }
-		public ClientPeer ClientPeer { get; set; }
-		public ClientPeer Accepted { get; set; }
+		public Listener ListenerPeer { get; set; }
+		public Peer ClientPeer { get; set; }
+		public Peer Accepted { get; set; }
 		
 		public ManualResetEvent ClientSocketConnectedEvent { get; set; }
 		public ManualResetEvent ClientSocketDataReceivedEvent { get; set; }

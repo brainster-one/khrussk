@@ -5,10 +5,10 @@ namespace Khrussk.Peers {
 	using Sockets;
 
 	/// <summary>Service peer.</summary>
-	public sealed class ListenerPeer /*: IDisposable */ {
+	public sealed class Listener /*: IDisposable */ {
 		/// <summary>Initializes a new instance of the ListenerPeer class using the specified protocol.</summary>
 		/// <param name="protocol">Protocol.</param>
-		public ListenerPeer(IProtocol protocol) {
+		public Listener(IProtocol protocol) {
 			_protocol = protocol;
 			_socket = new ListenerSocket();
 			_socket.ClientSocketAccepted += new EventHandler<SocketEventArgs>(_socket_ClientSocketAccepted);
@@ -45,7 +45,7 @@ namespace Khrussk.Peers {
 		/// <param name="client">Client's peer.</param>
 		void _socket_ClientSocketAccepted(object sender, SocketEventArgs e) {
 			var evnt = ClientPeerConnected;
-			if (evnt != null) evnt(this, new PeerEventArgs(new ClientPeer(e.ClientSocket, _protocol)));
+			if (evnt != null) evnt(this, new PeerEventArgs(PeerEventType.Connection, new Peer(e.ClientSocket, _protocol)));
 		}
 
 		/// <summary>Protocol.</summary>

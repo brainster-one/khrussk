@@ -48,14 +48,15 @@ namespace Khrussk.Network {
 			Assert.IsNotNull(_context.SocketEventArgs.Packet);
 			Assert.AreEqual(127, ((Packet)_context.SocketEventArgs.Packet).Data);
 		}
-		/*
+		
 		/// <summary>Data from remote host should be read.</summary>
 		[TestMethod()] public void DataFromLocalHostShouldBeRead() {
-			_context.ClientSocket.Send(new byte[] { 1, 2, 3, 4, 5 }, 5);
+			_context.ClientPeer.Send(new Packet { Data = 127 });
+			_context.ClientSocketDataReceivedEvent.WaitOne(TimeSpan.FromSeconds(10));
 
-			Assert.IsTrue(_context.ClientSocketDataReceivedEvent.WaitOne(TimeSpan.FromSeconds(1)));
 			Assert.IsNotNull(_context.SocketEventArgs);
-			Assert.AreEqual(5, _context.SocketEventArgs.Buffer.Length);
-		}*/
+			Assert.IsNotNull(_context.SocketEventArgs.Packet);
+			Assert.AreEqual(127, ((Packet)_context.SocketEventArgs.Packet).Data);
+		}
 	}
 }

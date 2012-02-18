@@ -40,9 +40,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClientPeer.cs">
+    <Compile Include="Peer.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Events\IPeerEventDispatcher.cs" />
+    <Compile Include="Events\IPeerEventHandler.cs" />
+    <Compile Include="Events\ListenerEventConfiguration.cs" />
+    <Compile Include="Events\PeerEventDispatcher.cs" />
+    <Compile Include="Events\PeerEventHandlerInfo.cs" />
+    <Compile Include="Events\PeerEventsConfiguration.cs" />
+    <Compile Include="Events\PendingPeerEventDispatcher.cs" />
     <Compile Include="Interfaces\IPacket.cs" />
     <Compile Include="Interfaces\IPacketSerializer.cs" />
     <Compile Include="Interfaces\IProtocol.cs" />
@@ -51,7 +58,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol.cs" />
-    <Compile Include="ListenerPeer.cs" />
+    <Compile Include="Listener.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Khrussk.Sockets\Khrussk.Sockets.csproj">

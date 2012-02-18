@@ -2,24 +2,38 @@
 namespace Khrussk.Peers {
 	using System;
 
+	/// <summary>Peer event type.</summary>
+	public enum PeerEventType {
+		Connection,
+		Disconnection,
+		PacketReceived
+	}
+
 	/// <summary>Services event args.</summary>
 	public sealed class PeerEventArgs : EventArgs {
 		/// <summary>Initializes a new instance of the PeerEventArgs class.</summary>
-		/// <param name="client">Client.</param>
-		public PeerEventArgs(ClientPeer client) {
-			Client = client;
+		/// <param name="type">Event type.</param>
+		/// <param name="peer">Peer.</param>
+		public PeerEventArgs(PeerEventType type, Peer peer) {
+			EventType = type;
+			Peer = peer;
 		}
 
 		/// <summary>Initializes a new instance of the PeerEventArgs class.</summary>
-		/// <param name="client">Client.</param>
+		/// <param name="type">Event type.</param>
+		/// <param name="peer">Peer.</param>
 		/// <param name="packet">Packet.</param>
-		public PeerEventArgs(ClientPeer client, IPacket packet) {
-			Client = client;
+		public PeerEventArgs(PeerEventType type, Peer peer, IPacket packet) {
+			EventType = type;
+			Peer = peer;
 			Packet = packet;
 		}
-		
+
 		/// <summary>Gets client.</summary>
-		public ClientPeer Client { get; private set; }
+		public PeerEventType EventType { get; private set; }
+
+		/// <summary>Gets client.</summary>
+		public Peer Peer { get; private set; }
 
 		/// <summary>Gets packet.</summary>
 		public IPacket Packet { get; private set; }
