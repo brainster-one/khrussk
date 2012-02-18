@@ -1,7 +1,7 @@
 ﻿
 namespace Khrussk.Peers {
 	using System;
-
+	
 	/// <summary>Peer event type.</summary>
 	public enum PeerEventType {
 		Connection,
@@ -9,6 +9,7 @@ namespace Khrussk.Peers {
 		PacketReceived
 	}
 
+	// todo rename to networkeventargs
 	/// <summary>Services event args.</summary>
 	public sealed class PeerEventArgs : EventArgs {
 		/// <summary>Initializes a new instance of the PeerEventArgs class.</summary>
