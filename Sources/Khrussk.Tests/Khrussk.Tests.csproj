@@ -59,13 +59,9 @@
     <Compile Include="SocketsCommunicationTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Khrussk.Peers\Khrussk.Peers.csproj">
-      <Project>{E5C504B2-32EF-46C6-A4F1-EA4354713C93}</Project>
-      <Name>Khrussk.Peers</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Khrussk.Sockets\Khrussk.Sockets.csproj">
-      <Project>{44356AEF-1C52-4A13-BB71-4986F133776B}</Project>
-      <Name>Khrussk.Sockets</Name>
+    <ProjectReference Include="..\Khrussk\Khrussk.csproj">
+      <Project>{8BC969A2-EB35-48C4-810F-0707132034EE}</Project>
+      <Name>Khrussk</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
