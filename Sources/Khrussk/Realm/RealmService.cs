@@ -1,9 +1,9 @@
 ﻿
 namespace Khrussk.Realm {
 	using System;
+	using System.Net;
 	using Khrussk.Realm.Protocol;
 	using Khrussk.Services;
-	using System.Net;
 
 	public sealed class RealmService {
 		public RealmService() {
@@ -19,9 +19,6 @@ namespace Khrussk.Realm {
 		public event EventHandler<RealmServiceEventArgs> ClientDisconnected;*/
 
 		public event EventHandler<RealmServiceEventArgs> UserConnected;
-		public event EventHandler<RealmServiceEventArgs> EntityAdded;
-		public event EventHandler<RealmServiceEventArgs> EntityRemoved;
-		public event EventHandler<RealmServiceEventArgs> EntityModified;
 		public event EventHandler<RealmServiceEventArgs> PacketReceived;
 
 		/*void _service_ClientConnected(object sender, Peers.PeerEventArgs e) {

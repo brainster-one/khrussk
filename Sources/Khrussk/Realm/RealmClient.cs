@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Khrussk.Peers;
-using Khrussk.Realm.Protocol;
-using System.Net;
-
+﻿
 namespace Khrussk.Realm {
+	using System;
+	using System.Net;
+	using Khrussk.Peers;
+	using Khrussk.Realm.Protocol;
+
 	public sealed class RealmClient {
 		public RealmClient() {
 			_peer = new Peer(new RealmProtocol());
@@ -15,11 +13,17 @@ namespace Khrussk.Realm {
 			_peer.PacketReceived += new EventHandler<PeerEventArgs>(_peer_PacketReceived);
 		}
 
+		/// <summary>Connects to remote RealmService.</summary>
+		/// <param name="endpoint">Endpoint to connect to.</param>
 		public void Connect(EndPoint endpoint) {
 			_peer.Connect(endpoint);
 		}
 
 		public event EventHandler<RealmServiceEventArgs> Connected;
+		public event EventHandler<RealmServiceEventArgs> EntityAdded;
+		public event EventHandler<RealmServiceEventArgs> EntityRemoved;
+		public event EventHandler<RealmServiceEventArgs> EntityModified;
+
 
 		void _peer_Connected(object sender, PeerEventArgs e) {
 			_peer.Send(new HandshakePacket(Guid.Empty));
@@ -36,7 +40,6 @@ namespace Khrussk.Realm {
 				if (evnt != null) evnt(this, new RealmServiceEventArgs(session));
 			}
 		}
-
 
 		private Peer _peer;
 	}
