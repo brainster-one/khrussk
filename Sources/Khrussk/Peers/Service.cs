@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Khrussk.Peers;
-using System.Net;
-
+﻿
 namespace Khrussk.Services {
+	using System;
+	using System.Collections.Generic;
+	using System.Net;
+	using Khrussk.Peers;
+
 	public class Service {
 		public Service(IProtocol protocol) {
 			_listener = new Listener(protocol);
@@ -16,9 +15,9 @@ namespace Khrussk.Services {
 			_listener.Listen(endpoint);
 		}
 
-		event EventHandler<PeerEventArgs> ClientConnected;
-		event EventHandler<PeerEventArgs> ClientDisconnected;
-		event EventHandler<PeerEventArgs> PacketReceived;
+		public event EventHandler<PeerEventArgs> ClientConnected;
+		public event EventHandler<PeerEventArgs> ClientDisconnected;
+		public event EventHandler<PeerEventArgs> PacketReceived;
 
 		void _listener_ClientPeerConnected(object sender, PeerEventArgs e) {
 			e.Peer.Disconnected += new EventHandler<PeerEventArgs>(peer_Disconnected);

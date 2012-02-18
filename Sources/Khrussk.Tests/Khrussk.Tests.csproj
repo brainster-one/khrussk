@@ -50,6 +50,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Realm\RealmTests.cs" />
     <Compile Include="Sockets\Context.cs" />
     <Compile Include="Packet.cs" />
     <Compile Include="PeerContext.cs" />
