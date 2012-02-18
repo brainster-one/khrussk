@@ -34,6 +34,7 @@ namespace Khrussk.Realm {
 
 		void _service_PacketReceived(object sender, Peers.PeerEventArgs e) {
 			if (e.Packet is HandshakePacket) {
+				e.Peer.Send(new HandshakePacket(Guid.NewGuid()));
 				var session = (e.Packet as HandshakePacket).Session;
 				var evnt = UserConnected;
 				if (evnt != null) evnt(this, new RealmServiceEventArgs(new User(session)));

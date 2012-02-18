@@ -27,19 +27,17 @@ using System.Threading;
 		/// <summary>Connection between ListenerSocket and ClientSocket should be established.</summary>
 		[TestMethod()] public void ConnectionShouldBeEstablishedTest() {
 			RealmService service = new RealmService();
-			service.UserConnected += new EventHandler<RealmServiceEventArgs>(service_UserConnected);
 			service.Start();
 
-			Peer peer = new Peer(new RealmProtocol());
-			peer.Connect(new IPEndPoint(IPAddress.Loopback, 9876));
-			peer.Send(new HandshakePacket(Guid.NewGuid()));
+			RealmClient client = new RealmClient();
+			client.Connected += new EventHandler<RealmServiceEventArgs>(client_Connected);
+			client.Connect(new IPEndPoint(IPAddress.Loopback, 9876));
 
 			Assert.IsTrue(evnt.WaitOne(TimeSpan.FromSeconds(3)));
 		}
 
-		void service_UserConnected(object sender, RealmServiceEventArgs e) {
+		void client_Connected(object sender, RealmServiceEventArgs e) {
 			evnt.Set();
 		}
-
 	}
 }
