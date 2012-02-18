@@ -14,7 +14,7 @@ namespace Khrussk.Sockets {
 			BeginReceive();
 		}
 
-		/// <summary>Initializes a new instance of the ClientSocket class using.</summary>
+		/// <summary>Initializes a new instance of the Socket class.</summary>
 		public Socket() {
 			_socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp) { NoDelay = true };
 			_socket.NoDelay = true;
@@ -29,7 +29,7 @@ namespace Khrussk.Sockets {
 		}
 
 		/// <summary>Associates a socket with a local endpoint.</summary>
-		/// <param name="endpoint">Endpoint.</param>
+		/// <param name="endpoint">Endpoint to listen on.</param>
 		public void Listen(IPEndPoint endpoint) {
 			if (endpoint == null) throw new ArgumentNullException("endpoint");
 			if (_socket.IsBound) throw new InvalidOperationException("Socket in listen state already.");
@@ -51,18 +51,26 @@ namespace Khrussk.Sockets {
 		/// <param name="buffer">Data to send.</param>
 		/// <param name="count">Amount of bytes to send.</param>
 		public void Send(byte[] buffer, int count) {
-			// TODO copy buffer to temp storage
 			var evnt = new SocketAsyncEventArgs();
-			evnt.Completed += new EventHandler<SocketAsyncEventArgs>(OnSendComplete);
+			evnt.Completed += OnSendComplete;
 			evnt.SetBuffer(buffer, 0, count);
 			_socket.SendAsync(evnt);
 		}
 
+		/// <summary>Socket has been conected to remote host.</summary>
 		public event EventHandler<SocketEventArgs> Connected;
+
+		/// <summary>Connection to remote host failed.</summary>
 		public event EventHandler<SocketEventArgs> ConnectionFailed;
+
+		/// <summary>Connection to remote host has been closed.</summary>
 		public event EventHandler<SocketEventArgs> Disconnected;
+
+		/// <summary>Data from remote host received.</summary>
 		public event EventHandler<SocketEventArgs> DataReceived;
-		public event EventHandler<SocketEventArgs> ClientSocketAccepted;
+
+		/// <summary>New connection has been accepted.</summary>
+		public event EventHandler<SocketEventArgs> ConnectionAccepted;
 
 		void BeginAccept() {
 			var evnt = new SocketAsyncEventArgs();
@@ -106,7 +114,11 @@ namespace Khrussk.Sockets {
 		void OnReceiveComplete(object sender, SocketAsyncEventArgs e) {
 			if (e.SocketError == SocketError.Success && e.BytesTransferred > 0) {
 				var evnt = DataReceived;
-				if (evnt != null) evnt(this, new SocketEventArgs(this, e.Buffer, e.BytesTransferred));
+				if (evnt != null) {
+					var buffer = new byte[e.BytesTransferred];
+					Buffer.BlockCopy(e.Buffer, 0, buffer, 0, e.BytesTransferred);
+					evnt(this, new SocketEventArgs(this, buffer));
+				}
 			} else if (e.SocketError != SocketError.Success) {
 				var evnt = Disconnected;
 				if (evnt != null) evnt(this, new SocketEventArgs(this));
@@ -116,7 +128,7 @@ namespace Khrussk.Sockets {
 
 		void OnAcceptComplete(object sender, SocketAsyncEventArgs e) {
 			var clientSocket = new Socket(e.AcceptSocket);
-			var evnt = ClientSocketAccepted;
+			var evnt = ConnectionAccepted;
 			if (evnt != null) evnt(this, new SocketEventArgs(clientSocket));
 			BeginAccept();
 		}

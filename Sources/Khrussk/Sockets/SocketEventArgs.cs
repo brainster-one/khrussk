@@ -1,28 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Khrussk.Sockets {
+	using System;
+
+	/// <summary>Socket event arguments.</summary>
 	public class SocketEventArgs : EventArgs {
-		private byte[] p;
-		private int p_2;
-
-		public SocketEventArgs() {
-
-		}
-
+		/// <summary>Initializes a new instance of the SocketEventArgs class using the specified socket.</summary>
+		/// <param name="socket">Socket.</param>
 		public SocketEventArgs(Socket socket) {
-			ClientSocket = socket;
+			Socket = socket;
 		}
 
-		public SocketEventArgs(Socket clientSocket, byte[] buffer, int count) {
-			ClientSocket = clientSocket;
-			Buffer = new byte[count];
-			System.Buffer.BlockCopy(buffer, 0, Buffer, 0, count);
-			
+		/// <summary>Initializes a new instance of the SocketEventArgs class using the specified socket and buffer.</summary>
+		/// <param name="socket">Socket.</param>
+		/// <param name="buffer">Buffer.</param>
+		public SocketEventArgs(Socket socket, byte[] buffer) {
+			Socket = socket;
+			Buffer = buffer;
 		}
-		public Socket ClientSocket { get; private set; }
+		
+		/// <summary>Gets socket.</summary>
+		public Socket Socket { get; private set; }
+
+		/// <summary>Gets buffer.</summary>
 		public byte[] Buffer { get; private set; }
 	}
 }

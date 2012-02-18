@@ -18,7 +18,7 @@ namespace Khrussk.Tests {
 			ClientSocket.Connected += callback;
 			ClientSocket.DataReceived += callback;
 			ClientSocket.Disconnected += callback;
-			ListenerSocket.ClientSocketAccepted += callback;
+			ListenerSocket.ConnectionAccepted += callback;
 
 			EndPoint = new IPEndPoint(IPAddress.Loopback, ++_port);
 			Wait = new ManualResetEvent(false);
@@ -41,8 +41,8 @@ namespace Khrussk.Tests {
 		}
 
 		void callback(object sender, SocketEventArgs e) {
-			if (e.ClientSocket != null) {
-				Accepted = e.ClientSocket;
+			if (e.Socket != null) {
+				Accepted = e.Socket;
 				Accepted.DataReceived += callback;
 				Accepted.Disconnected += callback;
 			}
