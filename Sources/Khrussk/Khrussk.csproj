@@ -49,6 +49,7 @@
     <Compile Include="Peers\Protocol.cs" />
     <Compile Include="Peers\Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Realm\Protocol\AddEntityPacket.cs" />
     <Compile Include="Realm\Protocol\EntitySerializer.cs" />
     <Compile Include="Realm\Protocol\HandshakePacket.cs" />
     <Compile Include="Realm\Protocol\IEntity.cs" />

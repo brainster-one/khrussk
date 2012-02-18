@@ -7,7 +7,7 @@ namespace Khrussk.Realm {
 
 	public sealed class RealmClient {
 		public RealmClient() {
-			_peer = new Peer(new RealmProtocol());
+			_peer = new Peer(new RealmProtocol(_serializer));
 			_peer.Connected += new EventHandler<PeerEventArgs>(_peer_Connected);
 			_peer.Disconnected += new EventHandler<PeerEventArgs>(_peer_Disconnected);
 			_peer.PacketReceived += new EventHandler<PeerEventArgs>(_peer_PacketReceived);
@@ -42,5 +42,6 @@ namespace Khrussk.Realm {
 		}
 
 		private Peer _peer;
+		private IEntitySerializer _serializer = new EntitySerializer();
 	}
 }

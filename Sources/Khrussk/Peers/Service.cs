@@ -15,6 +15,10 @@ namespace Khrussk.Services {
 			_listener.Listen(endpoint);
 		}
 
+		public void SendAll(IPacket packet) {
+			_peers.ForEach(x => x.Send(packet));
+		}
+
 		public event EventHandler<PeerEventArgs> ClientConnected;
 		public event EventHandler<PeerEventArgs> ClientDisconnected;
 		public event EventHandler<PeerEventArgs> PacketReceived;
