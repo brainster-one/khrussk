@@ -49,8 +49,7 @@
     <Compile Include="Peers\Protocol.cs" />
     <Compile Include="Peers\Service.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Sockets\ClientSocket.cs" />
-    <Compile Include="Sockets\ListenerSocket.cs" />
+    <Compile Include="Sockets\Socket.cs" />
     <Compile Include="Sockets\SocketEventArgs.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

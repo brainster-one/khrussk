@@ -12,17 +12,17 @@ namespace Khrussk.Sockets {
 
 		}
 
-		public SocketEventArgs(ClientSocket socket) {
+		public SocketEventArgs(Socket socket) {
 			ClientSocket = socket;
 		}
 
-		public SocketEventArgs(ClientSocket clientSocket, byte[] buffer, int count) {
+		public SocketEventArgs(Socket clientSocket, byte[] buffer, int count) {
 			ClientSocket = clientSocket;
 			Buffer = new byte[count];
 			System.Buffer.BlockCopy(buffer, 0, Buffer, 0, count);
 			
 		}
-		public ClientSocket ClientSocket { get; private set; }
+		public Socket ClientSocket { get; private set; }
 		public byte[] Buffer { get; private set; }
 	}
 }

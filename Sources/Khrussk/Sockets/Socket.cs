@@ -4,19 +4,19 @@ namespace Khrussk.Sockets {
 	using System.Net;
 	using System.Net.Sockets;
 
-	/// <summary>Socket for client side.</summary>
-	public sealed class ClientSocket {
-		/// <summary>Initializes a new instance of the ClientSocket class using the specified socket.</summary>
+	/// <summary>Socket.</summary>
+	public sealed class Socket {
+		/// <summary>Initializes a new instance of the Socket class using the specified socket.</summary>
 		/// <param name="socket">.net socket instance.</param>
-		internal ClientSocket(Socket socket) {
+		internal Socket(System.Net.Sockets.Socket socket) {
 			_socket = socket;
 			_socket.NoDelay = true;
 			BeginReceive();
 		}
 
 		/// <summary>Initializes a new instance of the ClientSocket class using.</summary>
-		public ClientSocket() {
-			_socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp) { NoDelay = true };
+		public Socket() {
+			_socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp) { NoDelay = true };
 			_socket.NoDelay = true;
 		}
 
@@ -26,6 +26,18 @@ namespace Khrussk.Sockets {
 			if (endpoint == null) throw new ArgumentNullException("endpoint");
 			if (IsConnected) throw new InvalidOperationException("Socket connected already.");
 			BeginConnect(endpoint);
+		}
+
+		/// <summary>Associates a socket with a local endpoint.</summary>
+		/// <param name="endpoint">Endpoint.</param>
+		public void Listen(IPEndPoint endpoint) {
+			if (endpoint == null) throw new ArgumentNullException("endpoint");
+			if (IsConnected) throw new InvalidOperationException("Socket in listen state already.");
+
+			_socket.Bind(endpoint);
+			_socket.Listen(5);
+
+			BeginAccept();
 		}
 
 		/// <summary>Disconnects socket.</summary>
@@ -48,13 +60,20 @@ namespace Khrussk.Sockets {
 
 		/// <summary>Gets socket connection state.</summary>
 		public bool IsConnected {
-			get { return _socket != null && _socket.Connected; }
+			get { return _socket != null && (_socket.Connected || _socket.IsBound); }
 		}
 
 		public event EventHandler<SocketEventArgs> Connected;
 		public event EventHandler<SocketEventArgs> ConnectionFailed;
 		public event EventHandler<SocketEventArgs> Disconnected;
 		public event EventHandler<SocketEventArgs> DataReceived;
+		public event EventHandler<SocketEventArgs> ClientSocketAccepted;
+
+		void BeginAccept() {
+			var evnt = new SocketAsyncEventArgs();
+			evnt.Completed += OnAcceptComplete;
+			_socket.AcceptAsync(evnt);
+		}
 
 		void BeginConnect(EndPoint endpoint) {
 			var evnt = new SocketAsyncEventArgs { RemoteEndPoint = endpoint };
@@ -98,6 +117,13 @@ namespace Khrussk.Sockets {
 				if (evnt != null) evnt(this, new SocketEventArgs(this));
 			}
 			BeginReceive();
+		}
+
+		void OnAcceptComplete(object sender, SocketAsyncEventArgs e) {
+			var clientSocket = new Socket(e.AcceptSocket);
+			var evnt = ClientSocketAccepted;
+			if (evnt != null) evnt(this, new SocketEventArgs(clientSocket));
+			BeginAccept();
 		}
 		
 		

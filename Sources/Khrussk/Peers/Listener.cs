@@ -10,7 +10,7 @@ namespace Khrussk.Peers {
 		/// <param name="protocol">Protocol.</param>
 		public Listener(IProtocol protocol) {
 			_protocol = protocol;
-			_socket = new ListenerSocket();
+			_socket = new Socket();
 			_socket.ClientSocketAccepted += new EventHandler<SocketEventArgs>(_socket_ClientSocketAccepted);
 		}
 
@@ -52,6 +52,6 @@ namespace Khrussk.Peers {
 		readonly IProtocol _protocol;
 
 		/// <summary>Underlying socket.</summary>
-		ListenerSocket _socket;
+		Socket _socket;
 	}
 }

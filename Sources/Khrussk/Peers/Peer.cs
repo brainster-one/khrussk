@@ -10,7 +10,7 @@ namespace Khrussk.Peers {
 		/// <summary>Initializes a new instance of the ClientPeer class using the specified socket and protocol.</summary>
 		/// <param name="socket">Socket.</param>
 		/// <param name="protocol">Protocol.</param>
-		internal Peer(ClientSocket socket, IProtocol protocol) {
+		internal Peer(Socket socket, IProtocol protocol) {
 			_socket = socket;
 			_protocol = protocol;
 			_socket.Connected += new EventHandler<SocketEventArgs>(_socket_Connected);
@@ -23,7 +23,7 @@ namespace Khrussk.Peers {
 		/// <param name="protocol">Protocol.</param>
 		public Peer(IProtocol protocol) {
 			_protocol = protocol;
-			_socket = new ClientSocket();
+			_socket = new Socket();
 			_socket.Connected += new EventHandler<SocketEventArgs>(_socket_Connected);
 			_socket.Disconnected += new EventHandler<SocketEventArgs>(_socket_Disconnected);
 			_socket.ConnectionFailed += new EventHandler<SocketEventArgs>(_socket_ConnectionFailed);
@@ -98,7 +98,7 @@ namespace Khrussk.Peers {
 		}
 
 		/// <summary>Underlying socket.</summary>
-		ClientSocket _socket;
+		Socket _socket;
 
 		/// <summary>Protocol.</summary>
 		readonly IProtocol _protocol;
