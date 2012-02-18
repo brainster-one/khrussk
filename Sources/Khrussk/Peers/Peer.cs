@@ -39,7 +39,6 @@ namespace Khrussk.Peers {
 		*/
 		/// <summary>Connects client to service.</summary>
 		public void Connect(EndPoint host) {
-			if (IsConnected) throw new InvalidOperationException("Peer already connected");
 			_socket.Connect(host);
 		}
 
@@ -54,11 +53,6 @@ namespace Khrussk.Peers {
 		/// <summary>Disconnects client from service.</summary>
 		public void Disconnect() {
 			_socket.Disconnect();
-		}
-
-		/// <summary>Gets connection state.</summary>
-		public bool IsConnected {
-			get { return _socket.IsConnected; }
 		}
 
 		/// <summary>Connection established.</summary>

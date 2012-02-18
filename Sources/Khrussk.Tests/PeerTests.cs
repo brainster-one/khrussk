@@ -17,7 +17,7 @@ namespace Khrussk.Network {
 			_context.ClientPeer.Connect(_context.EndPoint);
 			_context.ClientSocketAccepted.WaitOne(TimeSpan.FromSeconds(1));
 
-			Assert.IsTrue(_context.ClientPeer.IsConnected);
+			Assert.IsNotNull(_context.Accepted);
 		}
 
 		/// <summary>Cleanup.</summary>
@@ -27,7 +27,7 @@ namespace Khrussk.Network {
 
 		/// <summary>Connection between ListenerSocket and ClientSocket should be established.</summary>
 		[TestMethod()] public void ConnectionShouldBeEstablishedTest() {
-			Assert.IsTrue(_context.ClientPeer.IsConnected);
+			Assert.IsNotNull(_context.Accepted);
 		}
 		/*
 		/// <summary>Data from remote host should be read.</summary>

@@ -13,7 +13,7 @@ namespace Khrussk.Tests.Sockets {
 			_context.ListenerSocket.Listen(_context.EndPoint);
 			
 			_context.WaitFor(() => _context.ClientSocket.Connect(_context.EndPoint));
-			Assert.IsTrue(_context.ClientSocket.IsConnected);
+			Assert.IsNotNull(_context.Accepted);
 		}
 
 		/// <summary>Cleanup.</summary>
@@ -23,22 +23,36 @@ namespace Khrussk.Tests.Sockets {
 
 		/// <summary>Connection between sockets should be established.</summary>
 		[TestMethod()] public void ConnectionShouldBeEstablishedTest() {
-			Assert.IsTrue(_context.ListenerSocket.IsConnected);
-			Assert.IsTrue(_context.ClientSocket.IsConnected);
+			Assert.IsNotNull(_context.Accepted);
 		}
 
-		/// <summary>Connection should be closed after disconnection on client side (IsConnected == false on both sides).</summary>
-		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnect() {
+		/// <summary>Connection should be closed after disconnection on client side.</summary>
+		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnectOnClientSideTest() {
 			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Disconnect()));
-			Assert.IsFalse(_context.ClientSocket.IsConnected);
-			Assert.IsFalse(_context.Accepted.IsConnected);
+			Assert.IsNotNull(_context.Accepted);
 		}
 
 		/// <summary>Connection should be closed after disconnection on remote side (IsConnected == false on both sides).</summary>
 		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnectOnRemoteSideTest() {
 			Assert.IsTrue(_context.WaitFor(() => _context.Accepted.Disconnect()));
-			Assert.IsFalse(_context.Accepted.IsConnected);
-			Assert.IsFalse(_context.ClientSocket.IsConnected); // todo: ClientSocket.IsConnected == true
+		}
+
+		/// <summary>Socket can be disconnected serveral times.</summary>
+		[TestMethod] public void CanDisconnectSeveralTimesTest() {
+			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Disconnect()));
+			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Disconnect()));
+		}
+
+		/// <summary>Can not connect twice.</summary>
+		[TestMethod, ExpectedException(typeof(InvalidOperationException))]
+		public void CanNotConnectTwiceTest() {
+			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Connect(_context.EndPoint)));
+		}
+
+		/// <summary>Recconnection works properly.</summary>
+		[TestMethod] public void CloseAndConnectAgainTest() {
+			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Disconnect()));
+			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Connect(_context.EndPoint)));
 		}
 
 		/// <summary>Data should be transfered to server.</summary>

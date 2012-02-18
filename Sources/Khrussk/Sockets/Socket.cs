@@ -24,7 +24,7 @@ namespace Khrussk.Sockets {
 		/// <param name="endpoint">Endpoint to connect to.</param>
 		public void Connect(EndPoint endpoint) {
 			if (endpoint == null) throw new ArgumentNullException("endpoint");
-			if (IsConnected) throw new InvalidOperationException("Socket connected already.");
+			if (_socket.Connected) throw new InvalidOperationException("Socket connected already.");
 			BeginConnect(endpoint);
 		}
 
@@ -32,7 +32,7 @@ namespace Khrussk.Sockets {
 		/// <param name="endpoint">Endpoint.</param>
 		public void Listen(IPEndPoint endpoint) {
 			if (endpoint == null) throw new ArgumentNullException("endpoint");
-			if (IsConnected) throw new InvalidOperationException("Socket in listen state already.");
+			if (_socket.IsBound) throw new InvalidOperationException("Socket in listen state already.");
 
 			_socket.Bind(endpoint);
 			_socket.Listen(5);
@@ -58,9 +58,6 @@ namespace Khrussk.Sockets {
 			_socket.SendAsync(evnt);
 		}
 
-		/// <summary>Gets socket connection state.</summary>
-		public bool IsConnected { get; private set; }
-
 		public event EventHandler<SocketEventArgs> Connected;
 		public event EventHandler<SocketEventArgs> ConnectionFailed;
 		public event EventHandler<SocketEventArgs> Disconnected;
@@ -71,7 +68,6 @@ namespace Khrussk.Sockets {
 			var evnt = new SocketAsyncEventArgs();
 			evnt.Completed += OnAcceptComplete;
 			_socket.AcceptAsync(evnt);
-			IsConnected = true;
 		}
 
 		void BeginConnect(EndPoint endpoint) {
@@ -89,7 +85,6 @@ namespace Khrussk.Sockets {
 
 		void OnConnectComplete(object sender, SocketAsyncEventArgs e) {
 			if (e.SocketError == SocketError.Success) {
-				IsConnected = true;
 				var evnt = Connected;
 				if (evnt != null) evnt(this, new SocketEventArgs(this));
 				BeginReceive();
@@ -100,7 +95,6 @@ namespace Khrussk.Sockets {
 		}
 
 		void OnDisconnectComplete(object sender, SocketAsyncEventArgs e) {
-			IsConnected = false;
 			var evnt = Disconnected;
 			if (evnt != null) evnt(this, new SocketEventArgs(this));
 		}
