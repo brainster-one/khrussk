@@ -19,6 +19,10 @@ namespace Khrussk.Realm {
 			_peer.Connect(endpoint);
 		}
 
+		public void RegisterEntityType(Type type, IEntitySerializer serializer) {
+			_serializer.RegisterEntityType(type, serializer);
+		}
+
 		public event EventHandler<RealmServiceEventArgs> Connected;
 		public event EventHandler<RealmServiceEventArgs> EntityAdded;
 		public event EventHandler<RealmServiceEventArgs> EntityRemoved;
@@ -38,10 +42,13 @@ namespace Khrussk.Realm {
 				var session = ((HandshakePacket)e.Packet).Session;
 				var evnt = Connected;
 				if (evnt != null) evnt(this, new RealmServiceEventArgs(session));
+			} else if (e.Packet is AddEntityPacket) {
+				var evnt = EntityAdded;
+				if (evnt != null) evnt(this, new RealmServiceEventArgs(((AddEntityPacket)e.Packet).Entity));
 			}
 		}
 
 		private Peer _peer;
-		private IEntitySerializer _serializer = new EntitySerializer();
+		private EntitySerializer _serializer = new EntitySerializer();
 	}
 }

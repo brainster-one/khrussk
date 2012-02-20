@@ -13,8 +13,12 @@ namespace Khrussk.Realm {
 			_service.PacketReceived += new System.EventHandler<Peers.PeerEventArgs>(_service_PacketReceived);
 		}
 
-		public void Start() {
-			_service.Start(new IPEndPoint(IPAddress.Any, 9876));
+		public void RegisterEntityType(Type type, IEntitySerializer serializer) {
+			_serializer.RegisterEntityType(type, serializer);
+		}
+
+		public void Start(IPEndPoint endpoint) {
+			_service.Start(endpoint);
 		}
 
 		public void AddEntity(IEntity entity) {
@@ -23,7 +27,6 @@ namespace Khrussk.Realm {
 		}
 
 		public void RemoveEntity(IEntity entity) {
-
 		}
 
 		public void ModifyEntity(IEntity entity) {
@@ -54,7 +57,7 @@ namespace Khrussk.Realm {
 			}
 		}
 
-		private IEntitySerializer _serializer;
+		private EntitySerializer _serializer;
 		private RealmProtocol _protocol;
 		private Service _service;
 	}

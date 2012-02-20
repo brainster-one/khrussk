@@ -5,8 +5,9 @@ using System.Text;
 
 namespace Khrussk.Realm {
 	public class RealmServiceEventArgs : EventArgs {
-		private User user;
-		private Guid session;
+		public User user;
+		public Guid session;
+		public Protocol.IEntity iEntity;
 
 		public RealmServiceEventArgs(User user) {
 			// TODO: Complete member initialization
@@ -16,6 +17,11 @@ namespace Khrussk.Realm {
 		public RealmServiceEventArgs(Guid session) {
 			// TODO: Complete member initialization
 			this.session = session;
+		}
+
+		public RealmServiceEventArgs(Protocol.IEntity iEntity) {
+			// TODO: Complete member initialization
+			this.iEntity = iEntity;
 		}
 	}
 }
