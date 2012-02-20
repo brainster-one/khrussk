@@ -5,8 +5,8 @@ namespace Khrussk.Tests.Sockets {
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 	/// <summary></summary>
-	[TestClass] public class SocketsCommunicationTests {
-		readonly Context _context = new Context();
+	[TestClass] public class ConnectionsTests {
+		readonly SocketTestContext _context = new SocketTestContext();
 		
 		/// <summary>Initialize.</summary>
 		[TestInitialize] public void Initialize() {
@@ -27,48 +27,38 @@ namespace Khrussk.Tests.Sockets {
 		}
 
 		/// <summary>Connection should be closed after disconnection on client side.</summary>
-		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnectOnClientSideTest() {
+		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnectionOnClientSideTest() {
 			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Disconnect()));
 			Assert.IsNotNull(_context.Accepted);
 		}
 
 		/// <summary>Connection should be closed after disconnection on remote side (IsConnected == false on both sides).</summary>
-		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnectOnRemoteSideTest() {
+		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnectionOnRemoteSideTest() {
 			Assert.IsTrue(_context.WaitFor(() => _context.Accepted.Disconnect()));
 		}
 
 		/// <summary>Socket can be disconnected serveral times.</summary>
-		[TestMethod] public void CanDisconnectSeveralTimesTest() {
+		[TestMethod] public void ConnectionCanBeClosedSeveralTimesTest() {
 			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Disconnect()));
 			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Disconnect()));
 		}
 
 		/// <summary>Can not connect twice.</summary>
 		[TestMethod, ExpectedException(typeof(InvalidOperationException))]
-		public void CanNotConnectTwiceTest() {
-			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Connect(_context.EndPoint)));
+		public void ConnectionShouldNotBeEstablishedSeveralTimesTest() {
+			_context.ClientSocket.Connect(_context.EndPoint);
 		}
 
 		/// <summary>Recconnection works properly.</summary>
-		[TestMethod] public void CloseAndConnectAgainTest() {
+		[TestMethod] public void ConnectionCanBeReusedTest() {
 			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Disconnect()));
 			Assert.IsTrue(_context.WaitFor(() => _context.ClientSocket.Connect(_context.EndPoint)));
 		}
 
-		/// <summary>Data should be transfered to server.</summary>
-		[TestMethod] public void DataShouldBeTransferedToRemoteSideTest() {
-			Assert.IsTrue(_context.WaitFor(() => {
-				_context.ClientSocket.Send(new byte[] { 1, 2, 3, 4, 5 }, 5);
-			}));
-			Assert.AreEqual(5, _context.SocketEventArgs.Buffer.Length);
-		}
-
-		/// <summary>Data should be transfered to client side.</summary>
-		[TestMethod] public void DataShouldBeTransferedToClientSideTest() {
-			Assert.IsTrue(_context.WaitFor(() => {
-				_context.Accepted.Send(new byte[] { 1, 2, 3, 4, 5 }, 5);
-			}));
-			Assert.AreEqual(5, _context.SocketEventArgs.Buffer.Length);
+		/// <summary>Can not listen twice.</summary>
+		[TestMethod, ExpectedException(typeof(InvalidOperationException))]
+		public void CanNotListenSeveralTimes() {
+			_context.ListenerSocket.Listen(_context.EndPoint);
 		}
 	}
 }

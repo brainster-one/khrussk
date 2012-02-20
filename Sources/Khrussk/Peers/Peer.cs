@@ -47,7 +47,7 @@ namespace Khrussk.Peers {
 		public void Send(IPacket packet) {
 			var m = new MemoryStream();
 			_protocol.Write(m, packet);
-			_socket.Send(m.ToArray(), (int)m.Length);
+			_socket.Send(m.ToArray(), 0, (int)m.Length);
 		}
 
 		/// <summary>Disconnects client from service.</summary>

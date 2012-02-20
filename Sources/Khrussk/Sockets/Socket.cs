@@ -16,12 +16,13 @@ namespace Khrussk.Sockets {
 
 		/// <summary>Initializes a new instance of the Socket class.</summary>
 		public Socket() {
-			_socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp) { NoDelay = true };
-			_socket.NoDelay = true;
+			_socket = new System.Net.Sockets.Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp) {
+				NoDelay = true
+			};
 		}
 
 		/// <summary>Connects socket to specified endpoint.</summary>
-		/// <param name="endpoint">Endpoint to connect to.</param>
+		/// <param name="endpoint">EndPoint to connect to.</param>
 		public void Connect(EndPoint endpoint) {
 			if (endpoint == null) throw new ArgumentNullException("endpoint");
 			if (_socket.Connected) throw new InvalidOperationException("Socket connected already.");
@@ -50,10 +51,10 @@ namespace Khrussk.Sockets {
 		/// <summary>Sends data to remote host.</summary>
 		/// <param name="buffer">Data to send.</param>
 		/// <param name="count">Amount of bytes to send.</param>
-		public void Send(byte[] buffer, int count) {
+		public void Send(byte[] buffer, int offset, int count) {
 			var evnt = new SocketAsyncEventArgs();
 			evnt.Completed += OnSendComplete;
-			evnt.SetBuffer(buffer, 0, count);
+			evnt.SetBuffer(buffer, offset, count);
 			_socket.SendAsync(evnt);
 		}
 

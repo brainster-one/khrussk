@@ -1,17 +1,16 @@
 ﻿
-namespace Khrussk.Tests {
-	using System.Net;
-	using System.Threading;
-	using Khrussk.Sockets;
+namespace Khrussk.Tests.Sockets {
 	using System;
+	using Khrussk.Sockets;
 
 	/// <summary>Thread handler.</summary>
 	/// <param name="exception">Exception.</param>
 	public delegate void ThreadHandler();
 
-	sealed class Context {
-		/// <summary></summary>
-		public Context() {
+	/// <summary>Context for tests.</summary>
+	sealed class SocketTestContext : TestContext {
+		/// <summary>Initializes a new instance of the SocketTestContext class using the specified socket.</summary>
+		public SocketTestContext() {
 			ListenerSocket = new Socket();
 			ClientSocket = new Socket();
 
@@ -19,14 +18,12 @@ namespace Khrussk.Tests {
 			ClientSocket.DataReceived += callback;
 			ClientSocket.Disconnected += callback;
 			ListenerSocket.ConnectionAccepted += callback;
-
-			EndPoint = new IPEndPoint(IPAddress.Loopback, ++_port);
-			Wait = new ManualResetEvent(false);
 		}
 
+		/// <summary>Cleanup environment.</summary>
 		public void Cleanup() {
-			if (Accepted != null) Accepted.Disconnect();
-
+			if (Accepted != null)
+				Accepted.Disconnect();
 			ClientSocket.Disconnect();
 			ListenerSocket.Disconnect();
 		}
@@ -50,17 +47,11 @@ namespace Khrussk.Tests {
 			Wait.Set();
 		}
 
-		public IPEndPoint EndPoint { get; set; }
-
 		public Socket ListenerSocket { get; set; }
 		public Socket ClientSocket { get; set; }
 		public Socket Accepted { get; set; }
-		
-		private ManualResetEvent Wait { get; set; }
-
-
 		public SocketEventArgs SocketEventArgs { get; set; }
-		static int _port = 1025;
+		
 		static object _lock = new object();
 	}
 }
