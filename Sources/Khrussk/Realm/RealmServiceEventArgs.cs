@@ -8,6 +8,7 @@ namespace Khrussk.Realm {
 		public User user;
 		public Guid session;
 		public Protocol.IEntity iEntity;
+		public Protocol.EntityDiffData EntityDiffData { get; private set; } 
 
 		public RealmServiceEventArgs(User user) {
 			// TODO: Complete member initialization
@@ -22,6 +23,11 @@ namespace Khrussk.Realm {
 		public RealmServiceEventArgs(Protocol.IEntity iEntity) {
 			// TODO: Complete member initialization
 			this.iEntity = iEntity;
+		}
+
+		public RealmServiceEventArgs(Protocol.EntityDiffData entityDiffData) {
+			// TODO: Complete member initialization
+			EntityDiffData = entityDiffData;
 		}
 	}
 }

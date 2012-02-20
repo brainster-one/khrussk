@@ -53,8 +53,7 @@ namespace Khrussk.Peers {
 			if (sinfo == null) { throw new InvalidOperationException("No serializer registered for this packet type: " + packetTypeId); }
 			var packet = sinfo.Serializer.Deserialize(new BinaryReader(packetStream));
 
-			// Close temp stream and return result
-			packetStream.Close();
+			// Return packet
 			return packet;
 		}
 

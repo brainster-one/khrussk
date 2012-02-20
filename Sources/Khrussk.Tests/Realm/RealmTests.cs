@@ -49,6 +49,20 @@ namespace Khrussk.Tests.Realm {
 			Assert.AreEqual("Olololo", ((Player)_context.RealmServiceEventArgs.iEntity).Name);
 		}
 
+		/// <summary>Connection between ListenerSocket and ClientSocket should be established.</summary>
+		[TestMethod()] public void SyncEntityTest() {
+			var player = new Player { Name = "test" };
+			_context.WaitFor(() => _context.Service.AddEntity(player));
+
+			player.Name = "test_after";
+			_context.WaitFor(() => _context.Service.ModifyEntity(player));
+			
+			Assert.IsNotNull(_context.RealmServiceEventArgs.EntityDiffData);
+			_context.RealmServiceEventArgs.EntityDiffData.ApplyChanges(player);
+			
+			Assert.AreEqual("test_after", player.Name);
+		}
+
 		void client_Connected(object sender, RealmServiceEventArgs e) {
 			evnt.Set();
 		}

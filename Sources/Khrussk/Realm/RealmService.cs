@@ -7,14 +7,13 @@ namespace Khrussk.Realm {
 
 	public sealed class RealmService {
 		public RealmService() {
-			_serializer = new EntitySerializer();
-			_protocol = new RealmProtocol(_serializer);
-			_service = new Service(new RealmProtocol(_serializer));
+			_protocol = new RealmProtocol();
+			_service = new Service(_protocol);
 			_service.PacketReceived += new System.EventHandler<Peers.PeerEventArgs>(_service_PacketReceived);
 		}
 
 		public void RegisterEntityType(Type type, IEntitySerializer serializer) {
-			_serializer.RegisterEntityType(type, serializer);
+			_protocol.RegisterEntityType(type, serializer);
 		}
 
 		public void Start(IPEndPoint endpoint) {
@@ -27,12 +26,12 @@ namespace Khrussk.Realm {
 		}
 
 		public void RemoveEntity(IEntity entity) {
+			_service.SendAll(new AddEntityPacket(entity));
 		}
 
 		public void ModifyEntity(IEntity entity) {
-
+			_service.SendAll(new SyncEntityPacket(entity));
 		}
-
 
 		/*public event EventHandler<RealmServiceEventArgs> ClientConnected;
 		public event EventHandler<RealmServiceEventArgs> ClientDisconnected;*/
@@ -57,7 +56,6 @@ namespace Khrussk.Realm {
 			}
 		}
 
-		private EntitySerializer _serializer;
 		private RealmProtocol _protocol;
 		private Service _service;
 	}

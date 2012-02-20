@@ -4,10 +4,12 @@ namespace Khrussk.Realm {
 	using System.Net;
 	using Khrussk.Peers;
 	using Khrussk.Realm.Protocol;
+	using System.Collections.Generic;
 
 	public sealed class RealmClient {
 		public RealmClient() {
-			_peer = new Peer(new RealmProtocol(_serializer));
+			_protocol = new RealmProtocol();
+			_peer = new Peer(_protocol);
 			_peer.Connected += new EventHandler<PeerEventArgs>(_peer_Connected);
 			_peer.Disconnected += new EventHandler<PeerEventArgs>(_peer_Disconnected);
 			_peer.PacketReceived += new EventHandler<PeerEventArgs>(_peer_PacketReceived);
@@ -20,7 +22,7 @@ namespace Khrussk.Realm {
 		}
 
 		public void RegisterEntityType(Type type, IEntitySerializer serializer) {
-			_serializer.RegisterEntityType(type, serializer);
+			_protocol.RegisterEntityType(type, serializer);
 		}
 
 		public event EventHandler<RealmServiceEventArgs> Connected;
@@ -45,10 +47,13 @@ namespace Khrussk.Realm {
 			} else if (e.Packet is AddEntityPacket) {
 				var evnt = EntityAdded;
 				if (evnt != null) evnt(this, new RealmServiceEventArgs(((AddEntityPacket)e.Packet).Entity));
+			} else if (e.Packet is SyncEntityPacket) {
+				var evnt = EntityAdded;
+				if (evnt != null) evnt(this, new RealmServiceEventArgs(((SyncEntityPacket)e.Packet).Diff));
 			}
 		}
 
 		private Peer _peer;
-		private EntitySerializer _serializer = new EntitySerializer();
+		private RealmProtocol _protocol;
 	}
 }

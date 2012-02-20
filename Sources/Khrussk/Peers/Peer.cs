@@ -81,6 +81,7 @@ namespace Khrussk.Peers {
 		}
 
 		void _socket_DataReceived(object sender, SocketEventArgs e) {
+			// TODO while (_protocol.CanRead()) {
 			var oldPos = _receiveStream.Position;
 			_receiveStream.Write(e.Buffer, 0, e.Buffer.Length);
 			_receiveStream.Position = oldPos;
