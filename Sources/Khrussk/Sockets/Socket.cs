@@ -58,7 +58,7 @@ namespace Khrussk.Sockets {
 			_socket.SendAsync(evnt);
 		}
 
-		/// <summary>Socket has been conected to remote host.</summary>
+		/// <summary>Connection to remote host has been established.</summary>
 		public event EventHandler<SocketEventArgs> Connected;
 
 		/// <summary>Connection to remote host failed.</summary>
@@ -67,7 +67,7 @@ namespace Khrussk.Sockets {
 		/// <summary>Connection to remote host has been closed.</summary>
 		public event EventHandler<SocketEventArgs> Disconnected;
 
-		/// <summary>Data from remote host received.</summary>
+		/// <summary>Data from remote host has been received.</summary>
 		public event EventHandler<SocketEventArgs> DataReceived;
 
 		/// <summary>New connection has been accepted.</summary>

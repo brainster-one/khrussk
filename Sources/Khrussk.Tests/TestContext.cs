@@ -3,6 +3,10 @@ namespace Khrussk.Tests {
 	using System.Net;
 	using System.Threading;
 
+	/// <summary>Waiting for event thread handler.</summary>
+	/// <returns>False - timeout.</returns>
+	public delegate bool WaitForThreadHandler();
+
 	/// <summary>Test context.</summary>
 	class TestContext {
 		/// <summary>Initializes a new instance of the TestContext class.</summary>
@@ -10,6 +14,22 @@ namespace Khrussk.Tests {
 			Wait = new ManualResetEvent(false);
 			EndPoint = new IPEndPoint(IPAddress.Loopback, ++_port);
 		}
+
+		/// <summary>Waits for event.</summary>
+		/// <param name="handler">Event wait function.</param>
+		/// <param name="timeout">Timeout.</param>
+		/// <returns>true - Event happens/ otherwice - false.</returns>
+		public bool WaitFor(WaitForThreadHandler handler, int timeout) {
+			var evt = new ManualResetEvent(false);
+
+			new System.Threading.Thread(x => {
+				while (handler() == false) { }
+				evt.Set();
+			}).Start();
+
+			return evt.WaitOne(timeout);
+		}
+
 
 		/// <summary>Gets wait event.</summary>
 		public ManualResetEvent Wait { get; private set; }
