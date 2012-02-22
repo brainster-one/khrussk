@@ -50,6 +50,7 @@ namespace Khrussk.Sockets {
 
 		/// <summary>Sends data to remote host.</summary>
 		/// <param name="buffer">Data to send.</param>
+		/// <param name="offset">Offset.</param>
 		/// <param name="count">Amount of bytes to send.</param>
 		public void Send(byte[] buffer, int offset, int count) {
 			var evnt = new SocketAsyncEventArgs();

@@ -17,7 +17,7 @@ namespace Khrussk.Tests.Sockets {
 			// Client
 			var client = new Socket();
 			client.Connected += callback;
-			client.DataReceived += callback;
+			client.DataReceived += callback5;
 			client.Disconnected += callback4;
 			_clientSockets.Add(client);
 			
@@ -39,7 +39,7 @@ namespace Khrussk.Tests.Sockets {
 		}
 
 		void callback2(object sender, SocketEventArgs e) {
-			e.Socket.DataReceived += callback;
+			e.Socket.DataReceived += callback5;
 			e.Socket.Disconnected += callback3;
 			_acceptedSockets.Add(e.Socket);
 			SocketEventArgs = e;
@@ -54,6 +54,10 @@ namespace Khrussk.Tests.Sockets {
 		void callback4(object sender, SocketEventArgs e) {
 			if (_clientSockets.Contains(e.Socket)) _clientSockets.Remove(e.Socket);
 			SocketEventArgs = e;
+		}
+
+		void callback5(object sender, SocketEventArgs e) {
+			_dataReceived.Add(e.Buffer);
 		}
 
 		public Socket NewSocket() {
@@ -72,11 +76,17 @@ namespace Khrussk.Tests.Sockets {
 		public IEnumerable<Socket> AcceptedSockets { 
 			get { return _acceptedSockets.AsReadOnly(); } 
 		}
+		public IEnumerable<byte[]> DataReceived {
+			get { return _dataReceived.AsReadOnly(); }
+		}
 		public SocketEventArgs SocketEventArgs { get; set; }
 
 		private List<Socket> _acceptedSockets = new List<Socket>();
 		private List<Socket> _clientSockets = new List<Socket>();
+		private List<byte[]> _dataReceived = new List<byte[]>();
 
 		static object _lock = new object();
+
+		
 	}
 }

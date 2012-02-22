@@ -63,10 +63,8 @@ namespace Khrussk.Tests.Sockets {
 		/// <summary>Recconnection works properly.</summary>
 		[TestMethod] public void ConnectionCanBeReusedTest() {
 			var socket = _context.ClientSocket;
-
 			socket.Disconnect();
 			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 0, 1000));
-
 			socket.Connect(_context.EndPoint);
 			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 1, 1000));
 		}
