@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Khrussk.Peers;
+﻿
+namespace Khrussk.Tests.Peers.Protocol {
+	using Khrussk.Peers;
 
-namespace Khrussk.Tests {
-	class Protocol : IProtocol {
+	class TestProtocol : IProtocol {
 		public IPacket Read(System.IO.Stream stream) {
 			return (IPacket)new Packet {
 				Data = (byte)stream.ReadByte()

@@ -1,14 +1,8 @@
 ﻿
 namespace Khrussk.Tests.Sockets {
-	using System;
-	using Khrussk.Sockets;
 	using System.Collections.Generic;
 	using System.Linq;
-	using System.Collections.ObjectModel;
-
-	/// <summary>Thread handler.</summary>
-	/// <param name="exception">Exception.</param>
-	public delegate void ThreadHandler();
+	using Khrussk.Sockets;
 
 	/// <summary>Context for tests.</summary>
 	sealed class SocketTestContext : TestContext {
@@ -16,14 +10,14 @@ namespace Khrussk.Tests.Sockets {
 		public SocketTestContext() {
 			// Client
 			var client = new Socket();
-			client.Connected += callback;
-			client.DataReceived += callback5;
-			client.Disconnected += callback4;
+			client.Connected += OnClientSocketConnected;
+			client.DataReceived += OnDataReceived;
+			client.Disconnected += OnClientSocketDisconnected;
 			_clientSockets.Add(client);
 			
 			// Listener socket
 			ListenerSocket = new Socket();
-			ListenerSocket.ConnectionAccepted += callback2;
+			ListenerSocket.ConnectionAccepted += OnClientSocketAccepted;
 		}
 
 		/// <summary>Cleanup environment.</summary>
@@ -33,60 +27,83 @@ namespace Khrussk.Tests.Sockets {
 			ListenerSocket.Disconnect();
 		}
 
-		void callback(object sender, SocketEventArgs e) {
-			SocketEventArgs = e;
-			Wait.Set();
-		}
-
-		void callback2(object sender, SocketEventArgs e) {
-			e.Socket.DataReceived += callback5;
-			e.Socket.Disconnected += callback3;
-			_acceptedSockets.Add(e.Socket);
-			SocketEventArgs = e;
-			Wait.Set();
-		}
-
-		void callback3(object sender, SocketEventArgs e) {
-			if (_acceptedSockets.Contains(e.Socket)) _acceptedSockets.Remove(e.Socket);
-			SocketEventArgs = e;
-		}
-
-		void callback4(object sender, SocketEventArgs e) {
-			if (_clientSockets.Contains(e.Socket)) _clientSockets.Remove(e.Socket);
-			SocketEventArgs = e;
-		}
-
-		void callback5(object sender, SocketEventArgs e) {
-			_dataReceived.Add(e.Buffer);
-		}
-
+		/// <summary>Creates new socket.</summary>
+		/// <returns>New socket.</returns>
 		public Socket NewSocket() {
 			var ns = new Socket();
 			_clientSockets.Add(ns);
 			return ns;
 		}
 
-		public Socket ListenerSocket { get; set; }
+		/// <summary>Gets listener socket.</summary>
+		public Socket ListenerSocket { get; private set; }
+
+		/// <summary>Gets client socket.</summary>
 		public Socket ClientSocket {
 			get { return _clientSockets.First(); }
 		}
-		public IEnumerable<Socket> ClientSockets { 
-			get { return _clientSockets.AsReadOnly(); } 
+
+		/// <summary>Gets list of client's sockets.</summary>
+		public IEnumerable<Socket> ClientSockets {
+			get { return _clientSockets.AsReadOnly(); }
 		}
-		public IEnumerable<Socket> AcceptedSockets { 
-			get { return _acceptedSockets.AsReadOnly(); } 
+
+		/// <summary>Gets list of accepted sockets.</summary>
+		public IEnumerable<Socket> AcceptedSockets {
+			get { return _acceptedSockets.AsReadOnly(); }
 		}
+
+		/// <summary>Gets list of received data chunks.</summary>
 		public IEnumerable<byte[]> DataReceived {
 			get { return _dataReceived.AsReadOnly(); }
 		}
-		public SocketEventArgs SocketEventArgs { get; set; }
 
+		/// <summary>On client socket connected.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Event args.</param>
+		void OnClientSocketConnected(object sender, SocketEventArgs e) {
+			Wait.Set();
+		}
+
+		/// <summary>On connection accepted</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Event args.</param>
+		void OnClientSocketAccepted(object sender, SocketEventArgs e) {
+			e.Socket.DataReceived += OnDataReceived;
+			e.Socket.Disconnected += OnAcceptedSocketDisconnected;
+			_acceptedSockets.Add(e.Socket);
+			Wait.Set();
+		}
+
+		/// <summary>On socket disconnected.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Event args.</param>
+		void OnAcceptedSocketDisconnected(object sender, SocketEventArgs e) {
+			if (_acceptedSockets.Contains(e.Socket)) _acceptedSockets.Remove(e.Socket);
+		}
+
+
+		/// <summary>On socket disconnected.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Event args.</param>
+		void OnClientSocketDisconnected(object sender, SocketEventArgs e) {
+			if (_clientSockets.Contains(e.Socket)) _clientSockets.Remove(e.Socket);
+		}
+
+		/// <summary>On data received.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Event args.</param>
+		void OnDataReceived(object sender, SocketEventArgs e) {
+			_dataReceived.Add(e.Buffer);
+		}
+
+		/// <summary>List of accepted sockets.</summary>
 		private List<Socket> _acceptedSockets = new List<Socket>();
+
+		/// <summary>List of client's sockets</summary>
 		private List<Socket> _clientSockets = new List<Socket>();
+
+		/// <summary>List of received data chunks.</summary>
 		private List<byte[]> _dataReceived = new List<byte[]>();
-
-		static object _lock = new object();
-
-		
 	}
 }
