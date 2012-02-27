@@ -4,6 +4,7 @@ namespace Khrussk.Realm.Protocol {
 	using Khrussk.Peers;
 	using System.Collections.Generic;
 	using System.Linq;
+	using System;
 
 	/// <summary>Add entity packet.</summary>
 	sealed class SyncEntityPacket : IPacket {
@@ -13,13 +14,14 @@ namespace Khrussk.Realm.Protocol {
 			Entity = entity;
 		}
 
-		internal SyncEntityPacket(EntityDiffData data) {
+		internal SyncEntityPacket(int entityId, EntityDiffData data) {
+			EntityId = entityId;
 			Diff = data;
 		}
 
 		/// <summary>Gets or sets entity.</summary>
 		public IEntity Entity { get; private set; }
-
+		public int EntityId { get; private set; }
 		public EntityDiffData Diff { get; private set; }
 	}
 
@@ -36,9 +38,9 @@ namespace Khrussk.Realm.Protocol {
 		/// <returns>Packet.</returns>
 		public IPacket Deserialize(BinaryReader reader) {
 			// TODO Make copy of reader. Потомучтод  данные могут быть прочитаны позже
-			var diff = new EntityDiffData(_serializer, reader);
-			return new SyncEntityPacket(diff);
-
+			var entityId = reader.ReadInt16();
+			var entityDiffData = new EntityDiffData(_serializer, reader);
+			return new SyncEntityPacket(entityId, entityDiffData);
 		}
 
 		/// <summary>Serializes packet to stream.</summary>
@@ -46,6 +48,7 @@ namespace Khrussk.Realm.Protocol {
 		/// <param name="packet">Packet to write.</param>
 		/// <returns>Packet.</returns>
 		public void Serialize(BinaryWriter writer, IPacket packet) {
+			writer.Write((Int16)((SyncEntityPacket)packet).Entity.Id);
 			_serializer.Serialize(writer, ((SyncEntityPacket)packet).Entity);
 		}
 

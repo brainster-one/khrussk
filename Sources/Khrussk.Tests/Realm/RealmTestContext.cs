@@ -40,7 +40,7 @@ namespace Khrussk.Tests.Realm {
 		}
 
 		void EntityModified(object sender, RealmServiceEventArgs e) {
-			e.EntityDiffData.ApplyChanges(Entities.First());
+			e.EntityDiffData.ApplyChanges(Entities.First(x => x.Id == e.EntityId));
 		}
 
 		public void Cleanup() {

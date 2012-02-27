@@ -37,13 +37,13 @@ namespace Khrussk.Tests.Realm {
 		
 		/// <summary>Connection between ListenerSocket and ClientSocket should be established.</summary>
 		[TestMethod] public void SyncEntityTest() {
-			var player = new Player { Name = "test" };
+			var player = new Player { Id = 987, Name = "test" };
 			_context.Service.AddEntity(player);
 			player.Name = "changed";
 			_context.Service.ModifyEntity(player);
 
-			Assert.IsTrue(_context.WaitFor(() => _context.Entities.Count() == 1, 10000));
-			Assert.IsTrue(_context.WaitFor(() => ((Player)_context.Entities.First()).Name == "changed", 10000));
+			Assert.IsTrue(_context.WaitFor(() => _context.Entities.Count() == 1, 1000));
+			Assert.IsTrue(_context.WaitFor(() => ((Player)_context.Entities.First()).Name == "changed", 1000));
 		}
 	}
 }
