@@ -9,7 +9,11 @@ namespace Khrussk.Realm {
 		public Guid session;
 		public Protocol.IEntity iEntity;
 		public int EntityId;
-		public Protocol.EntityDiffData EntityDiffData { get; private set; } 
+		public Protocol.EntityDiffData EntityDiffData { get; private set; }
+
+		public RealmServiceEventArgs(int entityId) {
+			EntityId = entityId;
+		}
 
 		public RealmServiceEventArgs(User user) {
 			// TODO: Complete member initialization

@@ -26,7 +26,7 @@ namespace Khrussk.Realm {
 		}
 
 		public void RemoveEntity(IEntity entity) {
-			_service.SendAll(new AddEntityPacket(entity));
+			_service.SendAll(new RemoveEntityPacket(entity));
 		}
 
 		public void ModifyEntity(IEntity entity) {

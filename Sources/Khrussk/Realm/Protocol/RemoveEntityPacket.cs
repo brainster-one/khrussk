@@ -33,7 +33,7 @@ namespace Khrussk.Realm.Protocol {
 		/// <param name="reader">Reader to deserialize packet by.</param>
 		/// <returns>Packet.</returns>
 		public IPacket Deserialize(BinaryReader reader) {
-			var id = reader.ReadInt32();
+			var id = reader.ReadInt16();
 			return new RemoveEntityPacket(id);
 		}
 
@@ -42,7 +42,7 @@ namespace Khrussk.Realm.Protocol {
 		/// <param name="packet">Packet to write.</param>
 		/// <returns>Packet.</returns>
 		public void Serialize(BinaryWriter writer, IPacket packet) {
-			_serializer.Serialize(writer, ((AddEntityPacket)packet).Entity);
+			writer.Write((short)((RemoveEntityPacket)packet).EntityId);
 		}
 
 		/// <summary>Entity serializer.</summary>

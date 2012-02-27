@@ -23,6 +23,7 @@ namespace Khrussk.Tests.Realm {
 			Service.UserConnected += Service_UserConnected;
 			Client.EntityAdded += EntityAdded;
 			Client.EntityModified += EntityModified;
+			Client.EntityRemoved += EntityRemoved;
 			/*Service.PacketReceived += Service_UserConnected;
 			
 			Client.Connected += Service_UserConnected;*/
@@ -37,6 +38,10 @@ namespace Khrussk.Tests.Realm {
 
 		void EntityAdded(object sender, RealmServiceEventArgs e) {
 			Entities.Add(e.iEntity);
+		}
+
+		void EntityRemoved(object sender, RealmServiceEventArgs e) {
+			Entities.RemoveAll(x => x.Id == e.EntityId);
 		}
 
 		void EntityModified(object sender, RealmServiceEventArgs e) {
