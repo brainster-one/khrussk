@@ -48,7 +48,7 @@ namespace Khrussk.Realm {
 				var evnt = EntityAdded;
 				if (evnt != null) evnt(this, new RealmServiceEventArgs(((AddEntityPacket)e.Packet).Entity));
 			} else if (e.Packet is SyncEntityPacket) {
-				var evnt = EntityAdded;
+				var evnt = EntityModified;
 				if (evnt != null) evnt(this, new RealmServiceEventArgs(((SyncEntityPacket)e.Packet).Diff));
 			}
 		}

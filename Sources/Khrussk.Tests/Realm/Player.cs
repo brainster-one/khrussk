@@ -17,10 +17,9 @@ namespace Khrussk.Tests.Realm {
 		}
 
 		public void Deserialize(System.IO.BinaryReader reader, ref IEntity entity) {
-			if (entity == null) entity = new Player();
-			entity = new Player {
-				Name = reader.ReadString()
-			};
+			var player = (entity == null ? new Player() : (Player)entity); 
+			player.Name = reader.ReadString();
+			entity = player;
 		}
 	}
 }

@@ -53,7 +53,7 @@
     <Compile Include="Peers\PeerTestContext.cs" />
     <Compile Include="Sockets\ConnectionTests.cs" />
     <Compile Include="TestContext.cs" />
-    <Compile Include="Realm\Context.cs" />
+    <Compile Include="Realm\RealmTestContext.cs" />
     <Compile Include="Realm\Player.cs" />
     <Compile Include="Realm\RealmTests.cs" />
     <Compile Include="Sockets\SocketTestContext.cs" />
