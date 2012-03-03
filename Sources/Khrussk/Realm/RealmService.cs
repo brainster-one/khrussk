@@ -4,12 +4,16 @@ namespace Khrussk.Realm {
 	using System.Net;
 	using Khrussk.Realm.Protocol;
 	using Khrussk.Services;
+	using Khrussk.Peers;
+	using System.Linq;
+	using System.Collections.Generic;
 
 	public sealed class RealmService {
 		public RealmService() {
 			_protocol = new RealmProtocol();
 			_service = new Service(_protocol);
 			_service.PacketReceived += new System.EventHandler<Peers.PeerEventArgs>(_service_PacketReceived);
+			_service.ClientDisconnected += new EventHandler<Peers.PeerEventArgs>(_service_ClientDisconnected);
 		}
 
 		public void RegisterEntityType(Type type, IEntitySerializer serializer) {
@@ -18,6 +22,16 @@ namespace Khrussk.Realm {
 
 		public void Start(IPEndPoint endpoint) {
 			_service.Start(endpoint);
+		}
+
+		public void Stop() {
+			_service.Stop();
+		}
+
+		public void Disconnect(User user) {
+			var peer = _peerUserMap.FirstOrDefault(x => x.Value == user);
+			if (peer.Key != null) peer.Key.Disconnect();
+			// TODO throw exception - user is not connected
 		}
 
 		public void AddEntity(IEntity entity) {
@@ -37,26 +51,36 @@ namespace Khrussk.Realm {
 		public event EventHandler<RealmServiceEventArgs> ClientDisconnected;*/
 
 		public event EventHandler<RealmServiceEventArgs> UserConnected;
+		public event EventHandler<RealmServiceEventArgs> UserDisconnected;
 		public event EventHandler<RealmServiceEventArgs> PacketReceived;
 
 		/*void _service_ClientConnected(object sender, Peers.PeerEventArgs e) {
 			throw new System.NotImplementedException();
 		}
-
+		*/
+		
 		void _service_ClientDisconnected(object sender, Peers.PeerEventArgs e) {
-			throw new System.NotImplementedException();
-		}*/
+			var evnt = UserDisconnected;
+			if (evnt != null) {
+				var user = _peerUserMap.FirstOrDefault(x => x.Key == e.Peer);
+				evnt(this, new RealmServiceEventArgs(user.Value));
+			}
+		}
 
 		void _service_PacketReceived(object sender, Peers.PeerEventArgs e) {
 			if (e.Packet is HandshakePacket) {
 				e.Peer.Send(new HandshakePacket(Guid.NewGuid()));
 				var session = (e.Packet as HandshakePacket).Session;
+				var user = new User(session);
+				_peerUserMap[e.Peer] = user;
+
 				var evnt = UserConnected;
-				if (evnt != null) evnt(this, new RealmServiceEventArgs(new User(session)));
+				if (evnt != null) evnt(this, new RealmServiceEventArgs(user));
 			}
 		}
 
 		private RealmProtocol _protocol;
 		private Service _service;
+		private Dictionary<Peer, User> _peerUserMap = new Dictionary<Peer,User>();
 	}
 }

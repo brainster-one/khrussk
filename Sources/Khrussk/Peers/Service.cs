@@ -15,6 +15,10 @@ namespace Khrussk.Services {
 			_listener.Listen(endpoint);
 		}
 
+		public void Stop() {
+			_listener.Disconnect();
+		}
+
 		public void SendAll(IPacket packet) {
 			_peers.ForEach(x => x.Send(packet));
 		}

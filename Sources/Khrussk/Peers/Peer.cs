@@ -41,18 +41,25 @@ namespace Khrussk.Peers {
 		public void Connect(EndPoint host) {
 			_socket.Connect(host);
 		}
-
+		bool disconnected = false;
 		/// <summary>Sends packet to service.</summary>
 		/// <param name="packet">Packet to send.</param>
 		public void Send(IPacket packet) {
-			var m = new MemoryStream();
-			_protocol.Write(m, packet);
-			_socket.Send(m.ToArray(), 0, (int)m.Length);
+			try {
+				var m = new MemoryStream();
+				_protocol.Write(m, packet);
+				_socket.Send(m.ToArray(), 0, (int)m.Length);
+			} catch {
+				Disconnect();
+			}
 		}
 
 		/// <summary>Disconnects client from service.</summary>
 		public void Disconnect() {
-			_socket.Disconnect();
+			if (!disconnected) {
+				disconnected = true;
+				_socket.Disconnect();
+			}
 		}
 
 		/// <summary>Connection established.</summary>
@@ -81,15 +88,19 @@ namespace Khrussk.Peers {
 		}
 
 		void _socket_DataReceived(object sender, SocketEventArgs e) {
-			// TODO while (_protocol.CanRead()) {
-			var oldPos = _receiveStream.Position;
-			_receiveStream.Write(e.Buffer, 0, e.Buffer.Length);
-			_receiveStream.Position = oldPos;
-			//if (_protocol.canRead)
-			var packet = _protocol.Read(_receiveStream);
-			
-			var evnt = PacketReceived;
-			if (evnt != null) evnt(this, new PeerEventArgs(PeerEventType.PacketReceived, this, packet));
+			try {
+				// TODO while (_protocol.CanRead()) {
+				var oldPos = _receiveStream.Position;
+				_receiveStream.Write(e.Buffer, 0, e.Buffer.Length);
+				_receiveStream.Position = oldPos;
+				//if (_protocol.canRead)
+				var packet = _protocol.Read(_receiveStream);
+
+				var evnt = PacketReceived;
+				if (evnt != null) evnt(this, new PeerEventArgs(PeerEventType.PacketReceived, this, packet));
+			} catch (Exception ex) {
+				Disconnect();
+			}
 		}
 
 		/// <summary>Underlying socket.</summary>

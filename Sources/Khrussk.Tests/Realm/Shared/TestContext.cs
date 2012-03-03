@@ -8,9 +8,9 @@ namespace Khrussk.Tests.Realm {
 	using Khrussk.Realm.Protocol;
 	using System.Linq;
 
-	sealed class RealmTestContext : TestContext {
+	public sealed class TestContext : BasicTestContext {
 		/// <summary></summary>
-		public RealmTestContext() {
+		public TestContext() {
 			ConnectedUsers = new List<User>();
 			Entities = new List<IEntity>();
 
@@ -19,17 +19,32 @@ namespace Khrussk.Tests.Realm {
 
 			Service.RegisterEntityType(typeof(Player), new PlayerSerializer());
 			Client.RegisterEntityType(typeof(Player), new PlayerSerializer());
-
+			
 			Service.UserConnected += Service_UserConnected;
+			Service.UserDisconnected += new EventHandler<Khrussk.Realm.RealmServiceEventArgs>(Service_UserDisconnected);
 			Client.EntityAdded += EntityAdded;
 			Client.EntityModified += EntityModified;
 			Client.EntityRemoved += EntityRemoved;
+			Client.Connected += new EventHandler<Khrussk.Realm.RealmServiceEventArgs>(Client_Connected);
+			Client.Disconnected += new EventHandler<Khrussk.Realm.RealmServiceEventArgs>(Client_Disconnected);
 			/*Service.PacketReceived += Service_UserConnected;
 			
 			Client.Connected += Service_UserConnected;*/
 
 			EndPoint = new IPEndPoint(IPAddress.Loopback, ++_port);
 			Wait = new ManualResetEvent(false);
+		}
+
+		void Client_Connected(object sender, RealmServiceEventArgs e) {
+			IsClientConnected = true;
+		}
+
+		void Client_Disconnected(object sender, RealmServiceEventArgs e) {
+			IsClientConnected = false;
+		}
+
+		void Service_UserDisconnected(object sender, RealmServiceEventArgs e) {
+			ConnectedUsers.Remove(e.user);
 		}
 
 		void Service_UserConnected(object sender, RealmServiceEventArgs e) {
@@ -49,6 +64,15 @@ namespace Khrussk.Tests.Realm {
 		}
 
 		public void Cleanup() {
+			Service.Stop();
+		}
+
+		public RealmClient NewRealmClient() {
+			var client = new RealmClient();
+			client.EntityAdded += EntityAdded;
+			client.EntityModified += EntityModified;
+			client.EntityRemoved += EntityRemoved;
+			return client;
 		}
 
 		public IPEndPoint EndPoint { get; set; }
@@ -62,5 +86,7 @@ namespace Khrussk.Tests.Realm {
 
 		public List<User> ConnectedUsers { get; set; }
 		public List<IEntity> Entities { get; set; }
+
+		public bool IsClientConnected { get; set; }
 	}
 }

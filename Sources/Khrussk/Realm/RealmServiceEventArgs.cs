@@ -39,5 +39,9 @@ namespace Khrussk.Realm {
 			this.EntityId = p;
 			this.EntityDiffData = entityDiffData;
 		}
+
+		public RealmServiceEventArgs() {
+			// TODO: Complete member initialization
+		}
 	}
 }

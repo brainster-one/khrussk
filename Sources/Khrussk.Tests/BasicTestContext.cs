@@ -8,9 +8,9 @@ namespace Khrussk.Tests {
 	public delegate bool WaitForThreadHandler();
 
 	/// <summary>Test context.</summary>
-	class TestContext {
+	public class BasicTestContext {
 		/// <summary>Initializes a new instance of the TestContext class.</summary>
-		public TestContext() {
+		public BasicTestContext() {
 			Wait = new ManualResetEvent(false);
 			EndPoint = new IPEndPoint(IPAddress.Loopback, ++_port);
 		}
@@ -36,6 +36,9 @@ namespace Khrussk.Tests {
 
 		/// <summary>Gets EndPoint.</summary>
 		public IPEndPoint EndPoint { get; private set; }
+
+		/// <summary>Gets waiting period in millisecnds.</summary>
+		public int WaitingPeriod { get { return 500; } }
 
 		/// <summary>Port.</summary>
 		static int _port = 1025;

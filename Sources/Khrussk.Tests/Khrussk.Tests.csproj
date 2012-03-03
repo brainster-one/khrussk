@@ -51,11 +51,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Peers\PeerTestContext.cs" />
+    <Compile Include="Realm\Shared\ConnectionTests.cs" />
+    <Compile Include="Realm\RealmServiceConnectionTests.cs" />
+    <Compile Include="Realm\RealmClientConnectionTests.cs" />
     <Compile Include="Sockets\ConnectionTests.cs" />
-    <Compile Include="TestContext.cs" />
-    <Compile Include="Realm\RealmTestContext.cs" />
-    <Compile Include="Realm\Player.cs" />
-    <Compile Include="Realm\RealmTests.cs" />
+    <Compile Include="BasicTestContext.cs" />
+    <Compile Include="Realm\Shared\TestContext.cs" />
+    <Compile Include="Realm\Shared\Player.cs" />
+    <Compile Include="Realm\EntitySyncTests.cs" />
     <Compile Include="Sockets\SocketTestContext.cs" />
     <Compile Include="Peers\Protocol\Packet.cs" />
     <Compile Include="Peers\PeerTests.cs" />

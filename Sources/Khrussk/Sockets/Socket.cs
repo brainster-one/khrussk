@@ -121,11 +121,12 @@ namespace Khrussk.Sockets {
 					Buffer.BlockCopy(e.Buffer, 0, buffer, 0, e.BytesTransferred);
 					evnt(this, new SocketEventArgs(this, buffer));
 				}
-			} else if (e.SocketError != SocketError.Success) {
+				BeginReceive();
+			} else /*if (e.SocketError != SocketError.Success)*/ {
 				var evnt = Disconnected;
 				if (evnt != null) evnt(this, new SocketEventArgs(this));
 			}
-			BeginReceive();
+			
 		}
 
 		void OnAcceptComplete(object sender, SocketAsyncEventArgs e) {

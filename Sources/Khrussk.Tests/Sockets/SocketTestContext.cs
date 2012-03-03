@@ -5,7 +5,7 @@ namespace Khrussk.Tests.Sockets {
 	using Khrussk.Sockets;
 
 	/// <summary>Context for tests.</summary>
-	sealed class SocketTestContext : TestContext {
+	sealed class SocketTestContext : BasicTestContext {
 		/// <summary>Initializes a new instance of the SocketTestContext class.</summary>
 		public SocketTestContext() {
 			// Client

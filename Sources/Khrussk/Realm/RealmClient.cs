@@ -21,11 +21,16 @@ namespace Khrussk.Realm {
 			_peer.Connect(endpoint);
 		}
 
+		public void Disconnect() {
+			_peer.Disconnect();
+		}
+
 		public void RegisterEntityType(Type type, IEntitySerializer serializer) {
 			_protocol.RegisterEntityType(type, serializer);
 		}
 
 		public event EventHandler<RealmServiceEventArgs> Connected;
+		public event EventHandler<RealmServiceEventArgs> Disconnected;
 		public event EventHandler<RealmServiceEventArgs> EntityAdded;
 		public event EventHandler<RealmServiceEventArgs> EntityRemoved;
 		public event EventHandler<RealmServiceEventArgs> EntityModified;
@@ -36,7 +41,8 @@ namespace Khrussk.Realm {
 		}
 
 		void _peer_Disconnected(object sender, PeerEventArgs e) {
-			throw new NotImplementedException();
+			var evnt = Disconnected;
+			if (evnt != null) evnt(this, new RealmServiceEventArgs());
 		}
 
 		void _peer_PacketReceived(object sender, PeerEventArgs e) {

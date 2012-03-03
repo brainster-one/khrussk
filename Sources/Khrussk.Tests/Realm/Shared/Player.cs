@@ -6,6 +6,9 @@ using Khrussk.Realm.Protocol;
 
 namespace Khrussk.Tests.Realm {
 	class Player : IEntity {
+		public Player() {
+			Name = String.Empty;
+		}
 		public int Id { get; set; }
 		public string Name { get; set; }
 	}

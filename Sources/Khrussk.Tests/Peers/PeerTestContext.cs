@@ -6,7 +6,7 @@ namespace Khrussk.Tests.Peers {
 	using Khrussk.Tests.Peers.Protocol;
 
 	/// <summary>Context for tests.</summary>
-	sealed class PeerTestContext : TestContext {
+	sealed class PeerTestContext : BasicTestContext {
 		/// <summary>Initializes a new instance of the SocketTestContext class.</summary>
 		public PeerTestContext() {
 			// Client
