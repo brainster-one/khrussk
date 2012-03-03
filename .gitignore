@@ -1,5 +1,7 @@
+*.pdb
 *.suo
 *.user
 obj
 bin
 TestResults
+Khrussk.Tests.dll

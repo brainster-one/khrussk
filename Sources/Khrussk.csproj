@@ -12,12 +12,13 @@
     <AssemblyName>Khrussk</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
+    <OutputPath>..\Binaries\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -25,7 +26,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
+    <OutputPath>..\Binaries\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -51,13 +52,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Realm\Protocol\AddEntityPacket.cs" />
     <Compile Include="Realm\Protocol\EntityDiffData.cs" />
-    <Compile Include="Realm\Protocol\SyncEntityPacket.cs" />
-    <Compile Include="Realm\Protocol\RemoveEntityPacket.cs" />
     <Compile Include="Realm\Protocol\EntitySerializer.cs" />
     <Compile Include="Realm\Protocol\HandshakePacket.cs" />
     <Compile Include="Realm\Protocol\IEntity.cs" />
     <Compile Include="Realm\Protocol\IEntitySerializer.cs" />
     <Compile Include="Realm\Protocol\RealmProtocol.cs" />
+    <Compile Include="Realm\Protocol\RemoveEntityPacket.cs" />
+    <Compile Include="Realm\Protocol\SyncEntityPacket.cs" />
     <Compile Include="Realm\RealmClient.cs" />
     <Compile Include="Realm\RealmService.cs" />
     <Compile Include="Realm\RealmServiceEventArgs.cs" />

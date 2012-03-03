@@ -29,23 +29,27 @@ namespace Khrussk.Sockets {
 			BeginConnect(endpoint);
 		}
 
+		#if !SILVERLIGHT
 		/// <summary>Associates a socket with a local endpoint.</summary>
 		/// <param name="endpoint">Endpoint to listen on.</param>
 		public void Listen(IPEndPoint endpoint) {
 			if (endpoint == null) throw new ArgumentNullException("endpoint");
 			if (_socket.IsBound) throw new InvalidOperationException("Socket in listen state already.");
-
 			_socket.Bind(endpoint);
 			_socket.Listen(5);
-
 			BeginAccept();
 		}
+		#endif
 
 		/// <summary>Disconnects socket.</summary>
 		public void Disconnect() {
 			var evnt = new SocketAsyncEventArgs();
 			evnt.Completed += OnDisconnectComplete;
+			#if !SILVERLIGHT
 			_socket.DisconnectAsync(evnt);
+			#else
+			_socket.Close();
+			#endif
 		}
 
 		/// <summary>Sends data to remote host.</summary>
@@ -71,14 +75,16 @@ namespace Khrussk.Sockets {
 		/// <summary>Data from remote host has been received.</summary>
 		public event EventHandler<SocketEventArgs> DataReceived;
 
+		#if !SILVERLIGHT
 		/// <summary>New connection has been accepted.</summary>
 		public event EventHandler<SocketEventArgs> ConnectionAccepted;
-
+		
 		void BeginAccept() {
 			var evnt = new SocketAsyncEventArgs();
 			evnt.Completed += OnAcceptComplete;
 			_socket.AcceptAsync(evnt);
 		}
+		#endif
 
 		void BeginConnect(EndPoint endpoint) {
 			var evnt = new SocketAsyncEventArgs { RemoteEndPoint = endpoint };
@@ -128,15 +134,16 @@ namespace Khrussk.Sockets {
 			}
 			
 		}
-
+		
+		#if !SILVERLIGHT
 		void OnAcceptComplete(object sender, SocketAsyncEventArgs e) {
 			var clientSocket = new Socket(e.AcceptSocket);
 			var evnt = ConnectionAccepted;
 			if (evnt != null) evnt(this, new SocketEventArgs(clientSocket));
 			BeginAccept();
 		}
-		
-		
+		#endif
+
 		System.Net.Sockets.Socket _socket;
 		byte[] _receiveBuffer = new byte[255];
 	}

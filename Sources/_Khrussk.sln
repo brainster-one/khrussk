@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khrussk.Tests", "Khrussk.Tests\Khrussk.Tests.csproj", "{6950B860-A4F1-42CA-9DD6-825476B371F6}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khrussk.Tests", "Khrussk.Tests.csproj", "{6950B860-A4F1-42CA-9DD6-825476B371F6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A73C913E-8350-4AF4-B9B3-9938760DF985}"
 	ProjectSection(SolutionItems) = preProject
@@ -10,7 +10,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khrussk", "Khrussk\Khrussk.csproj", "{8BC969A2-EB35-48C4-810F-0707132034EE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khrussk", "Khrussk.csproj", "{8BC969A2-EB35-48C4-810F-0707132034EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Khrussk.Client.Silverlight", "Khrussk.Client.Silverlight.csproj", "{1BB88F31-11F7-4B5C-A44D-E3FF8576800F}"
 EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
@@ -29,6 +31,10 @@ Global
 		{8BC969A2-EB35-48C4-810F-0707132034EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BC969A2-EB35-48C4-810F-0707132034EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BC969A2-EB35-48C4-810F-0707132034EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BB88F31-11F7-4B5C-A44D-E3FF8576800F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BB88F31-11F7-4B5C-A44D-E3FF8576800F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BB88F31-11F7-4B5C-A44D-E3FF8576800F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BB88F31-11F7-4B5C-A44D-E3FF8576800F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
