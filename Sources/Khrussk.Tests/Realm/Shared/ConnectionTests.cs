@@ -3,20 +3,21 @@ namespace Khrussk.Tests.Realm {
 	using System.Linq;
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-	/// <summary>Connection establishing between RealmService and client tests.</summary>
-	[TestClass] public class ConnectionTests {
-		protected TestContext _context = new TestContext();
-
+	[TestClass] public abstract class ConnectionTests {
 		/// <summary>Initialize.</summary>
 		[TestInitialize] public void Initialize() {
-			_context.Service.Start(_context.EndPoint);
-			_context.Client.Connect(_context.EndPoint);
-			Assert.IsTrue(_context.WaitFor(() => _context.ConnectedUsers.Count() == 1, 1000));
+			Context = new TestContext();
+			Context.Service.Start(Context.EndPoint);
+			Context.Client.Connect(Context.EndPoint);
+			Assert.IsTrue(Context.WaitFor(() => Context.ConnectedUsers.Count() == 1, Context.WaitingPeriod));
 		}
 
 		/// <summary>Cleanup.</summary>
 		[TestCleanup] public void Cleanup() {
-			_context.Cleanup();
+			Context.Cleanup();
 		}
+
+		/// <summary>Gets context.</summary>
+		protected TestContext Context { get; private set; }
 	}
 }

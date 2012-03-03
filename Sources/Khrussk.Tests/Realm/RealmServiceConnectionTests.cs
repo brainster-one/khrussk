@@ -8,51 +8,51 @@ namespace Khrussk.Tests.Realm {
 
 		/// <summary>Disconnected event should be triggered on client side when connection closed on local side.</summary>
 		[TestMethod] public void DisconnectedEventShouldBeTriggeredThenConnectionClosedTest2() {
-			_context.Client.Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => !_context.IsClientConnected, _context.WaitingPeriod));
+			Context.Client.Disconnect();
+			Assert.IsTrue(Context.WaitFor(() => !Context.IsClientConnected, Context.WaitingPeriod));
 		}
 
 		/// <summary>UserConnected event should be triggered when connection established.</summary>
 		[TestMethod] public void UserConnectedEventShouldBeTriggeredThenConnectionEstablishedTest() {
-			Assert.AreEqual(1, _context.ConnectedUsers.Count());
+			Assert.AreEqual(1, Context.ConnectedUsers.Count());
 		}
 
 		/// <summary>UserDisconnected event should be triggered when connection closed.</summary>
 		[TestMethod] public void UserDisconnectedEventShouldBeTriggeredThenConnectionClosedTest() {
-			_context.Client.Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => _context.ConnectedUsers.Count() == 0, _context.WaitingPeriod));
+			Context.Client.Disconnect();
+			Assert.IsTrue(Context.WaitFor(() => Context.ConnectedUsers.Count() == 0, Context.WaitingPeriod));
 		}
 
 		/// <summary>Realm server can handle  multiple connections.</summary>
 		[TestMethod] public void RealmServerCanHandleMultipleConnectionsTest() {
-			_context.NewRealmClient().Connect(_context.EndPoint);
-			_context.NewRealmClient().Connect(_context.EndPoint);
-			Assert.IsTrue(_context.WaitFor(() => _context.ConnectedUsers.Count() == 2 + 1, _context.WaitingPeriod));
+			Context.NewRealmClient().Connect(Context.EndPoint);
+			Context.NewRealmClient().Connect(Context.EndPoint);
+			Assert.IsTrue(Context.WaitFor(() => Context.ConnectedUsers.Count() == 2 + 1, Context.WaitingPeriod));
 		}
 
 		/// <summary>Realm server can handle  multiple disconnections.</summary>
 		[TestMethod] public void RealmServerCanHandleMultipleDisconnectionTest() {
-			var client = _context.NewRealmClient();
-			client.Connect(_context.EndPoint);
-			Assert.IsTrue(_context.WaitFor(() => _context.ConnectedUsers.Count() == 1 + 1, _context.WaitingPeriod));
+			var client = Context.NewRealmClient();
+			client.Connect(Context.EndPoint);
+			Assert.IsTrue(Context.WaitFor(() => Context.ConnectedUsers.Count() == 1 + 1, Context.WaitingPeriod));
 
 			client.Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => _context.ConnectedUsers.Count() == 1, _context.WaitingPeriod));
+			Assert.IsTrue(Context.WaitFor(() => Context.ConnectedUsers.Count() == 1, Context.WaitingPeriod));
 		}
 
 		/// <summary>Related user should be passed via event then connection closed.</summary>
 		[TestMethod] public void RelatedUserShouldBePassedViaEventThenConnectionClosedTest() {
-			var user = _context.ConnectedUsers.First();
+			var user = Context.ConnectedUsers.First();
 			
 			// Second client
-			var client = _context.NewRealmClient();
-			client.Connect(_context.EndPoint);
-			Assert.IsTrue(_context.WaitFor(() => _context.ConnectedUsers.Count() == 1 + 1, _context.WaitingPeriod));
-			var secondUser = _context.ConnectedUsers.Last();
+			var client = Context.NewRealmClient();
+			client.Connect(Context.EndPoint);
+			Assert.IsTrue(Context.WaitFor(() => Context.ConnectedUsers.Count() == 1 + 1, Context.WaitingPeriod));
+			var secondUser = Context.ConnectedUsers.Last();
 
 			// Second client disconnected
 			client.Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => !_context.ConnectedUsers.Contains(secondUser), _context.WaitingPeriod));
+			Assert.IsTrue(Context.WaitFor(() => !Context.ConnectedUsers.Contains(secondUser), Context.WaitingPeriod));
 		}
 	}
 }

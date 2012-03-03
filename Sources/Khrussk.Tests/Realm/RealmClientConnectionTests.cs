@@ -8,13 +8,13 @@ namespace Khrussk.Tests.Realm {
 
 		/// <summary>Connected event should be triggered on client side when connection established.</summary>
 		[TestMethod] public void ConnectedEventShouldBeTriggeredThenConnectionEstablishedTest() {
-			Assert.IsTrue(_context.IsClientConnected);
+			Assert.IsTrue(Context.IsClientConnected);
 		}
 
 		/// <summary>Disconnected event should be triggered on client side when connection closed on remote side.</summary>
 		[TestMethod] public void DisconnectedEventShouldBeTriggeredThenConnectionClosedTest() {
-			_context.Service.Disconnect(_context.ConnectedUsers.First());
-			Assert.IsTrue(_context.WaitFor(() => !_context.IsClientConnected, _context.WaitingPeriod));
+			Context.Service.Disconnect(Context.ConnectedUsers.First());
+			Assert.IsTrue(Context.WaitFor(() => !Context.IsClientConnected, Context.WaitingPeriod));
 		}
 
 	}

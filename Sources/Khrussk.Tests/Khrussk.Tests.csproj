@@ -57,7 +57,7 @@
     <Compile Include="Sockets\ConnectionTests.cs" />
     <Compile Include="BasicTestContext.cs" />
     <Compile Include="Realm\Shared\TestContext.cs" />
-    <Compile Include="Realm\Shared\Player.cs" />
+    <Compile Include="Realm\Shared\TestEntity.cs" />
     <Compile Include="Realm\EntitySyncTests.cs" />
     <Compile Include="Sockets\SocketTestContext.cs" />
     <Compile Include="Peers\Protocol\Packet.cs" />

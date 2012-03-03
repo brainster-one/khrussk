@@ -38,7 +38,7 @@ namespace Khrussk.Tests {
 		public IPEndPoint EndPoint { get; private set; }
 
 		/// <summary>Gets waiting period in millisecnds.</summary>
-		public int WaitingPeriod { get { return 500; } }
+		public int WaitingPeriod { get { return 750; } }
 
 		/// <summary>Port.</summary>
 		static int _port = 1025;
