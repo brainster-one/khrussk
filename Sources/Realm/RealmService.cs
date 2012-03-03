@@ -50,9 +50,9 @@ namespace Khrussk.Realm {
 		/*public event EventHandler<RealmServiceEventArgs> ClientConnected;
 		public event EventHandler<RealmServiceEventArgs> ClientDisconnected;*/
 
-		public event EventHandler<RealmServiceEventArgs> UserConnected;
-		public event EventHandler<RealmServiceEventArgs> UserDisconnected;
-		public event EventHandler<RealmServiceEventArgs> PacketReceived;
+		public event EventHandler<RealmEventArgs> UserConnected;
+		public event EventHandler<RealmEventArgs> UserDisconnected;
+		public event EventHandler<RealmEventArgs> PacketReceived;
 
 		/*void _service_ClientConnected(object sender, Peers.PeerEventArgs e) {
 			throw new System.NotImplementedException();
@@ -63,7 +63,7 @@ namespace Khrussk.Realm {
 			var evnt = UserDisconnected;
 			if (evnt != null) {
 				var user = _peerUserMap.FirstOrDefault(x => x.Key == e.Peer);
-				evnt(this, new RealmServiceEventArgs(user.Value));
+				evnt(this, new RealmEventArgs(user.Value));
 			}
 		}
 
@@ -75,7 +75,7 @@ namespace Khrussk.Realm {
 				_peerUserMap[e.Peer] = user;
 
 				var evnt = UserConnected;
-				if (evnt != null) evnt(this, new RealmServiceEventArgs(user));
+				if (evnt != null) evnt(this, new RealmEventArgs(user));
 			}
 		}
 

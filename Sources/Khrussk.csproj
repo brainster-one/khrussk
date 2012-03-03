@@ -61,7 +61,7 @@
     <Compile Include="Realm\Protocol\SyncEntityPacket.cs" />
     <Compile Include="Realm\RealmClient.cs" />
     <Compile Include="Realm\RealmService.cs" />
-    <Compile Include="Realm\RealmServiceEventArgs.cs" />
+    <Compile Include="Realm\RealmEventArgs.cs" />
     <Compile Include="Realm\User.cs" />
     <Compile Include="Sockets\Socket.cs" />
     <Compile Include="Sockets\SocketEventArgs.cs" />

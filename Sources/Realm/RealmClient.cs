@@ -29,11 +29,11 @@ namespace Khrussk.Realm {
 			_protocol.RegisterEntityType(type, serializer);
 		}
 
-		public event EventHandler<RealmServiceEventArgs> Connected;
-		public event EventHandler<RealmServiceEventArgs> Disconnected;
-		public event EventHandler<RealmServiceEventArgs> EntityAdded;
-		public event EventHandler<RealmServiceEventArgs> EntityRemoved;
-		public event EventHandler<RealmServiceEventArgs> EntityModified;
+		public event EventHandler<RealmEventArgs> Connected;
+		public event EventHandler<RealmEventArgs> Disconnected;
+		public event EventHandler<RealmEventArgs> EntityAdded;
+		public event EventHandler<RealmEventArgs> EntityRemoved;
+		public event EventHandler<RealmEventArgs> EntityModified;
 
 
 		void _peer_Connected(object sender, PeerEventArgs e) {
@@ -42,24 +42,24 @@ namespace Khrussk.Realm {
 
 		void _peer_Disconnected(object sender, PeerEventArgs e) {
 			var evnt = Disconnected;
-			if (evnt != null) evnt(this, new RealmServiceEventArgs());
+			if (evnt != null) evnt(this, new RealmEventArgs());
 		}
 
 		void _peer_PacketReceived(object sender, PeerEventArgs e) {
 			if (e.Packet is HandshakePacket) {
 				var session = ((HandshakePacket)e.Packet).Session;
 				var evnt = Connected;
-				if (evnt != null) evnt(this, new RealmServiceEventArgs(session));
+				if (evnt != null) evnt(this, new RealmEventArgs(session));
 			} else if (e.Packet is AddEntityPacket) {
 				var evnt = EntityAdded;
-				if (evnt != null) evnt(this, new RealmServiceEventArgs(((AddEntityPacket)e.Packet).Entity));
+				if (evnt != null) evnt(this, new RealmEventArgs(((AddEntityPacket)e.Packet).Entity));
 			} else if (e.Packet is RemoveEntityPacket) {
 				var evnt = EntityRemoved;
-				if (evnt != null) evnt(this, new RealmServiceEventArgs(((RemoveEntityPacket)e.Packet).EntityId));
+				if (evnt != null) evnt(this, new RealmEventArgs(((RemoveEntityPacket)e.Packet).EntityId));
 			} else if (e.Packet is SyncEntityPacket) {
 				var evnt = EntityModified;
 				var packet = (SyncEntityPacket)e.Packet;
-				if (evnt != null) evnt(this, new RealmServiceEventArgs(packet.EntityId, packet.Diff));
+				if (evnt != null) evnt(this, new RealmEventArgs(packet.EntityId, packet.Diff));
 			}
 		}
 
