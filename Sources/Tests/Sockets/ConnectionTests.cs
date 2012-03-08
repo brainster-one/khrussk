@@ -13,7 +13,7 @@ namespace Khrussk.Tests.Sockets {
 			_context.ListenerSocket.Listen(_context.EndPoint);
 			_context.ClientSocket.Connect(_context.EndPoint);
 
-			Assert.IsTrue(_context.WaitFor(() => _context.AcceptedSockets.Count() == 1, 1000));
+			Assert.IsTrue(_context.WaitFor(() => _context.AcceptedSockets.Count() == 1, _context.WaitingPeriod));
 		}
 
 		/// <summary>Cleanup.</summary>
@@ -29,20 +29,20 @@ namespace Khrussk.Tests.Sockets {
 		/// <summary>Connection should be closed after disconnection on local site.</summary>
 		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnectionOnLocalSiteTest() {
 			_context.ClientSocket.Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 0, 1000));
+			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 0, _context.WaitingPeriod));
 		}
 
 		/// <summary>Connection should be closed after disconnection on remote site.</summary>
 		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnectionOnRemoteSiteTest() {
 			_context.AcceptedSockets.First().Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => _context.AcceptedSockets.Count() == 0, 1000));
+			Assert.IsTrue(_context.WaitFor(() => _context.AcceptedSockets.Count() == 0, _context.WaitingPeriod));
 		}
 
 		/// <summary>Socket can be disconnected serveral times.</summary>
 		[TestMethod] public void ConnectionCanBeClosedSeveralTimesTest() {
 			_context.ClientSocket.Disconnect();
 			_context.ClientSocket.Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 0, 1000));
+			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 0, _context.WaitingPeriod));
 		}
 
 		/// <summary>Listener can handle multiple connections.</summary>
@@ -50,8 +50,8 @@ namespace Khrussk.Tests.Sockets {
 			_context.NewSocket().Connect(_context.EndPoint);
 			_context.NewSocket().Connect(_context.EndPoint);
 			_context.NewSocket().Connect(_context.EndPoint);
-			
-			_context.WaitFor(() => _context.AcceptedSockets.Count() == 3 + 1 /* one connected before */, 1000);
+
+			_context.WaitFor(() => _context.AcceptedSockets.Count() == 3 + 1 /* one connected before */, _context.WaitingPeriod);
 		}
 
 		/// <summary>Can not connect twice.</summary>
@@ -64,9 +64,9 @@ namespace Khrussk.Tests.Sockets {
 		[TestMethod] public void ConnectionCanBeReusedTest() {
 			var socket = _context.ClientSocket;
 			socket.Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 0, 1000));
+			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 0, _context.WaitingPeriod));
 			socket.Connect(_context.EndPoint);
-			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 1, 1000));
+			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 1, _context.WaitingPeriod));
 		}
 
 		/// <summary>Can not listen twice.</summary>

@@ -3,6 +3,7 @@ namespace Khrussk.Sockets {
 	using System;
 	using System.Net;
 	using System.Net.Sockets;
+	using System.Diagnostics;
 
 	/// <summary>Socket.</summary>
 	public sealed class Socket {

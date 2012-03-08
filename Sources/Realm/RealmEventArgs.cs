@@ -19,7 +19,7 @@ namespace Khrussk.Realm {
 		}
 
 		public RealmEventArgs(IEntity iEntity) {
-			this.IEntity = iEntity;
+			this.Entity = iEntity;
 		}
 
 		public RealmEventArgs(int entityId, EntityDiffData entityDiffData) {
@@ -38,7 +38,7 @@ namespace Khrussk.Realm {
 		public Guid Session { get; private set; }
 
 		/// <summary>Gets entity.</summary>
-		public IEntity IEntity { get; private set; }
+		public IEntity Entity { get; private set; }
 
 		/// <summary>Gets entity Id.</summary>
 		public int EntityId { get; private set; }

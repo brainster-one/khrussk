@@ -40,5 +40,13 @@ namespace Khrussk.Tests.Realm {
 			Assert.IsTrue(Context.WaitFor(() => Context.Entities.Count() == 1, Context.WaitingPeriod));
 			Assert.IsTrue(Context.WaitFor(() => ((TestEntity)Context.Entities.First()).Name == "changed", Context.WaitingPeriod));
 		}
+
+		/// <summary>EntityAdded event should be triggered when entity added.</summary>
+		[TestMethod] public void RealmServiceCanHandleMultipleEntities() {
+			foreach (var name in new[] { "p1", "p2", "p3", "p4", "p5", "p6" }) {
+				Context.Service.AddEntity(new TestEntity { Name = name });
+			}
+			Assert.IsTrue(Context.WaitFor(() => Context.Entities.Count() == 6, Context.WaitingPeriod * 10));
+		}
 	}
 }

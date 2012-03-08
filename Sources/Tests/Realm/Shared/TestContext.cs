@@ -70,7 +70,7 @@ namespace Khrussk.Tests.Realm {
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnEntityAdded(object sender, RealmEventArgs e) {
-			Entities.Add(e.IEntity);
+			Entities.Add(e.Entity);
 		}
 
 		/// <summary>On entity removed event triggered.</summary>

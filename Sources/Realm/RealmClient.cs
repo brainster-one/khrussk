@@ -5,6 +5,7 @@ namespace Khrussk.Realm {
 	using Khrussk.Peers;
 	using Khrussk.Realm.Protocol;
 	using System.Collections.Generic;
+	using System.Diagnostics;
 
 	public sealed class RealmClient {
 		public RealmClient() {

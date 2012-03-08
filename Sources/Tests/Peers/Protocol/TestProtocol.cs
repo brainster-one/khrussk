@@ -4,6 +4,8 @@ namespace Khrussk.Tests.Peers.Protocol {
 
 	class TestProtocol : IProtocol {
 		public IPacket Read(System.IO.Stream stream) {
+			if (stream.Position >= stream.Length) return null;
+
 			return (IPacket)new Packet {
 				Data = (byte)stream.ReadByte()
 			};

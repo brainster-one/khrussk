@@ -2,6 +2,8 @@
 namespace Khrussk.Tests {
 	using System.Net;
 	using System.Threading;
+	using System;
+	using System.Diagnostics;
 
 	/// <summary>Waiting for event thread handler.</summary>
 	/// <returns>False - timeout.</returns>
@@ -13,6 +15,11 @@ namespace Khrussk.Tests {
 		public BasicTestContext() {
 			Wait = new ManualResetEvent(false);
 			EndPoint = new IPEndPoint(IPAddress.Loopback, ++_port);
+			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
+		}
+
+		void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
+			Debug.Print("Unhandled exception: " + e.ExceptionObject);
 		}
 
 		/// <summary>Waits for event.</summary>

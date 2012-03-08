@@ -4,6 +4,7 @@ namespace Khrussk.Peers {
 	using System.IO;
 	using System.Net;
 	using Sockets;
+	using System.Diagnostics;
 
 	/// <summary>ClientPeer to connect to ListenerPeer.</summary>
 	public sealed class Peer /*: IDisposable */ {
@@ -88,21 +89,30 @@ namespace Khrussk.Peers {
 		}
 
 		void _socket_DataReceived(object sender, SocketEventArgs e) {
-			try {
-				// TODO while (_protocol.CanRead()) {
-				var oldPos = _receiveStream.Position;
-				_receiveStream.Write(e.Buffer, 0, e.Buffer.Length);
-				_receiveStream.Position = oldPos;
-				//if (_protocol.canRead)
-				var packet = _protocol.Read(_receiveStream);
+			lock (_receiveLock) {
+				try {
+					// Stores data into temporary stream
+					var oldPos = _receiveStream.Position;
+					_receiveStream.Write(e.Buffer, 0, e.Buffer.Length);
+					_receiveStream.Position = oldPos;
 
-				var evnt = PacketReceived;
-				if (evnt != null) evnt(this, new PeerEventArgs(PeerEventType.PacketReceived, this, packet));
-			} catch (Exception ex) {
-				Disconnect();
+					while (true) {
+						var packet = _protocol.Read(_receiveStream);
+						Debug.WriteLine("Packet received: " + e.Buffer.Length + " " + (packet == null ? "null" : packet.ToString()));
+
+						if (packet == null) break;
+
+						var evnt = PacketReceived;
+						if (evnt != null) evnt(this, new PeerEventArgs(PeerEventType.PacketReceived, this, packet));
+					}
+				} catch (Exception ex) {
+					Debug.WriteLine(ex.Message);
+					Disconnect();
+				}
 			}
 		}
 
+		object _receiveLock = new object();
 		/// <summary>Underlying socket.</summary>
 		Socket _socket;
 
