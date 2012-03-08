@@ -13,7 +13,7 @@ namespace Khrussk.Realm {
 			_peer = new Peer(Protocol);
 			_peer.Connected += OnConnected;
 			_peer.Disconnected += OnDisconnected;
-			_peer.PacketReceived += _peer_PacketReceived;
+			_peer.PacketReceived += OnPacketReceived;
 		}
 
 		/// <summary>Connects to remote RealmService.</summary>
