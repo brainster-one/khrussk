@@ -29,10 +29,14 @@ namespace Khrussk.Realm {
 			_service.Stop();
 		}
 
+		/// <summary>Disconnects user from service.</summary>
+		/// <param name="user">User to disconnect.</param>
 		public void Disconnect(User user) {
 			var peer = _peerUserMap.FirstOrDefault(x => x.Value == user);
-			if (peer.Key != null) peer.Key.Disconnect();
-			// TODO throw exception - user is not connected
+			if (peer.Key == null)
+				throw new InvalidOperationException(String.Format("User '{0}' is not connected", user));
+			else
+				peer.Key.Disconnect();
 		}
 
 		public void AddEntity(IEntity entity) {

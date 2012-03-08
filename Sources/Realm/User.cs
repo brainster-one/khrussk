@@ -9,6 +9,12 @@ namespace Khrussk.Realm {
 			Session = session;
 		}
 
+		/// <summary>Returns string representation of object.</summary>
+		/// <returns>String</returns>
+		public override string ToString() {
+			return Session.ToString();
+		}
+
 		/// <summary>Gets session Id.</summary>
 		public Guid Session { get; private set; }
 	}
