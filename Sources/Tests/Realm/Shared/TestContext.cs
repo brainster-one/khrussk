@@ -15,7 +15,7 @@ namespace Khrussk.Tests.Realm {
 			Service = new RealmService();
 			Client = NewRealmClient();
 
-			Service.RegisterEntityType(typeof(TestEntity), new TestEntitySerializer());
+			Service.Protocol.RegisterEntityType(typeof(TestEntity), new TestEntitySerializer());
 			Service.UserConnected += OnUserConnected;
 			Service.UserDisconnected += OnUserDisconnected;
 		}

@@ -1,29 +1,30 @@
 ﻿
 namespace Khrussk.Realm {
 	using System;
+	using System.Collections.Generic;
+	using System.Linq;
 	using System.Net;
+	using Khrussk.Peers;
 	using Khrussk.Realm.Protocol;
 	using Khrussk.Services;
-	using Khrussk.Peers;
-	using System.Linq;
-	using System.Collections.Generic;
 
+	/// <summary>Realm service.</summary>
 	public sealed class RealmService {
+		/// <summary>Initializes a new instance of the RealmService class.</summary>
 		public RealmService() {
-			_protocol = new RealmProtocol();
-			_service = new Service(_protocol);
-			_service.PacketReceived += new System.EventHandler<Peers.PeerEventArgs>(_service_PacketReceived);
-			_service.ClientDisconnected += new EventHandler<Peers.PeerEventArgs>(_service_ClientDisconnected);
+			Protocol = new RealmProtocol();
+			_service = new Service(Protocol);
+			_service.PacketReceived += _service_PacketReceived;
+			_service.ClientDisconnected += _service_ClientDisconnected;
 		}
 
-		public void RegisterEntityType(Type type, IEntitySerializer serializer) {
-			_protocol.RegisterEntityType(type, serializer);
-		}
-
+		/// <summary>Starts service.</summary>
+		/// <param name="endpoint">Endpoint to listen on.</param>
 		public void Start(IPEndPoint endpoint) {
 			_service.Start(endpoint);
 		}
 
+		/// <summary>Stops the service.</summary>
 		public void Stop() {
 			_service.Stop();
 		}
@@ -79,7 +80,7 @@ namespace Khrussk.Realm {
 			}
 		}
 
-		private RealmProtocol _protocol;
+		public RealmProtocol Protocol { get; private set; }
 		private Service _service;
 		private Dictionary<Peer, User> _peerUserMap = new Dictionary<Peer,User>();
 	}
