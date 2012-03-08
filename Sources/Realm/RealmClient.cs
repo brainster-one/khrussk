@@ -11,9 +11,9 @@ namespace Khrussk.Realm {
 		public RealmClient() {
 			Protocol = new RealmProtocol();
 			_peer = new Peer(Protocol);
-			_peer.Connected += new EventHandler<PeerEventArgs>(_peer_Connected);
-			_peer.Disconnected += new EventHandler<PeerEventArgs>(_peer_Disconnected);
-			_peer.PacketReceived += new EventHandler<PeerEventArgs>(_peer_PacketReceived);
+			_peer.Connected += OnConnected;
+			_peer.Disconnected += OnDisconnected;
+			_peer.PacketReceived += _peer_PacketReceived;
 		}
 
 		/// <summary>Connects to remote RealmService.</summary>
@@ -22,27 +22,45 @@ namespace Khrussk.Realm {
 			_peer.Connect(endpoint);
 		}
 
+		/// <summary>Disconnects from service.</summary>
 		public void Disconnect() {
 			_peer.Disconnect();
 		}
 
+		/// <summary>Connected to remote service.</summary>
 		public event EventHandler<RealmEventArgs> Connected;
+
+		/// <summary>Connection has been closed.</summary>
 		public event EventHandler<RealmEventArgs> Disconnected;
+
+		/// <summary>Entity has benn added into realm.</summary>
 		public event EventHandler<RealmEventArgs> EntityAdded;
+
+		/// <summary>Entity has been removed from realm.</summary>
 		public event EventHandler<RealmEventArgs> EntityRemoved;
+
+		/// <summary>Entity has been changed.</summary>
 		public event EventHandler<RealmEventArgs> EntityModified;
 
-
-		void _peer_Connected(object sender, PeerEventArgs e) {
+		/// <summary>Just connected to remote service. Send handshake packet.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Event args.</param>
+		void OnConnected(object sender, PeerEventArgs e) {
 			_peer.Send(new HandshakePacket(Guid.Empty));
 		}
 
-		void _peer_Disconnected(object sender, PeerEventArgs e) {
+		/// <summary>Connection with remote service has been closed.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Event args.</param>
+		void OnDisconnected(object sender, PeerEventArgs e) {
 			var evnt = Disconnected;
 			if (evnt != null) evnt(this, new RealmEventArgs());
 		}
 
-		void _peer_PacketReceived(object sender, PeerEventArgs e) {
+		/// <summary>New packet has been received.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Event args.</param>
+		void OnPacketReceived(object sender, PeerEventArgs e) {
 			if (e.Packet is HandshakePacket) {
 				var session = ((HandshakePacket)e.Packet).Session;
 				var evnt = Connected;
@@ -63,6 +81,7 @@ namespace Khrussk.Realm {
 		/// <summary>Gets protocol.</summary>
 		public RealmProtocol Protocol { get; private set; }
 
+		/// <summary>Underlaying peer.</summary>
 		private Peer _peer;
 	}
 }
