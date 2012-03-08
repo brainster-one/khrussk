@@ -2,10 +2,10 @@
 namespace Khrussk.Realm {
 	using System;
 	using Khrussk.Realm.Protocol;
+	using Khrussk.Peers;
 
 	/// <summary>Event args for realm events.</summary>
 	public class RealmEventArgs : EventArgs {
-
 		public RealmEventArgs(int entityId) {
 			EntityId = entityId;
 		}
@@ -31,6 +31,10 @@ namespace Khrussk.Realm {
 			// TODO: Complete member initialization
 		}
 
+		public RealmEventArgs(Peers.IPacket packet) {
+			Packet = packet;
+		}
+
 		/// <summary>Gets user.</summary>
 		public User User { get; private set; }
 
@@ -45,5 +49,7 @@ namespace Khrussk.Realm {
 
 		/// <summary>Gets entity diff data.</summary>
 		public EntityDiffData EntityDiffData { get; private set; }
+
+		public IPacket Packet { get; private set; }
 	}
 }
