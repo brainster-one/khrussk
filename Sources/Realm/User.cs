@@ -1,15 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
+﻿
 namespace Khrussk.Realm {
-	public class User {
-		private Guid session;
+	using System;
 
+	/// <summary>User.</summary>
+	public class User {
+		/// <summary>Initializes a new instance of the User class using the specified session.</summary>
 		public User(Guid session) {
-			// TODO: Complete member initialization
-			this.session = session;
+			Session = session;
 		}
+
+		/// <summary>Gets session Id.</summary>
+		public Guid Session { get; private set; }
 	}
 }
