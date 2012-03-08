@@ -34,7 +34,7 @@ namespace Khrussk.Tests.Realm {
 			client.EntityRemoved += OnEntityRemoved;
 			client.Connected += new EventHandler<Khrussk.Realm.RealmEventArgs>(OnClientConnected);
 			client.Disconnected += new EventHandler<Khrussk.Realm.RealmEventArgs>(OnClientDisconnected);
-			client.RegisterEntityType(typeof(TestEntity), new TestEntitySerializer());
+			client.Protocol.RegisterEntityType(typeof(TestEntity), new TestEntitySerializer());
 			return client;
 		}
 

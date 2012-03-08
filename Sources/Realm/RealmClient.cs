@@ -4,13 +4,13 @@ namespace Khrussk.Realm {
 	using System.Net;
 	using Khrussk.Peers;
 	using Khrussk.Realm.Protocol;
-	using System.Collections.Generic;
-	using System.Diagnostics;
 
+	/// <summary>Realm client.</summary>
 	public sealed class RealmClient {
+		/// <summary>Initializes a new instance of the RealmService class.</summary>
 		public RealmClient() {
-			_protocol = new RealmProtocol();
-			_peer = new Peer(_protocol);
+			Protocol = new RealmProtocol();
+			_peer = new Peer(Protocol);
 			_peer.Connected += new EventHandler<PeerEventArgs>(_peer_Connected);
 			_peer.Disconnected += new EventHandler<PeerEventArgs>(_peer_Disconnected);
 			_peer.PacketReceived += new EventHandler<PeerEventArgs>(_peer_PacketReceived);
@@ -24,10 +24,6 @@ namespace Khrussk.Realm {
 
 		public void Disconnect() {
 			_peer.Disconnect();
-		}
-
-		public void RegisterEntityType(Type type, IEntitySerializer serializer) {
-			_protocol.RegisterEntityType(type, serializer);
 		}
 
 		public event EventHandler<RealmEventArgs> Connected;
@@ -64,7 +60,9 @@ namespace Khrussk.Realm {
 			}
 		}
 
+		/// <summary>Gets protocol.</summary>
+		public RealmProtocol Protocol { get; private set; }
+
 		private Peer _peer;
-		private RealmProtocol _protocol;
 	}
 }
