@@ -61,20 +61,23 @@ namespace Khrussk.NetworkRealm {
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnPacketReceived(object sender, PeerEventArgs e) {
+			// TODO Refactor this shit.
 			if (e.Packet is HandshakePacket) {
 				var session = ((HandshakePacket)e.Packet).Session;
 				var evnt = Connected;
-				if (evnt != null) evnt(this, new RealmEventArgs(session));
+				if (evnt != null) evnt(this, new RealmEventArgs { Session = session });
 			} else if (e.Packet is AddEntityPacket) {
+				var packet = (AddEntityPacket)e.Packet;
 				var evnt = EntityAdded;
-				if (evnt != null) evnt(this, new RealmEventArgs(((AddEntityPacket)e.Packet).Entity));
+				if (evnt != null) evnt(this, new RealmEventArgs { EntityId = packet.EntityId, Entity = packet.Entity });
 			} else if (e.Packet is RemoveEntityPacket) {
+				var packet = (RemoveEntityPacket)e.Packet;
 				var evnt = EntityRemoved;
-				if (evnt != null) evnt(this, new RealmEventArgs(((RemoveEntityPacket)e.Packet).EntityId));
+				if (evnt != null) evnt(this, new RealmEventArgs { EntityId = packet.EntityId });
 			} else if (e.Packet is SyncEntityPacket) {
-				var evnt = EntityModified;
 				var packet = (SyncEntityPacket)e.Packet;
-				if (evnt != null) evnt(this, new RealmEventArgs(packet.EntityId, packet.Diff));
+				var evnt = EntityModified;
+				if (evnt != null) evnt(this, new RealmEventArgs { EntityId = packet.EntityId, EntityDiffData = packet.Diff });
 			}
 		}
 

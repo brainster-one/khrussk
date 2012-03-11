@@ -41,20 +41,36 @@ namespace Khrussk.NetworkRealm {
 
 		/// <summary>Adds antity to realm.</summary>
 		/// <param name="entity">Entity to add.</param>
-		public void AddEntity(IEntity entity) {
-			_service.SendAll(new AddEntityPacket(entity));
+		public void AddEntity(object entity) {
+			// TODO ckeck object registered
+			var id = _currentEntityId++;
+			_entityIds[entity] = id;
+
+			_service.SendAll(new AddEntityPacket(id, entity));
 		}
 
 		/// <summary>Removes entity from realm.</summary>
 		/// <param name="entity">Entity to remove.</param>
-		public void RemoveEntity(IEntity entity) {
-			_service.SendAll(new RemoveEntityPacket(entity));
+		public void RemoveEntity(object entity) {
+			// TODO ckeck object registered
+			var id = _entityIds[entity];
+			RemoveEntity(id);
+		}
+
+		/// <summary>Removes entity from realm.</summary>
+		/// <param name="entityId">Entity to remove.</param>
+		public void RemoveEntity(int entityId) {
+			// TODO ckeck object registered
+			// TODO освободить ID
+			_service.SendAll(new RemoveEntityPacket(entityId));
 		}
 
 		/// <summary>Syncs entities for all users.</summary>
 		/// <param name="entity">Entity to sync.</param>
-		public void ModifyEntity(IEntity entity) {
-			_service.SendAll(new SyncEntityPacket(entity));
+		public void ModifyEntity(object entity) {
+			// TODO ckeck object registered
+			var id = _entityIds[entity];
+			_service.SendAll(new SyncEntityPacket(id, entity));
 		}
 
 		/// <summary>New user connected to realm.</summary>
@@ -73,7 +89,7 @@ namespace Khrussk.NetworkRealm {
 			var evnt = UserDisconnected;
 			if (evnt != null) {
 				var user = _peerUserMap.FirstOrDefault(x => x.Key == e.Peer);
-				evnt(this, new RealmEventArgs(user.Value));
+				evnt(this, new RealmEventArgs { User = user.Value });
 			}
 		}
 		
@@ -88,10 +104,10 @@ namespace Khrussk.NetworkRealm {
 				_peerUserMap[e.Peer] = user;
 
 				var evnt = UserConnected;
-				if (evnt != null) evnt(this, new RealmEventArgs(user));
+				if (evnt != null) evnt(this, new RealmEventArgs { User = user });
 			} else {
 				var evnt = PacketReceived;
-				if (evnt != null) evnt(this, new RealmEventArgs(e.Packet));
+				if (evnt != null) evnt(this, new RealmEventArgs { Packet = e.Packet });
 			}
 		}
 
@@ -103,5 +119,9 @@ namespace Khrussk.NetworkRealm {
 
 		/// <summary>Peer to user map.</summary>
 		private Dictionary<Peer, User> _peerUserMap = new Dictionary<Peer,User>();
+
+		// TODO переписать по человечески
+		private Dictionary<object, int> _entityIds = new Dictionary<object, int>();
+		private int _currentEntityId;
 	}
 }

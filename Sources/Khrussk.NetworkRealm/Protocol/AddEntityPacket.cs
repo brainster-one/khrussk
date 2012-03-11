@@ -1,5 +1,6 @@
 ﻿
 namespace Khrussk.NetworkRealm.Protocol {
+	using System;
 	using System.IO;
 	using Khrussk.Peers;
 
@@ -7,12 +8,14 @@ namespace Khrussk.NetworkRealm.Protocol {
 	sealed class AddEntityPacket : IPacket {
 		/// <summary>Initializes a new instance of the AddEntityPacket class.</summary>
 		/// <param name="entity">Entity.</param>
-		public AddEntityPacket(IEntity entity) {
+		public AddEntityPacket(int entityId, object entity) {
+			EntityId = entityId;
 			Entity = entity;
 		}
 
 		/// <summary>Gets or sets entity.</summary>
-		public IEntity Entity { get; private set; }
+		public object Entity { get; private set; }
+		public int EntityId { get; private set; }
 	}
 
 	/// <summary>AddEntityPacket serializer.</summary>
@@ -27,10 +30,10 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <param name="reader">Reader to deserialize packet by.</param>
 		/// <returns>Packet.</returns>
 		public IPacket Deserialize(BinaryReader reader) {
-			IEntity entity = null;
+			object entity = null;
+			var entityId = reader.ReadInt16();
 			_serializer.Deserialize(reader, ref entity);
-			return new AddEntityPacket(entity);
-
+			return new AddEntityPacket(entityId, entity);
 		}
 
 		/// <summary>Serializes packet to stream.</summary>
@@ -38,6 +41,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <param name="packet">Packet to write.</param>
 		/// <returns>Packet.</returns>
 		public void Serialize(BinaryWriter writer, IPacket packet) {
+			writer.Write((Int16)((AddEntityPacket)packet).EntityId);
 			_serializer.Serialize(writer, ((AddEntityPacket)packet).Entity);
 		}
 

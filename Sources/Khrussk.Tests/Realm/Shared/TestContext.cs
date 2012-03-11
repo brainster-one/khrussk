@@ -11,7 +11,7 @@ namespace Khrussk.Tests.Realm {
 		/// <summary>Initializes new instance of TestContext.</summary>
 		public TestContext() {
 			ConnectedUsers = new List<User>();
-			Entities = new List<IEntity>();
+			Entities = new Dictionary<int, object>();
 			Service = new RealmService();
 			Client = NewRealmClient();
 
@@ -70,21 +70,21 @@ namespace Khrussk.Tests.Realm {
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnEntityAdded(object sender, RealmEventArgs e) {
-			Entities.Add(e.Entity);
+			Entities.Add(e.EntityId, e.Entity);
 		}
 
 		/// <summary>On entity removed event triggered.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnEntityRemoved(object sender, RealmEventArgs e) {
-			Entities.RemoveAll(x => x.Id == e.EntityId);
+			Entities.Remove(e.EntityId);// .RemoveAll(x => x.Id == e.EntityId);
 		}
 
 		/// <summary>On entity modified event triggered.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnEntityModified(object sender, RealmEventArgs e) {
-			e.EntityDiffData.ApplyChanges(Entities.First(x => x.Id == e.EntityId));
+			e.EntityDiffData.ApplyChanges(Entities.First(x => x.Key == e.EntityId).Value);
 		}
 
 		/// <summary>Gets service.</summary>
@@ -97,7 +97,7 @@ namespace Khrussk.Tests.Realm {
 		public List<User> ConnectedUsers { get; private set; }
 
 		/// <summary>Gets list of entities.</summary>
-		public List<IEntity> Entities { get; set; }
+		public Dictionary<int, object> Entities { get; set; }
 
 		/// <summary>Gets client connection flag.</summary>
 		public bool IsClientConnected { get; set; }

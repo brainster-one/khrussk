@@ -1,5 +1,6 @@
 ﻿
 namespace Khrussk.NetworkRealm.Protocol {
+	using System;
 	using System.IO;
 	using Khrussk.Peers;
 
@@ -7,14 +8,8 @@ namespace Khrussk.NetworkRealm.Protocol {
 	sealed class RemoveEntityPacket : IPacket {
 		/// <summary>Initializes a new instance of the AddEntityPacket class.</summary>
 		/// <param name="entity">Entity.</param>
-		public RemoveEntityPacket(IEntity entity) {
-			EntityId = entity.Id;
-		}
-
-		/// <summary>Initializes a new instance of the AddEntityPacket class.</summary>
-		/// <param name="entity">Entity.</param>
-		public RemoveEntityPacket(int id) {
-			EntityId = id;
+		public RemoveEntityPacket(int entityId) {
+			EntityId = entityId;
 		}
 
 		/// <summary>Gets or sets entity.</summary>
@@ -42,7 +37,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <param name="packet">Packet to write.</param>
 		/// <returns>Packet.</returns>
 		public void Serialize(BinaryWriter writer, IPacket packet) {
-			writer.Write((short)((RemoveEntityPacket)packet).EntityId);
+			writer.Write((Int16)((RemoveEntityPacket)packet).EntityId);
 		}
 
 		/// <summary>Entity serializer.</summary>

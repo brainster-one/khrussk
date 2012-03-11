@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-using Khrussk.NetworkRealm.Protocol;
-
+﻿
 namespace Khrussk.NetworkRealm.Protocol {
+	using System.IO;
+
 	public class EntityDiffData {
 		internal EntityDiffData(IEntitySerializer serializer, BinaryReader reader) {
 			_serializer = serializer;
@@ -14,7 +10,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 
 		/// <summary>Apply changes to entity.</summary>
 		/// <param name="entity">Entity to apply changes to.</param>
-		public void ApplyChanges(IEntity entity) {
+		public void ApplyChanges(object entity) {
 			_serializer.Deserialize(_reader, ref entity);
 		}
 

@@ -52,9 +52,6 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Khrussk.Interfaces\IEntity.cs">
-      <Link>IEntity.cs</Link>
-    </Compile>
     <Compile Include="..\Khrussk.Interfaces\IEntitySerializer.cs">
       <Link>IEntitySerializer.cs</Link>
     </Compile>

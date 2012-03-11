@@ -35,7 +35,6 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="IEntity.cs" />
     <Compile Include="IEntitySerializer.cs" />
     <Compile Include="IPacket.cs" />
     <Compile Include="IPacketSerializer.cs" />

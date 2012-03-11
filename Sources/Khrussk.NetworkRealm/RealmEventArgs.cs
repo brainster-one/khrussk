@@ -6,7 +6,7 @@ namespace Khrussk.NetworkRealm {
 
 	/// <summary>Event args for realm events.</summary>
 	public class RealmEventArgs : EventArgs {
-		public RealmEventArgs(int entityId) {
+/*		public RealmEventArgs(int entityId) {
 			EntityId = entityId;
 		}
 
@@ -34,22 +34,22 @@ namespace Khrussk.NetworkRealm {
 		public RealmEventArgs(Peers.IPacket packet) {
 			Packet = packet;
 		}
-
+*/
 		/// <summary>Gets user.</summary>
-		public User User { get; private set; }
+		public User User { get; set; }
 
 		/// <summary>Gets session.</summary>
-		public Guid Session { get; private set; }
+		public Guid Session { get; set; }
 
 		/// <summary>Gets entity.</summary>
-		public IEntity Entity { get; private set; }
+		public object Entity { get; set; }
 
 		/// <summary>Gets entity Id.</summary>
-		public int EntityId { get; private set; }
+		public int EntityId { get; set; }
 
 		/// <summary>Gets entity diff data.</summary>
-		public EntityDiffData EntityDiffData { get; private set; }
+		public EntityDiffData EntityDiffData { get; set; }
 
-		public IPacket Packet { get; private set; }
+		public IPacket Packet { get; set; }
 	}
 }

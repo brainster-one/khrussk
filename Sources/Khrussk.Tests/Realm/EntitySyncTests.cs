@@ -13,32 +13,32 @@ namespace Khrussk.Tests.Realm {
 
 		/// <summary>EntityRemoved event should be triggered when entity removed.</summary>
 		[TestMethod] public void EntityRemovedEventShouldBeTriggeredWhenEntityAddedTest() {
-			Context.Service.AddEntity(new TestEntity { Name = "name" });
+			var serviceEntity = new TestEntity { Name = "name" };
+			Context.Service.AddEntity(serviceEntity);
 			Assert.IsTrue(Context.WaitFor(() => Context.Entities.Count() == 1, Context.WaitingPeriod));
-			Context.Service.RemoveEntity(Context.Entities.First());
+			Context.Service.RemoveEntity(serviceEntity);
 			Assert.IsTrue(Context.WaitFor(() => Context.Entities.Count() == 0, Context.WaitingPeriod));
 		}
 
 		/// <summary>Entity should be synced properly.</summary>
 		[TestMethod] public void EntityShouldBeSyncedTest() {
-			Context.Service.AddEntity(new TestEntity { Id = 99, Name = "player_name" });
+			Context.Service.AddEntity(new TestEntity { Name = "player_name" });
 
 			Assert.IsTrue(Context.WaitFor(() => Context.Entities.Count() == 1, Context.WaitingPeriod));
-			Assert.AreEqual(99, ((TestEntity)Context.Entities.First()).Id);
-			Assert.AreEqual("player_name", ((TestEntity)Context.Entities.First()).Name);
+			Assert.AreEqual("player_name", ((TestEntity)Context.Entities.First().Value).Name);
 		}
 		
 		/// <summary>Entity changed should be synced properly.</summary>
 		[TestMethod] public void EntityChangesShouldBeSyncedProperlyTest() {
 			// Add and modify entity
-			var player = new TestEntity { Id = 987, Name = "test" };
+			var player = new TestEntity { Name = "test" };
 			Context.Service.AddEntity(player);
 			player.Name = "changed";
 			Context.Service.ModifyEntity(player);
 
 			// Check changes
 			Assert.IsTrue(Context.WaitFor(() => Context.Entities.Count() == 1, Context.WaitingPeriod));
-			Assert.IsTrue(Context.WaitFor(() => ((TestEntity)Context.Entities.First()).Name == "changed", Context.WaitingPeriod));
+			Assert.IsTrue(Context.WaitFor(() => ((TestEntity)Context.Entities.First().Value).Name == "changed", Context.WaitingPeriod));
 		}
 
 		/// <summary>EntityAdded event should be triggered when entity added.</summary>

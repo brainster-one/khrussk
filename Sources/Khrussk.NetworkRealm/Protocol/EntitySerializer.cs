@@ -33,30 +33,27 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <summary>Serializes entity to stream.</summary>
 		/// <param name="writer">Writer to serialize entity by.</param>
 		/// <param name="entity">Entity to serialize.</param>
-		public void Serialize(BinaryWriter writer, IEntity entity) {
+		public void Serialize(BinaryWriter writer, object entity) {
 			var handler = _serializers.FirstOrDefault(x => x.EntityType == entity.GetType());
-			if (handler == null) throw new InvalidOperationException("No serializer registered for entity type: " + entity.GetType());
+			if (handler == null) throw new InvalidOperationException("No serializer found for entity type: " + entity.GetType());
 
 			// Serializes entity to stream
 			writer.Write((byte)handler.EntityTypeId);
-			writer.Write((short)entity.Id);
 			handler.Serializer.Serialize(writer, entity);
 		}
 
 		/// <summary>Deserializes entity from stream.</summary>
 		/// <param name="reader">Reader to deserialize entity by.</param>
 		/// <param name="entity">Entity.</param>
-		public void Deserialize(BinaryReader reader, ref IEntity entity) {
+		public void Deserialize(BinaryReader reader, ref object entity) {
 			// Looking for serializer
 			var entityTypeId = reader.ReadByte();
 			var handler = _serializers.FirstOrDefault(x => x.EntityTypeId == entityTypeId);
 			if (handler == null)
-				throw new InvalidOperationException("No serializer registered for entity type id: " + entityTypeId);
+				throw new InvalidOperationException("No serializer found for entity type id: " + entityTypeId);
 
 			// Deserializes entity from stream
-			var entityId = reader.ReadUInt16();
 			handler.Serializer.Deserialize(reader, ref entity);
-			entity.Id = entityId;
 		}
 
 		/// <summary>Serializers.</summary>
