@@ -45,7 +45,7 @@ namespace Khrussk.Peers {
 		bool disconnected = false;
 		/// <summary>Sends packet to service.</summary>
 		/// <param name="packet">Packet to send.</param>
-		public void Send(IPacket packet) {
+		public void Send(object packet) {
 			try {
 				var m = new MemoryStream();
 				_protocol.Write(m, packet);

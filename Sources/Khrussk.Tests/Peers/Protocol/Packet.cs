@@ -2,7 +2,7 @@
 namespace Khrussk.Tests.Peers.Protocol {
 	using Khrussk.Peers;
 
-	class Packet : IPacket {
+	class Packet {
 		public byte Data { get; set; }
 	}
 }

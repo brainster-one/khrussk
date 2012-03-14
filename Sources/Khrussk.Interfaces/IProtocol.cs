@@ -7,11 +7,11 @@ namespace Khrussk.Peers {
 		/// <summary>Creates packet from stream.</summary>
 		/// <param name="stream">Stream to read data from.</param>
 		/// <returns>Created packet.</returns>
-		IPacket Read(Stream stream);
+		object Read(Stream stream);
 
 		/// <summary>Writes packet to stream.</summary>
 		/// <param name="stream">Stream to write data to.</param>
 		/// <param name="packet">Packet to write.</param>
-		void Write(Stream stream, IPacket packet);
+		void Write(Stream stream, object packet);
 	}
 }

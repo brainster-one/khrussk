@@ -5,7 +5,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 	using Khrussk.Peers; 
 
 	/// <summary>Handshake packet.</summary>
-	public sealed class HandshakePacket : IPacket {
+	public sealed class HandshakePacket {
 		/// <summary>Initializes a new instance of the HandshakePacket class.</summary>
 		/// <param name="session">Session.</param>
 		public HandshakePacket(Guid session) {
@@ -21,7 +21,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <summary>Deserializes packet from stream.</summary>
 		/// <param name="reader">Reader to deserialize packet by.</param>
 		/// <returns>Packet.</returns>
-		public IPacket Deserialize(BinaryReader reader) {
+		public object Deserialize(BinaryReader reader) {
 			return new HandshakePacket(Guid.Parse(reader.ReadString()));
 		}
 
@@ -29,7 +29,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <param name="writer">Writer to serialize packet.</param>
 		/// <param name="packet">Packet to write.</param>
 		/// <returns>Packet.</returns>
-		public void Serialize(BinaryWriter writer, IPacket packet) {
+		public void Serialize(BinaryWriter writer, object packet) {
 			var p = (HandshakePacket)packet;
 			writer.Write(p.Session.ToString());
 		}

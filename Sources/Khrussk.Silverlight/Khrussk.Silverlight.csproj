@@ -55,9 +55,6 @@
     <Compile Include="..\Khrussk.Interfaces\IEntitySerializer.cs">
       <Link>IEntitySerializer.cs</Link>
     </Compile>
-    <Compile Include="..\Khrussk.Interfaces\IPacket.cs">
-      <Link>IPacket.cs</Link>
-    </Compile>
     <Compile Include="..\Khrussk.Interfaces\IPacketSerializer.cs">
       <Link>IPacketSerializer.cs</Link>
     </Compile>

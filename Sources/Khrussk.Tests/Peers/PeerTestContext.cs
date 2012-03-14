@@ -55,7 +55,7 @@ namespace Khrussk.Tests.Peers {
 		}
 
 		/// <summary>Gets list of received packets.</summary>
-		public IEnumerable<IPacket> Packets {
+		public IEnumerable<object> Packets {
 			get { return _packetReceived.AsReadOnly(); }
 		}
 
@@ -105,6 +105,6 @@ namespace Khrussk.Tests.Peers {
 		private List<Peer> _clientPeers = new List<Peer>();
 
 		/// <summary>List of received packets.</summary>
-		private List<IPacket> _packetReceived = new List<IPacket>();
+		private List<object> _packetReceived = new List<object>();
 	}
 }

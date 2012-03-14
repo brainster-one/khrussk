@@ -5,7 +5,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 	using Khrussk.Peers;
 
 	/// <summary>Add entity packet.</summary>
-	sealed class SyncEntityPacket : IPacket {
+	sealed class SyncEntityPacket {
 		/// <summary>Initializes a new instance of the AddEntityPacket class.</summary>
 		/// <param name="entity">Entity.</param>
 		public SyncEntityPacket(int entityId, object entity) {
@@ -35,7 +35,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <summary>Deserializes packet from stream.</summary>
 		/// <param name="reader">Reader to deserialize packet by.</param>
 		/// <returns>Packet.</returns>
-		public IPacket Deserialize(BinaryReader reader) {
+		public object Deserialize(BinaryReader reader) {
 			// TODO Make copy of reader. Потому что  данные могут быть прочитаны позже
 			var entityId = reader.ReadInt16();
 			var entityDiffData = new EntityDiffData(_serializer, reader);
@@ -46,7 +46,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <param name="writer">Writer to serialize packet.</param>
 		/// <param name="packet">Packet to write.</param>
 		/// <returns>Packet.</returns>
-		public void Serialize(BinaryWriter writer, IPacket packet) {
+		public void Serialize(BinaryWriter writer, object packet) {
 			writer.Write((Int16)((SyncEntityPacket)packet).EntityId);
 			_serializer.Serialize(writer, ((SyncEntityPacket)packet).Entity);
 		}

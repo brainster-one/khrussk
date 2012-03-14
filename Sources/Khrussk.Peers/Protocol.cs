@@ -37,7 +37,7 @@ namespace Khrussk.Peers {
 		/// <param name="stream">Stream to read data from.</param>
 		/// <returns>Created packet.</returns>
 		// TODO Return null if packet can not be read
-		public IPacket Read(Stream stream) {
+		public object Read(Stream stream) {
 			if (stream == null) throw new ArgumentNullException("stream");
 			if (!stream.CanRead) throw new ArgumentException("Can't read from closed stream", "stream");
 
@@ -75,7 +75,7 @@ namespace Khrussk.Peers {
 		/// <summary>Writes packet to stream.</summary>
 		/// <param name="stream">Stream to write data to.</param>
 		/// <param name="packet">Packet to write.</param>
-		public void Write(Stream stream, IPacket packet) {
+		public void Write(Stream stream, object packet) {
 			if (stream == null) throw new ArgumentNullException("stream");
 			if (packet == null) throw new ArgumentNullException("packet");
 			if (!stream.CanWrite) throw new ArgumentException("Can't write to stream", "stream");

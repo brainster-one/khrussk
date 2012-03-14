@@ -31,7 +31,7 @@ namespace Khrussk.NetworkRealm {
 			// TODO: Complete member initialization
 		}
 
-		public RealmEventArgs(Peers.IPacket packet) {
+		public RealmEventArgs(Peers.object packet) {
 			Packet = packet;
 		}
 */
@@ -50,6 +50,6 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Gets entity diff data.</summary>
 		public EntityDiffData EntityDiffData { get; set; }
 
-		public IPacket Packet { get; set; }
+		public object Packet { get; set; }
 	}
 }

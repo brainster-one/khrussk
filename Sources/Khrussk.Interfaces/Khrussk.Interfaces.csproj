@@ -36,7 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IEntitySerializer.cs" />
-    <Compile Include="IPacket.cs" />
     <Compile Include="IPacketSerializer.cs" />
     <Compile Include="IProtocol.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

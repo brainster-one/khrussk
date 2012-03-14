@@ -24,7 +24,7 @@ namespace Khrussk.Peers {
 		/// <param name="type">Event type.</param>
 		/// <param name="peer">Peer.</param>
 		/// <param name="packet">Packet.</param>
-		public PeerEventArgs(PeerEventType type, Peer peer, IPacket packet) {
+		public PeerEventArgs(PeerEventType type, Peer peer, object packet) {
 			EventType = type;
 			Peer = peer;
 			Packet = packet;
@@ -37,6 +37,6 @@ namespace Khrussk.Peers {
 		public Peer Peer { get; private set; }
 
 		/// <summary>Gets packet.</summary>
-		public IPacket Packet { get; private set; }
+		public object Packet { get; private set; }
 	}
 }

@@ -5,7 +5,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 	using Khrussk.Peers;
 
 	/// <summary>Add entity packet.</summary>
-	sealed class RemoveEntityPacket : IPacket {
+	sealed class RemoveEntityPacket {
 		/// <summary>Initializes a new instance of the AddEntityPacket class.</summary>
 		/// <param name="entity">Entity.</param>
 		public RemoveEntityPacket(int entityId) {
@@ -27,7 +27,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <summary>Deserializes packet from stream.</summary>
 		/// <param name="reader">Reader to deserialize packet by.</param>
 		/// <returns>Packet.</returns>
-		public IPacket Deserialize(BinaryReader reader) {
+		public object Deserialize(BinaryReader reader) {
 			var id = reader.ReadInt16();
 			return new RemoveEntityPacket(id);
 		}
@@ -36,7 +36,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <param name="writer">Writer to serialize packet.</param>
 		/// <param name="packet">Packet to write.</param>
 		/// <returns>Packet.</returns>
-		public void Serialize(BinaryWriter writer, IPacket packet) {
+		public void Serialize(BinaryWriter writer, object packet) {
 			writer.Write((Int16)((RemoveEntityPacket)packet).EntityId);
 		}
 

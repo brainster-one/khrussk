@@ -19,7 +19,7 @@ namespace Khrussk.Services {
 			_listener.Disconnect();
 		}
 
-		public void SendAll(IPacket packet) {
+		public void SendAll(object packet) {
 			_peers.ForEach(x => x.Send(packet));
 		}
 
