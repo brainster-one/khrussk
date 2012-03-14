@@ -5,7 +5,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{671047B6-1484-4736-B618-B02BA6D45C27}</ProjectGuid>
+    <ProjectGuid>{DC048120-45F7-412C-8D03-20C96DA02B0A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Khrussk.Interfaces</RootNamespace>
@@ -32,7 +32,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IEntitySerializer.cs" />

@@ -5,13 +5,15 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{649954E0-F1AC-4FB7-B848-6CA4BFE41BA1}</ProjectGuid>
+    <ProjectGuid>{E1DEBD41-EA79-46DF-80F8-B1DD6A16B1D9}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Khrussk.Peers</RootNamespace>
     <AssemblyName>Khrussk.Peers</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\Khrussk.Peers\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Khrussk.Interfaces">
+      <HintPath>packages\Khrussk.Interfaces.0.0.3\lib\Khrussk.Interfaces.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
   </ItemGroup>
@@ -41,18 +46,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol.cs" />
     <Compile Include="Service.cs" />
+    <Compile Include="Socket.cs" />
+    <Compile Include="SocketEventArgs.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Khrussk.Interfaces\Khrussk.Interfaces.csproj">
-      <Project>{671047B6-1484-4736-B618-B02BA6D45C27}</Project>
-      <Name>Khrussk.Interfaces</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Khrussk.Sockets\Khrussk.Sockets.csproj">
-      <Project>{6F414985-50E4-4486-9C73-E8DBB3400C7F}</Project>
-      <Name>Khrussk.Sockets</Name>
-    </ProjectReference>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\..\..\Assets\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

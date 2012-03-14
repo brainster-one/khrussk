@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{15A8B442-B68A-4C70-9375-ED1A6E53DC5F}</ProjectGuid>
+    <ProjectGuid>{D68BA3C3-6B86-405A-AA7D-DE11E82C52CF}</ProjectGuid>
     <ProjectTypeGuids>{A1591282-1198-4647-A2B1-27E5FF5F6F3B};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Khrussk.Silverlight</RootNamespace>
-    <AssemblyName>Khrussk.Silverlight</AssemblyName>
+    <RootNamespace>Khrussk.NetworkRealm</RootNamespace>
+    <AssemblyName>Khrussk.NetworkRealm</AssemblyName>
     <TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -28,7 +28,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\Binaries\</OutputPath>
+    <OutputPath>..\..\Binaries\Silverlight\</OutputPath>
     <DefineConstants>DEBUG;TRACE;SILVERLIGHT</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -38,7 +38,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>Bin\Release</OutputPath>
+    <OutputPath>..\..\Binaries\Silverlight\</OutputPath>
     <DefineConstants>TRACE;SILVERLIGHT</DefineConstants>
     <NoStdLib>true</NoStdLib>
     <NoConfig>true</NoConfig>
@@ -100,10 +100,10 @@
     <Compile Include="..\Khrussk.Peers\Protocol.cs">
       <Link>Protocol.cs</Link>
     </Compile>
-    <Compile Include="..\Khrussk.Sockets\Socket.cs">
+    <Compile Include="..\Khrussk.Peers\Socket.cs">
       <Link>Socket.cs</Link>
     </Compile>
-    <Compile Include="..\Khrussk.Sockets\SocketEventArgs.cs">
+    <Compile Include="..\Khrussk.Peers\SocketEventArgs.cs">
       <Link>SocketEventArgs.cs</Link>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
