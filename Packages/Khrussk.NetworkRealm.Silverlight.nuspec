@@ -5,16 +5,12 @@
     <authors>brainster</authors>
     <owners />
     <projectUrl>https://github.com/brainster-one/khrussk</projectUrl>
-    <dependencies>
-      <dependency id="Khrussk.Interfaces" version="0.0.3" />
-      <dependency id="Khrussk.Peers" version="0.0.3" />
-    </dependencies>
-    <id>Khrussk.NetworkRealm</id>
+    <id>Khrussk.NetworkRealm.Silverlight</id>
     <title />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Khrussk is a network library for games.</description>
   </metadata>
   <files>
-    <file src="..\Binaries\Khrussk.NetworkRealm.dll" target="lib\Khrussk.NetworkRealm.dll" />
+    <file src="..\Binaries\Silverlight\Khrussk.NetworkRealm.Silverlight.dll" target="lib\sl5\Khrussk.NetworkRealm.Silverlight.dll" />
   </files>
 </package>

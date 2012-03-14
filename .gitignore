@@ -8,4 +8,6 @@ TestResults
 Khrussk.Tests.dll
 Binaries/*.dll
 Binaries/*.pdb
+Binaries/*/*.dll
+Binaries/*/*.pdb
 Sources/*/packages
