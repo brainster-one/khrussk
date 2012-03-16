@@ -7,6 +7,7 @@ namespace Khrussk.NetworkRealm {
 	using Khrussk.Peers;
 	using Khrussk.Services;
 	using Khrussk.NetworkRealm.Protocol;
+	using System.Diagnostics;
 
 	/// <summary>Realm service.</summary>
 	public sealed class RealmService {
@@ -102,6 +103,16 @@ namespace Khrussk.NetworkRealm {
 				var session = (e.Packet as HandshakePacket).Session;
 				var user = new User(session);
 				_peerUserMap[e.Peer] = user;
+
+				// TODO Move it to another place
+				Debug.Print("Sending full world state:");
+				foreach (var entity in _entityIds.Keys) {
+					var entityId = _entityIds[entity];
+					Debug.Print("    " + entity + " " + entityId);
+					e.Peer.Send(new AddEntityPacket(entityId, entity));
+				}
+				Debug.Print("Done.");
+				//
 
 				var evnt = UserConnected;
 				if (evnt != null) evnt(this, new RealmEventArgs { User = user });
