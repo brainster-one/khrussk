@@ -2,12 +2,12 @@
 namespace Khrussk.NetworkRealm {
 	using System;
 	using System.Collections.Generic;
+	using System.Diagnostics;
 	using System.Linq;
 	using System.Net;
+	using Khrussk.NetworkRealm.Protocol;
 	using Khrussk.Peers;
 	using Khrussk.Services;
-	using Khrussk.NetworkRealm.Protocol;
-	using System.Diagnostics;
 
 	/// <summary>Realm service.</summary>
 	public sealed class RealmService {
@@ -63,6 +63,8 @@ namespace Khrussk.NetworkRealm {
 		public void RemoveEntity(int entityId) {
 			// TODO ckeck object registered
 			// TODO освободить ID
+			var entity = _entityIds.First(x => x.Value == entityId).Key;
+			_entityIds.Remove(entity);
 			_service.SendAll(new RemoveEntityPacket(entityId));
 		}
 
@@ -105,13 +107,11 @@ namespace Khrussk.NetworkRealm {
 				_peerUserMap[e.Peer] = user;
 
 				// TODO Move it to another place
-				Debug.Print("Sending full world state:");
 				foreach (var entity in _entityIds.Keys) {
 					var entityId = _entityIds[entity];
 					Debug.Print("    " + entity + " " + entityId);
 					e.Peer.Send(new AddEntityPacket(entityId, entity));
 				}
-				Debug.Print("Done.");
 				//
 
 				var evnt = UserConnected;

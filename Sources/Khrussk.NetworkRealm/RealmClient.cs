@@ -12,6 +12,7 @@ namespace Khrussk.NetworkRealm {
 			Protocol = new RealmProtocol();
 			_peer = new Peer(Protocol);
 			_peer.Connected += OnConnected;
+			_peer.ConnectionFailed += OnConnectionFailed;
 			_peer.Disconnected += OnDisconnected;
 			_peer.PacketReceived += OnPacketReceived;
 		}
@@ -35,6 +36,9 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Connected to remote service.</summary>
 		public event EventHandler<RealmEventArgs> Connected;
 
+		/// <summary>Connection failed.</summary>
+		public event EventHandler<RealmEventArgs> ConnectionFailed;
+
 		/// <summary>Connection has been closed.</summary>
 		public event EventHandler<RealmEventArgs> Disconnected;
 
@@ -52,6 +56,14 @@ namespace Khrussk.NetworkRealm {
 		/// <param name="e">Event args.</param>
 		void OnConnected(object sender, PeerEventArgs e) {
 			_peer.Send(new HandshakePacket(Guid.Empty));
+		}
+
+		/// <summary>On connection failed.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Event args.</param>
+		void OnConnectionFailed(object sender, PeerEventArgs e) {
+			var evnt = ConnectionFailed;
+			if (evnt != null) evnt(this, new RealmEventArgs());
 		}
 
 		/// <summary>Connection with remote service has been closed.</summary>
