@@ -98,8 +98,6 @@ namespace Khrussk.Peers {
 
 					while (true) {
 						var packet = _protocol.Read(_receiveStream);
-						Debug.WriteLine("Packet received: " + e.Buffer.Length + " " + (packet == null ? "null" : packet.ToString()));
-
 						if (packet == null) break;
 
 						var evnt = PacketReceived;

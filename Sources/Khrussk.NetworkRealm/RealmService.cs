@@ -117,8 +117,9 @@ namespace Khrussk.NetworkRealm {
 				var evnt = UserConnected;
 				if (evnt != null) evnt(this, new RealmEventArgs { User = user });
 			} else {
+				var user = _peerUserMap[e.Peer];
 				var evnt = PacketReceived;
-				if (evnt != null) evnt(this, new RealmEventArgs { Packet = e.Packet });
+				if (evnt != null) evnt(this, new RealmEventArgs { Packet = e.Packet, User = user });
 			}
 		}
 

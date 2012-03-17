@@ -22,6 +22,11 @@ namespace Khrussk.NetworkRealm {
 			_peer.Connect(endpoint);
 		}
 
+		/// <summary>Sends packet to remote service.</summary>
+		public void Send(object packet) {
+			_peer.Send(packet);
+		}
+
 		/// <summary>Disconnects from service.</summary>
 		public void Disconnect() {
 			_peer.Disconnect();
