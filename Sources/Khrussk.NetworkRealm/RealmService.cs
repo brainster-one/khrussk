@@ -2,7 +2,6 @@
 namespace Khrussk.NetworkRealm {
 	using System;
 	using System.Collections.Generic;
-	using System.Diagnostics;
 	using System.Linq;
 	using System.Net;
 	using Khrussk.NetworkRealm.Protocol;
@@ -43,36 +42,21 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Adds antity to realm.</summary>
 		/// <param name="entity">Entity to add.</param>
 		public void AddEntity(object entity) {
-			// TODO ckeck object registered
-			var id = _currentEntityId++;
-			_entityIds[entity] = id;
-
+			var id = _store.Add(entity);
 			_service.SendAll(new AddEntityPacket(id, entity));
 		}
 
 		/// <summary>Removes entity from realm.</summary>
 		/// <param name="entity">Entity to remove.</param>
 		public void RemoveEntity(object entity) {
-			// TODO ckeck object registered
-			var id = _entityIds[entity];
-			RemoveEntity(id);
-		}
-
-		/// <summary>Removes entity from realm.</summary>
-		/// <param name="entityId">Entity to remove.</param>
-		public void RemoveEntity(int entityId) {
-			// TODO ckeck object registered
-			// TODO освободить ID
-			var entity = _entityIds.First(x => x.Value == entityId).Key;
-			_entityIds.Remove(entity);
-			_service.SendAll(new RemoveEntityPacket(entityId));
+			var id = _store.Remove(entity);
+			_service.SendAll(new RemoveEntityPacket(id));
 		}
 
 		/// <summary>Syncs entities for all users.</summary>
 		/// <param name="entity">Entity to sync.</param>
 		public void ModifyEntity(object entity) {
-			// TODO ckeck object registered
-			var id = _entityIds[entity];
+			var id = _store.GetId(entity);
 			_service.SendAll(new SyncEntityPacket(id, entity));
 		}
 
@@ -107,10 +91,9 @@ namespace Khrussk.NetworkRealm {
 				_peerUserMap[e.Peer] = user;
 
 				// TODO Move it to another place
-				foreach (var entity in _entityIds.Keys) {
-					var entityId = _entityIds[entity];
-					Debug.Print("    " + entity + " " + entityId);
-					e.Peer.Send(new AddEntityPacket(entityId, entity));
+				foreach (var entity in _store.Entities) {
+					var id = _store.GetId(entity);
+					e.Peer.Send(new AddEntityPacket(id, entity));
 				}
 				//
 
@@ -132,8 +115,7 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Peer to user map.</summary>
 		private Dictionary<Peer, User> _peerUserMap = new Dictionary<Peer,User>();
 
-		// TODO переписать по человечески
-		private Dictionary<object, int> _entityIds = new Dictionary<object, int>();
-		private int _currentEntityId;
+		/// <summary>Stores entity and ids.</summary>
+		EntityIdMap _store = new EntityIdMap();
 	}
 }
