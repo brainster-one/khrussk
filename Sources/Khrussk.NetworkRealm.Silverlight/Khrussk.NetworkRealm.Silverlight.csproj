@@ -85,8 +85,8 @@
     <Compile Include="..\Khrussk.NetworkRealm\RealmClient.cs">
       <Link>RealmClient.cs</Link>
     </Compile>
-    <Compile Include="..\Khrussk.NetworkRealm\RealmEventArgs.cs">
-      <Link>RealmEventArgs.cs</Link>
+    <Compile Include="..\Khrussk.NetworkRealm\RealmClientEventArgs.cs">
+      <Link>RealmClientEventArgs.cs</Link>
     </Compile>
     <Compile Include="..\Khrussk.NetworkRealm\User.cs">
       <Link>User.cs</Link>

@@ -41,6 +41,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RealmClientEventArgs.cs" />
     <Compile Include="Helpers\EntityIdMap.cs" />
     <Compile Include="Helpers\UserPeerMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -52,7 +53,7 @@
     <Compile Include="Protocol\RemoveEntityPacket.cs" />
     <Compile Include="Protocol\SyncEntityPacket.cs" />
     <Compile Include="RealmClient.cs" />
-    <Compile Include="RealmEventArgs.cs" />
+    <Compile Include="RealmServiceEventArgs.cs" />
     <Compile Include="RealmService.cs" />
     <Compile Include="User.cs" />
   </ItemGroup>
