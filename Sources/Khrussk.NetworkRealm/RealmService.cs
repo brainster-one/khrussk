@@ -7,6 +7,7 @@ namespace Khrussk.NetworkRealm {
 	using Khrussk.NetworkRealm.Protocol;
 	using Khrussk.Peers;
 	using Khrussk.Services;
+	using Khrussk.NetworkRealm.Helpers;
 
 	/// <summary>Realm service.</summary>
 	public sealed class RealmService {
@@ -32,31 +33,27 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Disconnects user from service.</summary>
 		/// <param name="user">User to disconnect.</param>
 		public void Disconnect(User user) {
-			var peer = _peerUserMap.FirstOrDefault(x => x.Value == user);
-			if (peer.Key == null)
-				throw new InvalidOperationException(String.Format("User '{0}' is not connected", user));
-			else
-				peer.Key.Disconnect();
+			_users.GetPeer(user).Disconnect();
 		}
 
 		/// <summary>Adds antity to realm.</summary>
 		/// <param name="entity">Entity to add.</param>
 		public void AddEntity(object entity) {
-			var id = _store.Add(entity);
+			var id = _entities.Add(entity);
 			_service.SendAll(new AddEntityPacket(id, entity));
 		}
 
 		/// <summary>Removes entity from realm.</summary>
 		/// <param name="entity">Entity to remove.</param>
 		public void RemoveEntity(object entity) {
-			var id = _store.Remove(entity);
+			var id = _entities.Remove(entity);
 			_service.SendAll(new RemoveEntityPacket(id));
 		}
 
 		/// <summary>Syncs entities for all users.</summary>
 		/// <param name="entity">Entity to sync.</param>
 		public void ModifyEntity(object entity) {
-			var id = _store.GetId(entity);
+			var id = _entities.GetId(entity);
 			_service.SendAll(new SyncEntityPacket(id, entity));
 		}
 
@@ -74,25 +71,26 @@ namespace Khrussk.NetworkRealm {
 		/// <param name="e">Event args.</param>
 		void OnClientDisconnected(object sender, PeerEventArgs e) {
 			var evnt = UserDisconnected;
-			if (evnt != null) {
-				var user = _peerUserMap.FirstOrDefault(x => x.Key == e.Peer);
-				evnt(this, new RealmEventArgs { User = user.Value });
-			}
+			if (evnt != null) evnt(this, new RealmEventArgs { User = _users.GetUser(e.Peer) });
 		}
 		
 		/// <summary>Packet received from client.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnPacketReceived(object sender, PeerEventArgs e) {
+			var peer = e.Peer;
+			var packet = e.Packet;
+
 			if (e.Packet is HandshakePacket) {
-				e.Peer.Send(new HandshakePacket(Guid.NewGuid()));
-				var session = (e.Packet as HandshakePacket).Session;
+				peer.Send(new HandshakePacket(Guid.NewGuid()));
+				var session = (packet as HandshakePacket).Session;
 				var user = new User(session);
-				_peerUserMap[e.Peer] = user;
+				_users.Map(user, peer);
+				
 
 				// TODO Move it to another place
-				foreach (var entity in _store.Entities) {
-					var id = _store.GetId(entity);
+				foreach (var entity in _entities.Entities) {
+					var id = _entities.GetId(entity);
 					e.Peer.Send(new AddEntityPacket(id, entity));
 				}
 				//
@@ -100,9 +98,9 @@ namespace Khrussk.NetworkRealm {
 				var evnt = UserConnected;
 				if (evnt != null) evnt(this, new RealmEventArgs { User = user });
 			} else {
-				var user = _peerUserMap[e.Peer];
+				var user = _users.GetUser(peer);
 				var evnt = PacketReceived;
-				if (evnt != null) evnt(this, new RealmEventArgs { Packet = e.Packet, User = user });
+				if (evnt != null) evnt(this, new RealmEventArgs { Packet = packet, User = user });
 			}
 		}
 
@@ -113,9 +111,9 @@ namespace Khrussk.NetworkRealm {
 		private Service _service;
 
 		/// <summary>Peer to user map.</summary>
-		private Dictionary<Peer, User> _peerUserMap = new Dictionary<Peer,User>();
+		UserPeerMap _users = new UserPeerMap();
 
 		/// <summary>Stores entity and ids.</summary>
-		EntityIdMap _store = new EntityIdMap();
+		EntityIdMap _entities = new EntityIdMap();
 	}
 }

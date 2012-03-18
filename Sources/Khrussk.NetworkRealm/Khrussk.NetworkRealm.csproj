@@ -41,7 +41,8 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityIdMap.cs" />
+    <Compile Include="Helpers\EntityIdMap.cs" />
+    <Compile Include="Helpers\UserPeerMap.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Protocol\AddEntityPacket.cs" />
     <Compile Include="Protocol\EntityDiffData.cs" />
