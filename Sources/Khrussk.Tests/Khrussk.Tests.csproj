@@ -37,10 +37,10 @@
       <HintPath>packages\Khrussk.Interfaces.0.0.3\lib\Khrussk.Interfaces.dll</HintPath>
     </Reference>
     <Reference Include="Khrussk.NetworkRealm, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Khrussk.NetworkRealm.0.0.3\lib\Khrussk.NetworkRealm.dll</HintPath>
+      <HintPath>packages\Khrussk.NetworkRealm.0.0.17\lib\Khrussk.NetworkRealm.dll</HintPath>
     </Reference>
     <Reference Include="Khrussk.Peers, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\Khrussk.Peers.0.0.3\lib\Khrussk.Peers.dll</HintPath>
+      <HintPath>packages\Khrussk.Peers.0.0.4\lib\Khrussk.Peers.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -66,6 +66,7 @@
     <Compile Include="Realm\Shared\ConnectionTests.cs" />
     <Compile Include="Realm\Shared\TestContext.cs" />
     <Compile Include="Realm\Shared\TestEntity.cs" />
+    <Compile Include="Realm\Shared\TestProtocol.cs" />
     <Compile Include="Sockets\ConnectionTests.cs" />
     <Compile Include="Sockets\DataTransferTests.cs" />
     <Compile Include="Sockets\SocketTestContext.cs" />

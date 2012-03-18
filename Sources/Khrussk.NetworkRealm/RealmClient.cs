@@ -2,15 +2,16 @@
 namespace Khrussk.NetworkRealm {
 	using System;
 	using System.Net;
-	using Khrussk.Peers;
 	using Khrussk.NetworkRealm.Protocol;
+	using Khrussk.Peers;
 
 	/// <summary>Realm client.</summary>
 	public sealed class RealmClient {
 		/// <summary>Initializes a new instance of the RealmService class.</summary>
-		public RealmClient() {
-			Protocol = new RealmProtocol();
-			_peer = new Peer(Protocol);
+		/// <param name="protocol">Protocol.</param>
+		public RealmClient(RealmProtocol protocol) {
+			_protocol = protocol;
+			_peer = new Peer(_protocol);
 			_peer.Connected += OnConnected;
 			_peer.ConnectionFailed += OnConnectionFailed;
 			_peer.Disconnected += OnDisconnected;
@@ -98,12 +99,13 @@ namespace Khrussk.NetworkRealm {
 			}
 		}
 
-		/// <summary>Gets protocol.</summary>
-		public RealmProtocol Protocol { get; private set; }
+		/// <summary>Session.</summary>
+		private Guid _session;
 
 		/// <summary>Underlaying peer.</summary>
 		private Peer _peer;
 
-		private Guid _session;
+		/// <summary>Gets protocol.</summary>
+		private RealmProtocol _protocol;
 	}
 }

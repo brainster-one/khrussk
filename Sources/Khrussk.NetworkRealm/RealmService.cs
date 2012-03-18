@@ -1,20 +1,19 @@
 ﻿
 namespace Khrussk.NetworkRealm {
 	using System;
-	using System.Collections.Generic;
-	using System.Linq;
 	using System.Net;
+	using Khrussk.NetworkRealm.Helpers;
 	using Khrussk.NetworkRealm.Protocol;
 	using Khrussk.Peers;
 	using Khrussk.Services;
-	using Khrussk.NetworkRealm.Helpers;
 
 	/// <summary>Realm service.</summary>
 	public sealed class RealmService {
 		/// <summary>Initializes a new instance of the RealmService class.</summary>
-		public RealmService() {
-			Protocol = new RealmProtocol();
-			_service = new Service(Protocol);
+		/// <param name="protocol">Protocol.</param>
+		public RealmService(RealmProtocol protocol) {
+			_protocol = protocol;
+			_service = new Service(_protocol);
 			_service.PacketReceived += OnPacketReceived;
 			_service.ClientDisconnected += OnClientDisconnected;
 		}
@@ -103,12 +102,12 @@ namespace Khrussk.NetworkRealm {
 				if (evnt != null) evnt(this, new RealmServiceEventArgs { User = user, Packet = packet });
 			}
 		}
+	
+		/// <summary>Underlaying service.</summary>
+		Service _service;
 
 		/// <summary>Gets protocol.</summary>
-		public RealmProtocol Protocol { get; private set; }
-		
-		/// <summary>Underlaying service.</summary>
-		private Service _service;
+		RealmProtocol _protocol;
 
 		/// <summary>Peer to user map.</summary>
 		UserPeerMap _users = new UserPeerMap();
