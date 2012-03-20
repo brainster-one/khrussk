@@ -1,0 +1,15 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+	ToolsVersion="4.0">
+	<PropertyGroup>
+		<OutputPath>..\Binaries\</OutputPath>
+		<OutputType>Library</OutputType>
+		<RootNamespace>Khrussk.Interfaces</RootNamespace>
+		<AssemblyName>Khrussk.Interfaces</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="Interfaces\**\*.cs" />
+	</ItemGroup>
+
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

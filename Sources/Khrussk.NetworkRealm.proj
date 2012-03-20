@@ -1,0 +1,25 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+	ToolsVersion="4.0">
+
+	<PropertyGroup>
+		<OutputPath>..\Binaries\</OutputPath>
+		<OutputType>Library</OutputType>
+		<RootNamespace>Khrussk.NetworkRealm</RootNamespace>
+		<AssemblyName>Khrussk.NetworkRealm</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="System" />
+		<Reference Include="System.Net" />
+		<Reference Include="Khrussk.Interfaces">
+			<HintPath>..\Binaries\Khrussk.Interfaces.dll</HintPath>
+		</Reference>
+		<Reference Include="Khrussk.Peers">
+			<HintPath>..\Binaries\Khrussk.Peers.dll</HintPath>
+		</Reference>
+
+		<Compile Include="NetworkRealm\**\*.cs" />
+	</ItemGroup>
+
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

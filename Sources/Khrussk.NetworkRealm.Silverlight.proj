@@ -1,0 +1,47 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+	ToolsVersion="4.0">
+
+	<PropertyGroup>
+		<OutputPath>..\Binaries\</OutputPath>
+		<OutputType>Library</OutputType>
+		<RootNamespace>Khrussk.NetworkRealm</RootNamespace>
+		<AssemblyName>Khrussk.NetworkRealm.Silverlight</AssemblyName>
+		<TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
+		<TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
+		<SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
+		<SilverlightApplication>false</SilverlightApplication>
+		<DefineConstants>SILVERLIGHT</DefineConstants>
+		<NoStdLib>true</NoStdLib>
+		<NoConfig>true</NoConfig>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="mscorlib" />
+		<Reference Include="system" />
+		<Reference Include="System.Core" />
+		<Reference Include="System.Net" />
+		
+		<Compile Include="Interfaces\IEntitySerializer.cs" />
+		<Compile Include="Interfaces\IPacketSerializer.cs" />
+		<Compile Include="Interfaces\IProtocol.cs" />
+		<Compile Include="NetworkRealm\Protocol\AddEntityPacket.cs" />
+		<Compile Include="NetworkRealm\Protocol\EntityDiffData.cs" />
+		<Compile Include="NetworkRealm\Protocol\EntitySerializer.cs" />
+		<Compile Include="NetworkRealm\Protocol\EntitySerializerFactory.cs" />
+		<Compile Include="NetworkRealm\Protocol\HandshakePacket.cs" />
+		<Compile Include="NetworkRealm\Protocol\RealmProtocol.cs" />
+		<Compile Include="NetworkRealm\Protocol\RemoveEntityPacket.cs" />
+		<Compile Include="NetworkRealm\Protocol\SyncEntityPacket.cs" />
+		<Compile Include="NetworkRealm\RealmClient.cs" />
+		<Compile Include="NetworkRealm\RealmClientEventArgs.cs" />
+		<Compile Include="NetworkRealm\User.cs" />
+		<Compile Include="Peers\PacketSerializerFactory.cs" />
+		<Compile Include="Peers\Peer.cs" />
+		<Compile Include="Peers\PeerEventArgs.cs" />
+		<Compile Include="Peers\Protocol.cs" />
+		<Compile Include="Peers\Socket.cs" />
+		<Compile Include="Peers\SocketEventArgs.cs" />
+	</ItemGroup>
+
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>
