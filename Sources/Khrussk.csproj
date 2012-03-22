@@ -40,12 +40,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Extras\SilverlightPolicyService.cs" />
     <Compile Include="Interfaces\IEntitySerializer.cs" />
     <Compile Include="Interfaces\IPacketSerializer.cs" />
     <Compile Include="Interfaces\IProtocol.cs" />
+    <Compile Include="Interfaces\ConnectionState.cs" />
     <Compile Include="NetworkRealm\Helpers\EntityIdMap.cs" />
     <Compile Include="NetworkRealm\Helpers\UserPeerMap.cs" />
+    <Compile Include="NetworkRealm\Properties\AssemblyInfo.cs" />
     <Compile Include="NetworkRealm\Protocol\AddEntityPacket.cs" />
     <Compile Include="NetworkRealm\Protocol\EntityDiffData.cs" />
     <Compile Include="NetworkRealm\Protocol\EntitySerializer.cs" />
@@ -59,14 +60,26 @@
     <Compile Include="NetworkRealm\RealmService.cs" />
     <Compile Include="NetworkRealm\RealmServiceEventArgs.cs" />
     <Compile Include="NetworkRealm\User.cs" />
-    <Compile Include="Peers\Listener.cs" />
-    <Compile Include="Peers\PacketSerializerFactory.cs" />
-    <Compile Include="Peers\Peer.cs" />
-    <Compile Include="Peers\PeerEventArgs.cs" />
-    <Compile Include="Peers\Protocol.cs" />
-    <Compile Include="Peers\Service.cs" />
-    <Compile Include="Peers\Socket.cs" />
-    <Compile Include="Peers\SocketEventArgs.cs" />
+    <Compile Include="Peers\Listener.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Peers\PacketSerializerFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Peers\Peer.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Peers\PeerEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Peers\Protocol.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Sockets\Socket.Listener.cs" />
+    <Compile Include="Sockets\Socket.cs" />
+    <Compile Include="Sockets\SocketEventArgs.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

@@ -9,16 +9,16 @@ namespace Khrussk.Tests.Peers {
 	sealed class PeerTestContext : BasicTestContext {
 		/// <summary>Initializes a new instance of the SocketTestContext class.</summary>
 		public PeerTestContext() {
-			// Client
-			var peer = new Peer(new TestProtocol());
-			peer.Connected += OnClientSocketConnected;
-			peer.PacketReceived += OnPacketReceived;
-			peer.Disconnected += OnClientPeerDisconnected;
-			_clientPeers.Add(peer);
+			AcceptedPeers = new List<Peer>();
+			ClientPeers = new List<Peer>();
+			Packets = new List<object>();
+
+			Peer = new Peer(new TestProtocol());
+			Peer.PacketReceived += OnPacketReceived;
 			
-			// Listener socket
 			Listener = new Listener(new TestProtocol());
-			Listener.ClientPeerConnected += OnClientPeerConnected;
+			Listener.PeerConnected += OnPeerAccepted;
+
 		}
 
 		/// <summary>Cleanup environment.</summary>
@@ -32,79 +32,48 @@ namespace Khrussk.Tests.Peers {
 		/// <returns>New socket.</returns>
 		public Peer NewSocket() {
 			var np = new Peer(new TestProtocol());
-			_clientPeers.Add(np);
+			ClientPeers.Add(np);
 			return np;
 		}
+
+		/// <summary>Gets client.</summary>
+		public Peer Peer { get; private set; }
 
 		/// <summary>Gets listener.</summary>
 		public Listener Listener { get; private set; }
 
-		/// <summary>Gets client.</summary>
-		public Peer Peer {
-			get { return _clientPeers.First(); }
-		}
+		/// <summary>List of accepted peers.</summary>
+		public List<Peer> AcceptedPeers { get; private set; }
 
-		/// <summary>Gets list of client's peers.</summary>
-		public IEnumerable<Peer> ClientPeers {
-			get { return _clientPeers.AsReadOnly(); }
-		}
+		/// <summary>List of client's peers.</summary>
+		public List<Peer> ClientPeers { get; private set; }
 
-		/// <summary>Gets list of accepted peers.</summary>
-		public IEnumerable<Peer> AcceptedPeers {
-			get { return _acceptedPeers.AsReadOnly(); }
-		}
-
-		/// <summary>Gets list of received packets.</summary>
-		public IEnumerable<object> Packets {
-			get { return _packetReceived.AsReadOnly(); }
-		}
-
-		/// <summary>On client socket connected.</summary>
-		/// <param name="sender">Event sender.</param>
-		/// <param name="e">Event args.</param>
-		void OnClientSocketConnected(object sender, PeerEventArgs e) {
-			Wait.Set();
-		}
+		/// <summary>List of received packets.</summary>
+		public List<object> Packets { get; private set; }
 
 		/// <summary>On connection accepted</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
-		void OnClientPeerConnected(object sender, PeerEventArgs e) {
-			e.Peer.PacketReceived+= OnPacketReceived;
-			e.Peer.Disconnected += OnAcceptedPeerDisconnected;
-			_acceptedPeers.Add(e.Peer);
-			Wait.Set();
-		}
-
-		/// <summary>On socket disconnected.</summary>
-		/// <param name="sender">Event sender.</param>
-		/// <param name="e">Event args.</param>
-		void OnAcceptedPeerDisconnected(object sender, PeerEventArgs e) {
-			if (_acceptedPeers.Contains(e.Peer)) _acceptedPeers.Remove(e.Peer);
-		}
-
-
-		/// <summary>On socket disconnected.</summary>
-		/// <param name="sender">Event sender.</param>
-		/// <param name="e">Event args.</param>
-		void OnClientPeerDisconnected(object sender, PeerEventArgs e) {
-			if (_clientPeers.Contains(e.Peer)) _clientPeers.Remove(e.Peer);
+		void OnPeerAccepted(object sender, PeerEventArgs e) {
+			e.Peer.PacketReceived += OnPacketReceived;
+			e.Peer.ConnectionStateChanged += OnAcceptedPeerConnectionStateChanged;
+			AcceptedPeers.Add(e.Peer);
 		}
 
 		/// <summary>On data received.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnPacketReceived(object sender, PeerEventArgs e) {
-			_packetReceived.Add(e.Packet);
+			Packets.Add(e.Packet);
 		}
 
-		/// <summary>List of accepted peers.</summary>
-		private List<Peer> _acceptedPeers = new List<Peer>();
-
-		/// <summary>List of client's peers.</summary>
-		private List<Peer> _clientPeers = new List<Peer>();
-
-		/// <summary>List of received packets.</summary>
-		private List<object> _packetReceived = new List<object>();
+		/// <summary>On socket disconnected.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Event args.</param>
+		void OnAcceptedPeerConnectionStateChanged(object sender, PeerEventArgs e) {
+			if (e.ConnectionState == ConnectionState.Disconnected) {
+				if (AcceptedPeers.Contains(e.Peer)) AcceptedPeers.Remove(e.Peer);
+			}
+		}
 	}
 }

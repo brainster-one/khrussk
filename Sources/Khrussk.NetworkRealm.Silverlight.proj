@@ -24,6 +24,7 @@
 		<Compile Include="Interfaces\IEntitySerializer.cs" />
 		<Compile Include="Interfaces\IPacketSerializer.cs" />
 		<Compile Include="Interfaces\IProtocol.cs" />
+		<Compile Include="Interfaces\ConnectionState.cs" />
 		<Compile Include="NetworkRealm\Protocol\AddEntityPacket.cs" />
 		<Compile Include="NetworkRealm\Protocol\EntityDiffData.cs" />
 		<Compile Include="NetworkRealm\Protocol\EntitySerializer.cs" />
@@ -39,8 +40,7 @@
 		<Compile Include="Peers\Peer.cs" />
 		<Compile Include="Peers\PeerEventArgs.cs" />
 		<Compile Include="Peers\Protocol.cs" />
-		<Compile Include="Peers\Socket.cs" />
-		<Compile Include="Peers\SocketEventArgs.cs" />
+		<Compile Include="Sockets\**\*.cs" />
 	</ItemGroup>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

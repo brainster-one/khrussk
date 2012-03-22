@@ -33,5 +33,25 @@ namespace Khrussk.Tests.Sockets {
 			Assert.IsTrue(_context.WaitFor(() => _context.DataReceived.Count() == 1, _context.WaitingPeriod));
 			Assert.AreEqual(5, _context.DataReceived.First().Length);
 		}
+
+		[TestMethod] public void BigDataChunkTest() {
+			byte[] buffer = new byte[1024 * 1024];
+			_context.ClientSocket.Send(buffer, 0, buffer.Length);
+
+			_context.WaitFor(() => false, 1000);
+			var l = _context.DataReceived.ToArray().Sum(x => x.Length);
+			Assert.AreEqual(1024 * 1024, l);
+		}
+
+		[TestMethod] public void LotOfSmallDataChunksTest() {
+			for (int i = 0; i < 2048; ++i) {
+				byte[] buffer = new byte[3];
+				_context.ClientSocket.Send(buffer, 0, buffer.Length);
+			}
+
+			_context.WaitFor(() => false, 1000);
+			var l = _context.DataReceived.ToArray().Sum(x => x.Length);
+			Assert.AreEqual(2048 * 3, l);
+		}
 	}
 }

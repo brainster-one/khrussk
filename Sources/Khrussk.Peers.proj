@@ -15,6 +15,7 @@
 			<HintPath>..\Binaries\Khrussk.Interfaces.dll</HintPath>
 		</Reference>
 
+		<Compile Include="Sockets\**\*.cs" />
 		<Compile Include="Peers\**\*.cs" />
 	</ItemGroup>
 

@@ -2,36 +2,26 @@
 namespace Khrussk.Peers {
 	using System;
 	
-	/// <summary>Peer event type.</summary>
-	public enum PeerEventType {
-		Connection,
-		Disconnection,
-		PacketReceived
-	}
-
-	// todo rename to networkeventargs
 	/// <summary>Services event args.</summary>
 	public sealed class PeerEventArgs : EventArgs {
-		/// <summary>Initializes a new instance of the PeerEventArgs class.</summary>
-		/// <param name="type">Event type.</param>
+		/// <summary>Initializes a new instance of the PeerEventArgs class using the specified peer and connection state.</summary>
 		/// <param name="peer">Peer.</param>
-		public PeerEventArgs(PeerEventType type, Peer peer) {
-			EventType = type;
+		/// <param name="connectionState">Socket connection state.</param>
+		internal PeerEventArgs(Peer peer, ConnectionState connectionState) {
 			Peer = peer;
+			ConnectionState = connectionState;
 		}
 
-		/// <summary>Initializes a new instance of the PeerEventArgs class.</summary>
-		/// <param name="type">Event type.</param>
-		/// <param name="peer">Peer.</param>
-		/// <param name="packet">Packet.</param>
-		public PeerEventArgs(PeerEventType type, Peer peer, object packet) {
-			EventType = type;
+		/// <summary>Initializes a new instance of the PeerEventArgs class using the specified peer and packet.</summary>
+		/// <param name="socket">Peer.</param>
+		/// <param name="buffer">Packet.</param>
+		internal PeerEventArgs(Peer peer, object packet) {
 			Peer = peer;
 			Packet = packet;
 		}
-
+		
 		/// <summary>Gets client.</summary>
-		public PeerEventType EventType { get; private set; }
+		public ConnectionState ConnectionState { get; private set; }
 
 		/// <summary>Gets client.</summary>
 		public Peer Peer { get; private set; }

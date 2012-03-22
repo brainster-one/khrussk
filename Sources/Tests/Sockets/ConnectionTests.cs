@@ -3,6 +3,9 @@ namespace Khrussk.Tests.Sockets {
 	using System;
 	using System.Linq;
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
+	using System.Collections.Generic;
+	using Khrussk.Sockets;
+	using System.Diagnostics;
 
 	/// <summary>Connections test.</summary>
 	[TestClass] public class ConnectionsTests {
@@ -73,6 +76,20 @@ namespace Khrussk.Tests.Sockets {
 		[TestMethod, ExpectedException(typeof(InvalidOperationException))]
 		public void CanNotListenSeveralTimes() {
 			_context.ListenerSocket.Listen(_context.EndPoint);
+		}
+
+		///
+		[TestMethod] public void ConnectionStressTest() {
+			List<Socket> sockets = new List<Socket>();
+			for (int i = 0; i < 100; ++i) { sockets.Add(_context.NewSocket()); }
+			
+			sockets.ForEach(x => x.Connect(_context.EndPoint));
+			_context.WaitFor(() => _context.AcceptedSockets.Count == 100 + 1 /* connected before */, 1500);
+			Assert.AreEqual(101, _context.AcceptedSockets.Count);
+
+			sockets.ForEach(x => x.Disconnect());
+			_context.WaitFor(() => _context.AcceptedSockets.Count == 1, 1500);
+			Assert.AreEqual(1, _context.AcceptedSockets.Count);
 		}
 	}
 }

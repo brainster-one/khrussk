@@ -6,7 +6,7 @@ namespace Khrussk.Sockets {
 	using System.Diagnostics;
 
 	/// <summary>Socket.</summary>
-	public sealed class Socket {
+	public sealed partial class Socket : IDisposable {
 		/// <summary>Initializes a new instance of the Socket class using the specified socket.</summary>
 		/// <param name="socket">.net socket instance.</param>
 		internal Socket(System.Net.Sockets.Socket socket) {
@@ -22,32 +22,23 @@ namespace Khrussk.Sockets {
 			};
 		}
 
+		/// <summary>Releases the unmanaged resources used by the current socket, and optionally releases the managed resources also.</summary>
+		public void Dispose() {
+			_socket.Dispose();
+		}
+
 		/// <summary>Connects socket to specified endpoint.</summary>
 		/// <param name="endpoint">EndPoint to connect to.</param>
 		public void Connect(EndPoint endpoint) {
-			if (endpoint == null) throw new ArgumentNullException("endpoint");
+			if (endpoint == null) throw new ArgumentNullException("endpoint", "Endpoint can not be null.");
 			if (_socket.Connected) throw new InvalidOperationException("Socket connected already.");
 			BeginConnect(endpoint);
 		}
 
-		#if !SILVERLIGHT
-		/// <summary>Associates a socket with a local endpoint.</summary>
-		/// <param name="endpoint">Endpoint to listen on.</param>
-		public void Listen(IPEndPoint endpoint) {
-			if (endpoint == null) throw new ArgumentNullException("endpoint");
-			if (_socket.IsBound) throw new InvalidOperationException("Socket in listen state already.");
-			_socket.Bind(endpoint);
-			_socket.Listen(5);
-			BeginAccept();
-		}
-		#endif
-
 		/// <summary>Disconnects socket.</summary>
 		public void Disconnect() {
-			var evnt = new SocketAsyncEventArgs();
-			evnt.Completed += OnDisconnectComplete;
 			#if !SILVERLIGHT
-			_socket.DisconnectAsync(evnt);
+			BeginDisconnect();
 			#else
 			_socket.Close();
 			#endif
@@ -64,56 +55,44 @@ namespace Khrussk.Sockets {
 			_socket.SendAsync(evnt);
 		}
 
-		/// <summary>Connection to remote host has been established.</summary>
-		public event EventHandler<SocketEventArgs> Connected;
-
-		/// <summary>Connection to remote host failed.</summary>
-		public event EventHandler<SocketEventArgs> ConnectionFailed;
-
-		/// <summary>Connection to remote host has been closed.</summary>
-		public event EventHandler<SocketEventArgs> Disconnected;
-
+		/// <summary>Connection state has been changed.</summary>
+		public event EventHandler<SocketEventArgs> ConnectionStateChanged;
+		
 		/// <summary>Data from remote host has been received.</summary>
 		public event EventHandler<SocketEventArgs> DataReceived;
 
-		#if !SILVERLIGHT
-		/// <summary>New connection has been accepted.</summary>
-		public event EventHandler<SocketEventArgs> ConnectionAccepted;
-		
-		void BeginAccept() {
-			var evnt = new SocketAsyncEventArgs();
-			evnt.Completed += OnAcceptComplete;
-			_socket.AcceptAsync(evnt);
-		}
-		#endif
-
 		void BeginConnect(EndPoint endpoint) {
 			var evnt = new SocketAsyncEventArgs { RemoteEndPoint = endpoint };
-			evnt.Completed += new EventHandler<SocketAsyncEventArgs>(OnConnectComplete);
+			evnt.Completed += OnConnectComplete;
 			_socket.ConnectAsync(evnt);
 		}
 
+		#if !SILVERLIGHT
+		void BeginDisconnect() {
+			var evnt = new SocketAsyncEventArgs();
+			evnt.Completed += OnDisconnectComplete;
+			_socket.DisconnectAsync(evnt);
+		}
+		#endif
+
 		void BeginReceive() {
 			var evnt = new SocketAsyncEventArgs();
-			evnt.SetBuffer(_receiveBuffer, 0, 255);
-			evnt.Completed += new EventHandler<SocketAsyncEventArgs>(OnReceiveComplete);
+			evnt.SetBuffer(_receiveBuffer, 0, _receiveBuffer.Length);
+			evnt.Completed += OnReceiveComplete;
 			_socket.ReceiveAsync(evnt);
 		}
 
 		void OnConnectComplete(object sender, SocketAsyncEventArgs e) {
 			if (e.SocketError == SocketError.Success) {
-				var evnt = Connected;
-				if (evnt != null) evnt(this, new SocketEventArgs(this));
+				OnConnectionStateChanged(ConnectionState.Connected);
 				BeginReceive();
-			} else {
-				var evnt = ConnectionFailed;
-				if (evnt != null) evnt(this, new SocketEventArgs(this));
-			}
+			} else
+				OnConnectionStateChanged(ConnectionState.Failed);
 		}
 
 		void OnDisconnectComplete(object sender, SocketAsyncEventArgs e) {
-			var evnt = Disconnected;
-			if (evnt != null) evnt(this, new SocketEventArgs(this));
+			var evnt = ConnectionStateChanged;
+			if (evnt != null) evnt(this, new SocketEventArgs(this, ConnectionState.Disconnected));
 		}
 		
 		void OnSendComplete(object sender, SocketAsyncEventArgs e) {
@@ -129,23 +108,19 @@ namespace Khrussk.Sockets {
 					evnt(this, new SocketEventArgs(this, buffer));
 				}
 				BeginReceive();
-			} else /*if (e.SocketError != SocketError.Success)*/ {
-				var evnt = Disconnected;
-				if (evnt != null) evnt(this, new SocketEventArgs(this));
-			}
-			
+			} else
+				OnConnectionStateChanged(ConnectionState.Disconnected);
+		}
+
+		void OnConnectionStateChanged(ConnectionState connectionState) {
+			var evnt = ConnectionStateChanged;
+			if (evnt != null) evnt(this, new SocketEventArgs(this, connectionState));
 		}
 		
-		#if !SILVERLIGHT
-		void OnAcceptComplete(object sender, SocketAsyncEventArgs e) {
-			var clientSocket = new Socket(e.AcceptSocket);
-			var evnt = ConnectionAccepted;
-			if (evnt != null) evnt(this, new SocketEventArgs(clientSocket));
-			BeginAccept();
-		}
-		#endif
-
+		/// <summary>Underlaying socket.</summary>
 		System.Net.Sockets.Socket _socket;
-		byte[] _receiveBuffer = new byte[255];
+
+		/// <summary>Receive buffer.</summary>
+		byte[] _receiveBuffer = new byte[1024 * 8];
 	}
 }

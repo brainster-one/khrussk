@@ -7,14 +7,11 @@ namespace Khrussk.NetworkRealm {
 
 	/// <summary>Realm client.</summary>
 	public sealed class RealmClient {
-		/// <summary>Initializes a new instance of the RealmService class.</summary>
+		/// <summary>Initializes a new instance of the RealmClient class using the specified protocol.</summary>
 		/// <param name="protocol">Protocol.</param>
 		public RealmClient(RealmProtocol protocol) {
-			_protocol = protocol;
-			_peer = new Peer(_protocol);
-			_peer.Connected += OnConnected;
-			_peer.ConnectionFailed += OnConnectionFailed;
-			_peer.Disconnected += OnDisconnected;
+			_peer = new Peer(protocol);
+			_peer.ConnectionStateChanged += OnConnected;
 			_peer.PacketReceived += OnPacketReceived;
 		}
 
@@ -34,23 +31,11 @@ namespace Khrussk.NetworkRealm {
 			_peer.Disconnect();
 		}
 
-		/// <summary>Connected to remote service.</summary>
-		public event EventHandler<RealmClientEventArgs> Connected;
+		/// <summary>Connection state has been changed.</summary>
+		public event EventHandler<RealmClientEventArgs> ConnectionStateChanged;
 
-		/// <summary>Connection failed.</summary>
-		public event EventHandler<RealmClientEventArgs> ConnectionFailed;
-
-		/// <summary>Connection has been closed.</summary>
-		public event EventHandler<RealmClientEventArgs> Disconnected;
-
-		/// <summary>Entity has benn added into realm.</summary>
-		public event EventHandler<RealmClientEventArgs> EntityAdded;
-
-		/// <summary>Entity has been removed from realm.</summary>
-		public event EventHandler<RealmClientEventArgs> EntityRemoved;
-
-		/// <summary>Entity has been changed.</summary>
-		public event EventHandler<RealmClientEventArgs> EntityModified;
+		/// <summary>Entity state has been changed.</summary>
+		public event EventHandler<RealmClientEventArgs> EntityStateChanged;
 
 		/// <summary>Just connected to remote service. Send handshake packet.</summary>
 		/// <param name="sender">Event sender.</param>
@@ -63,16 +48,18 @@ namespace Khrussk.NetworkRealm {
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnConnectionFailed(object sender, PeerEventArgs e) {
-			var evnt = ConnectionFailed;
-			if (evnt != null) evnt(this, new RealmClientEventArgs());
+			_connectionState = ConnectionState.Failed;
+			var evnt = ConnectionStateChanged;
+			if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, ConnectionState = _connectionState });
 		}
 
 		/// <summary>Connection with remote service has been closed.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnDisconnected(object sender, PeerEventArgs e) {
-			var evnt = Disconnected;
-			if (evnt != null) evnt(this, new RealmClientEventArgs());
+			_connectionState = ConnectionState.Disconnected;
+			var evnt = ConnectionStateChanged;
+			if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, ConnectionState = _connectionState });
 		}
 
 		/// <summary>New packet has been received.</summary>
@@ -81,31 +68,30 @@ namespace Khrussk.NetworkRealm {
 		void OnPacketReceived(object sender, PeerEventArgs e) {
 			// TODO Refactor this shit.
 			if (e.Packet is HandshakePacket) {
+				_connectionState = ConnectionState.Connected;
 				_session = ((HandshakePacket)e.Packet).Session;
-				var evnt = Connected;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session });
+				var evnt = ConnectionStateChanged;
+				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, ConnectionState = _connectionState });
 			} else if (e.Packet is AddEntityPacket) {
 				var packet = (AddEntityPacket)e.Packet;
-				var evnt = EntityAdded;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Entity = packet.Entity } });
+				var evnt = EntityStateChanged;
+				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Entity = packet.Entity, Action = EntityNetworkAction.Added } });
 			} else if (e.Packet is RemoveEntityPacket) {
 				var packet = (RemoveEntityPacket)e.Packet;
-				var evnt = EntityRemoved;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId } });
+				var evnt = EntityStateChanged;
+				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Action = EntityNetworkAction.Removed } });
 			} else if (e.Packet is SyncEntityPacket) {
 				var packet = (SyncEntityPacket)e.Packet;
-				var evnt = EntityModified;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Diff = packet.Diff } });
+				var evnt = EntityStateChanged;
+				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Diff = packet.Diff, Action = EntityNetworkAction.Modified } });
 			}
 		}
 
 		/// <summary>Session.</summary>
 		private Guid _session;
+		private ConnectionState _connectionState;
 
 		/// <summary>Underlaying peer.</summary>
 		private Peer _peer;
-
-		/// <summary>Gets protocol.</summary>
-		private RealmProtocol _protocol;
 	}
 }

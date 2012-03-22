@@ -5,7 +5,6 @@ namespace Khrussk.NetworkRealm {
 	using Khrussk.NetworkRealm.Helpers;
 	using Khrussk.NetworkRealm.Protocol;
 	using Khrussk.Peers;
-	using Khrussk.Services;
 
 	/// <summary>Realm service.</summary>
 	public sealed class RealmService {
@@ -13,20 +12,23 @@ namespace Khrussk.NetworkRealm {
 		/// <param name="protocol">Protocol.</param>
 		public RealmService(RealmProtocol protocol) {
 			_protocol = protocol;
-			_service = new Service(_protocol);
-			_service.PacketReceived += OnPacketReceived;
-			_service.ClientDisconnected += OnClientDisconnected;
+			_peer = new Listener(_protocol);
+			_peer.PeerConnected += new EventHandler<PeerEventArgs>(_peer_PeerConnected);
+		}
+
+		void _peer_PeerConnected(object sender, PeerEventArgs e) {
+			e.Peer.PacketReceived += OnPacketReceived;
 		}
 
 		/// <summary>Starts service.</summary>
 		/// <param name="endpoint">Endpoint to listen on.</param>
 		public void Start(IPEndPoint endpoint) {
-			_service.Start(endpoint);
+			_peer.Listen(endpoint);
 		}
 
 		/// <summary>Stops the service.</summary>
 		public void Stop() {
-			_service.Stop();
+			_peer.Disconnect();
 		}
 
 		/// <summary>Disconnects user from service.</summary>
@@ -35,25 +37,33 @@ namespace Khrussk.NetworkRealm {
 			_users.GetPeer(user).Disconnect();
 		}
 
+		/// <summary>Sends packet to all connected clients.</summary>
+		/// <param name="packet">Packet to send.</param>
+		public void SendAll(object packet) {
+			foreach (Peer peer in _users.Peers) {
+				peer.Send(packet);
+			}
+		}
+
 		/// <summary>Adds antity to realm.</summary>
 		/// <param name="entity">Entity to add.</param>
 		public void AddEntity(object entity) {
 			var id = _entities.Add(entity);
-			_service.SendAll(new AddEntityPacket(id, entity));
+			SendAll(new AddEntityPacket(id, entity));
 		}
 
 		/// <summary>Removes entity from realm.</summary>
 		/// <param name="entity">Entity to remove.</param>
 		public void RemoveEntity(object entity) {
 			var id = _entities.Remove(entity);
-			_service.SendAll(new RemoveEntityPacket(id));
+			SendAll(new RemoveEntityPacket(id));
 		}
 
 		/// <summary>Syncs entities for all users.</summary>
 		/// <param name="entity">Entity to sync.</param>
 		public void ModifyEntity(object entity) {
 			var id = _entities.GetId(entity);
-			_service.SendAll(new SyncEntityPacket(id, entity));
+			SendAll(new SyncEntityPacket(id, entity));
 		}
 
 		/// <summary>New user connected to realm.</summary>
@@ -68,9 +78,11 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Client disconnected from service.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
-		void OnClientDisconnected(object sender, PeerEventArgs e) {
-			var evnt = UserDisconnected;
-			if (evnt != null) evnt(this, new RealmServiceEventArgs { User = _users.GetUser(e.Peer) });
+		void OnConnectionStateChanged(object sender, PeerEventArgs e) {
+			if (e.ConnectionState == ConnectionState.Disconnected) {
+				var evnt = UserDisconnected;
+				if (evnt != null) evnt(this, new RealmServiceEventArgs { User = _users.GetUser(e.Peer) });
+			}
 		}
 		
 		/// <summary>Packet received from client.</summary>
@@ -86,7 +98,6 @@ namespace Khrussk.NetworkRealm {
 				var user = new User(session);
 				_users.Map(user, peer);
 				
-
 				// TODO Move it to another place
 				foreach (var entity in _entities.Entities) {
 					var id = _entities.GetId(entity);
@@ -104,7 +115,7 @@ namespace Khrussk.NetworkRealm {
 		}
 	
 		/// <summary>Underlaying service.</summary>
-		Service _service;
+		Listener _peer;
 
 		/// <summary>Gets protocol.</summary>
 		RealmProtocol _protocol;

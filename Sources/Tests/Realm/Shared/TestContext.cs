@@ -4,6 +4,7 @@ namespace Khrussk.Tests.Realm {
 	using System.Collections.Generic;
 	using Khrussk.NetworkRealm;
 	using Khrussk.Tests.Realm.Shared;
+	using Khrussk.Peers;
 
 	/// <summary>Test context.</summary>
 	public sealed class TestContext : BasicTestContext {
@@ -27,26 +28,19 @@ namespace Khrussk.Tests.Realm {
 		/// <returns>RealmClient.</returns>
 		public RealmClient NewRealmClient() {
 			var client = new RealmClient(new TestProtocol());
-			client.EntityAdded += OnEntityAdded;
-			client.EntityModified += OnEntityModified;
-			client.EntityRemoved += OnEntityRemoved;
-			client.Connected += OnClientConnected;
-			client.Disconnected += OnClientDisconnected;
+			client.EntityStateChanged += OnEntityStateChanged;
+			client.ConnectionStateChanged += OnConnectionStateChanged;
 			return client;
 		}
 
 		/// <summary>Client connected to service.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
-		void OnClientConnected(object sender, RealmClientEventArgs e) {
-			IsClientConnected = true;
-		}
-
-		/// <summary>Client disconnected form service.</summary>
-		/// <param name="sender">Event sender.</param>
-		/// <param name="e">Event args.</param>
-		void OnClientDisconnected(object sender, RealmClientEventArgs e) {
-			IsClientConnected = false;
+		void OnConnectionStateChanged(object sender, RealmClientEventArgs e) {
+			if (e.ConnectionState == ConnectionState.Connected)
+				IsClientConnected = true;
+			else 
+				IsClientConnected = false;
 		}
 
 		/// <summary>User connected to service.</summary>
@@ -66,22 +60,13 @@ namespace Khrussk.Tests.Realm {
 		/// <summary>On entity added event triggered</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
-		void OnEntityAdded(object sender, RealmClientEventArgs e) {
-			Entities.Add(e.EntityInfo.Id, e.EntityInfo.Entity);
-		}
-
-		/// <summary>On entity removed event triggered.</summary>
-		/// <param name="sender">Event sender.</param>
-		/// <param name="e">Event args.</param>
-		void OnEntityRemoved(object sender, RealmClientEventArgs e) {
-			Entities.Remove(e.EntityInfo.Id);
-		}
-
-		/// <summary>On entity modified event triggered.</summary>
-		/// <param name="sender">Event sender.</param>
-		/// <param name="e">Event args.</param>
-		void OnEntityModified(object sender, RealmClientEventArgs e) {
-			e.EntityInfo.Diff.ApplyChanges(Entities.First(x => x.Key == e.EntityInfo.Id).Value);
+		void OnEntityStateChanged(object sender, RealmClientEventArgs e) {
+			if (e.EntityInfo.Action == EntityNetworkAction.Added)
+				Entities.Add(e.EntityInfo.Id, e.EntityInfo.Entity);
+			else if (e.EntityInfo.Action == EntityNetworkAction.Removed)
+				Entities.Remove(e.EntityInfo.Id);
+			else if (e.EntityInfo.Action == EntityNetworkAction.Modified)
+				e.EntityInfo.Diff.ApplyChanges(Entities.First(x => x.Key == e.EntityInfo.Id).Value);
 		}
 
 		/// <summary>Gets service.</summary>

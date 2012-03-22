@@ -22,7 +22,6 @@ namespace Khrussk.Peers {
 		/// <summary>Creates packet from stream.</summary>
 		/// <param name="stream">Stream to read data from.</param>
 		/// <returns>Created packet.</returns>
-		// TODO Return null if packet can not be read
 		public object Read(Stream stream) {
 			if (stream == null) throw new ArgumentNullException("stream");
 			if (!stream.CanRead) throw new ArgumentException("Can't read from closed stream", "stream");

@@ -5,21 +5,21 @@ namespace Khrussk.Peers {
 	using Sockets;
 
 	/// <summary>Service peer.</summary>
-	public sealed class Listener /*: IDisposable */ {
-		/// <summary>Initializes a new instance of the ListenerPeer class using the specified protocol.</summary>
+	public sealed class Listener : IDisposable {
+		/// <summary>Initializes a new instance of the Listener class using the specified protocol.</summary>
 		/// <param name="protocol">Protocol.</param>
 		public Listener(IProtocol protocol) {
 			_protocol = protocol;
 			_socket = new Socket();
-			_socket.ConnectionAccepted += new EventHandler<SocketEventArgs>(_socket_ClientSocketAccepted);
+			_socket.ConnectionAccepted += _socket_ClientSocketAccepted;
 		}
 
-		/*
-		/// <summary>Releases the unmanaged resources used by the current socket, and optionally releases the managed resources also.</summary>
+		
+		/// <summary>Releases the unmanaged resources used by the current listener, and optionally releases the managed resources also.</summary>
 		public void Dispose() {
-			if (_socket != null) _socket.Dispose();
+			_socket.Dispose();
 		}
-		*/
+		
 		/// <summary>Associates a peer with a local endpoint.</summary>
 		/// <param name="endpoint">Endpoint.</param>
 		public void Listen(IPEndPoint endpoint) {
@@ -31,21 +31,14 @@ namespace Khrussk.Peers {
 			_socket.Disconnect();
 		}
 
-		/*
-		/// <summary>Gets connection state.</summary>
-		public bool IsActive {
-			get { return _socket.; }
-		}
-		*/
-
 		/// <summary>On peer connected.</summary>
-		public event EventHandler<PeerEventArgs> ClientPeerConnected;
+		public event EventHandler<PeerEventArgs> PeerConnected;
 
 		/// <summary>On peer connected.</summary>
 		/// <param name="client">Client's peer.</param>
 		void _socket_ClientSocketAccepted(object sender, SocketEventArgs e) {
-			var evnt = ClientPeerConnected;
-			if (evnt != null) evnt(this, new PeerEventArgs(PeerEventType.Connection, new Peer(e.Socket, _protocol)));
+			var evnt = PeerConnected;
+			if (evnt != null) evnt(this, new PeerEventArgs(new Peer(e.Socket, _protocol), ConnectionState.Connected));
 		}
 
 		/// <summary>Protocol.</summary>

@@ -1,9 +1,9 @@
 ﻿
 namespace Khrussk.Tests {
-	using System.Net;
-	using System.Threading;
 	using System;
 	using System.Diagnostics;
+	using System.Net;
+	using System.Threading;
 
 	/// <summary>Waiting for event thread handler.</summary>
 	/// <returns>False - timeout.</returns>
@@ -11,15 +11,10 @@ namespace Khrussk.Tests {
 
 	/// <summary>Test context.</summary>
 	public class BasicTestContext {
-		/// <summary>Initializes a new instance of the TestContext class.</summary>
+		/// <summary>Initializes a new instance of the BasicTestContext class.</summary>
 		public BasicTestContext() {
-			Wait = new ManualResetEvent(false);
 			EndPoint = new IPEndPoint(IPAddress.Loopback, ++_port);
 			AppDomain.CurrentDomain.UnhandledException += OnUnhandledException;
-		}
-
-		void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
-			Debug.Print("Unhandled exception: " + e.ExceptionObject);
 		}
 
 		/// <summary>Waits for event.</summary>
@@ -37,15 +32,18 @@ namespace Khrussk.Tests {
 			return evt.WaitOne(timeout);
 		}
 
-
-		/// <summary>Gets wait event.</summary>
-		public ManualResetEvent Wait { get; private set; }
-
 		/// <summary>Gets EndPoint.</summary>
 		public IPEndPoint EndPoint { get; private set; }
 
 		/// <summary>Gets waiting period in millisecnds.</summary>
 		public int WaitingPeriod { get { return 750; } }
+
+		/// <summary>On unhandled exception.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">Evet args.</param>
+		void OnUnhandledException(object sender, UnhandledExceptionEventArgs e) {
+			Debug.Print("Unhandled exception: " + e.ExceptionObject);
+		}
 
 		/// <summary>Port.</summary>
 		static int _port = 1025;

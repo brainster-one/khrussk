@@ -39,6 +39,10 @@ namespace Khrussk.NetworkRealm.Helpers {
 			return _map.First(x => x.Value == peer).Key;
 		}
 
+		public IEnumerable<object> Peers {
+			get { return _map.Values; }
+		}
+
 		/// <summary>Dictionary stores object-id map.</summary>
 		private Dictionary<User, Peer> _map = new Dictionary<User, Peer>();
 	}
