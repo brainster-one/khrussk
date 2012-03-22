@@ -18,6 +18,7 @@ namespace Khrussk.NetworkRealm {
 
 		void _peer_PeerConnected(object sender, PeerEventArgs e) {
 			e.Peer.PacketReceived += OnPacketReceived;
+			e.Peer.ConnectionStateChanged += OnConnectionStateChanged;
 		}
 
 		/// <summary>Starts service.</summary>
@@ -80,6 +81,7 @@ namespace Khrussk.NetworkRealm {
 		/// <param name="e">Event args.</param>
 		void OnConnectionStateChanged(object sender, PeerEventArgs e) {
 			if (e.ConnectionState == ConnectionState.Disconnected) {
+				e.Peer.ConnectionStateChanged -= OnConnectionStateChanged;
 				var evnt = UserDisconnected;
 				if (evnt != null) evnt(this, new RealmServiceEventArgs { User = _users.GetUser(e.Peer) });
 			}
