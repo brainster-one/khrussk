@@ -1,7 +1,8 @@
 ﻿
-namespace Khrussk.Tests.Peers {
-	using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Khrussk.Tests.UnitTests.Peers {
 	using System.Linq;
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
 	using Protocol;
 
 	[TestClass] public class PeerTests {

@@ -1,9 +1,9 @@
 ﻿
-namespace Khrussk.Tests.Realm {
-	using System.Linq;
+
+namespace Khrussk.Tests.UnitTests.Realm.Shared {
 	using System.Collections.Generic;
+	using System.Linq;
 	using NetworkRealm;
-	using Shared;
 
 	/// <summary>Test context.</summary>
 	public sealed class TestContext : BasicTestContext {

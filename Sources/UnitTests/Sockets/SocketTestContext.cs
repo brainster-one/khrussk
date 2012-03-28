@@ -1,11 +1,10 @@
 ﻿
-using System.Globalization;
-
-namespace Khrussk.Tests.Sockets {
+namespace Khrussk.Tests.UnitTests.Sockets {
 	using System.Collections.Generic;
+	using System.Diagnostics;
+	using System.Globalization;
 	using System.Linq;
 	using Khrussk.Sockets;
-	using System.Diagnostics;
 
 	/// <summary>Context for tests.</summary>
 	sealed class SocketTestContext : BasicTestContext {

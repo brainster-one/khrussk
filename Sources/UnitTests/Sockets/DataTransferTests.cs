@@ -1,5 +1,5 @@
 ﻿
-namespace Khrussk.Tests.Sockets {
+namespace Khrussk.Tests.UnitTests.Sockets {
 	using System.Linq;
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
 

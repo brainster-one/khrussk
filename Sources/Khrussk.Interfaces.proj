@@ -8,7 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Compile Include="Interfaces\**\*.cs" />
+		<Compile Include="ConnectionState.cs" />
+		<Compile Include="Peers\IProtocol.cs" />
+		<Compile Include="Peers\IPacketSerializer.cs" />
+		<Compile Include="NetworkRealm\Protocol\IEntitySerializer.cs" />
 	</ItemGroup>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

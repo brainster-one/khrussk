@@ -1,10 +1,10 @@
 ﻿
-namespace Khrussk.Tests.Sockets {
+namespace Khrussk.Tests.UnitTests.Sockets {
 	using System;
-	using System.Linq;
-	using Microsoft.VisualStudio.TestTools.UnitTesting;
 	using System.Collections.Generic;
+	using System.Linq;
 	using Khrussk.Sockets;
+	using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 	/// <summary>Connections test.</summary>
 	[TestClass] public class ConnectionsTests {

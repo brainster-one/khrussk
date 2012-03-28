@@ -1,5 +1,5 @@
 ﻿
-namespace Khrussk.Tests.Realm {
+namespace Khrussk.Tests.UnitTests.Realm.Shared {
 	using System.Linq;
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
 

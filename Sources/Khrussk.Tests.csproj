@@ -45,21 +45,21 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Tests\BasicTestContext.cs" />
-    <Compile Include="Tests\Peers\PeerTestContext.cs" />
-    <Compile Include="Tests\Peers\PeerTests.cs" />
-    <Compile Include="Tests\Peers\Protocol\Packet.cs" />
-    <Compile Include="Tests\Peers\Protocol\TestProtocol.cs" />
-    <Compile Include="Tests\Realm\EntitySyncTests.cs" />
-    <Compile Include="Tests\Realm\RealmClientConnectionTests.cs" />
-    <Compile Include="Tests\Realm\RealmServiceConnectionTests.cs" />
-    <Compile Include="Tests\Realm\Shared\ConnectionTests.cs" />
-    <Compile Include="Tests\Realm\Shared\TestContext.cs" />
-    <Compile Include="Tests\Realm\Shared\TestEntity.cs" />
-    <Compile Include="Tests\Realm\Shared\TestProtocol.cs" />
-    <Compile Include="Tests\Sockets\ConnectionTests.cs" />
-    <Compile Include="Tests\Sockets\DataTransferTests.cs" />
-    <Compile Include="Tests\Sockets\SocketTestContext.cs" />
+    <Compile Include="UnitTests\BasicTestContext.cs" />
+    <Compile Include="UnitTests\Peers\PeerTestContext.cs" />
+    <Compile Include="UnitTests\Peers\PeerTests.cs" />
+    <Compile Include="UnitTests\Peers\Protocol\Packet.cs" />
+    <Compile Include="UnitTests\Peers\Protocol\TestProtocol.cs" />
+    <Compile Include="UnitTests\Realm\EntitySyncTests.cs" />
+    <Compile Include="UnitTests\Realm\RealmClientConnectionTests.cs" />
+    <Compile Include="UnitTests\Realm\RealmServiceConnectionTests.cs" />
+    <Compile Include="UnitTests\Realm\Shared\ConnectionTests.cs" />
+    <Compile Include="UnitTests\Realm\Shared\TestContext.cs" />
+    <Compile Include="UnitTests\Realm\Shared\TestEntity.cs" />
+    <Compile Include="UnitTests\Realm\Shared\TestProtocol.cs" />
+    <Compile Include="UnitTests\Sockets\ConnectionTests.cs" />
+    <Compile Include="UnitTests\Sockets\DataTransferTests.cs" />
+    <Compile Include="UnitTests\Sockets\SocketTestContext.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="Khrussk.csproj">

@@ -6,7 +6,6 @@ namespace Khrussk.NetworkRealm.Protocol {
 	using System.Linq;
 	using System.Reflection;
 
-
 	/// <summary>Basic entity serializer.</summary>
 	public sealed class EntitySerializer {
 		/// <summary>Registers entity serializer.</summary>

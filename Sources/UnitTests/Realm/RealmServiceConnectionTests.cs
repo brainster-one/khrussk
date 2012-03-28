@@ -1,7 +1,8 @@
 ﻿
-namespace Khrussk.Tests.Realm {
+namespace Khrussk.Tests.UnitTests.Realm {
 	using System.Linq;
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
+	using Shared;
 
 	/// <summary>Connection establishing between RealmService and client tests.</summary>
 	[TestClass] public sealed class RealmServiceConnectionTests : ConnectionTests {

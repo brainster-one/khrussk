@@ -1,5 +1,5 @@
 ﻿
-namespace Khrussk.Tests.Peers.Protocol {
+namespace Khrussk.Tests.UnitTests.Peers.Protocol {
 	using Khrussk.Peers;
 
 	class TestProtocol : Protocol {

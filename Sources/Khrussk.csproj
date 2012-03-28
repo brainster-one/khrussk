@@ -40,10 +40,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IEntitySerializer.cs" />
-    <Compile Include="Interfaces\IPacketSerializer.cs" />
-    <Compile Include="Interfaces\IProtocol.cs" />
-    <Compile Include="Interfaces\ConnectionState.cs" />
+    <Compile Include="NetworkRealm\Protocol\IEntitySerializer.cs" />
+    <Compile Include="Peers\IPacketSerializer.cs" />
+    <Compile Include="Peers\IProtocol.cs" />
+    <Compile Include="ConnectionState.cs" />
     <Compile Include="NetworkRealm\Helpers\EntityIdMap.cs" />
     <Compile Include="NetworkRealm\Helpers\UserPeerMap.cs" />
     <Compile Include="NetworkRealm\Properties\AssemblyInfo.cs" />

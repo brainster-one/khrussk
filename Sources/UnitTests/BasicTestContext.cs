@@ -1,5 +1,5 @@
 ﻿
-namespace Khrussk.Tests {
+namespace Khrussk.Tests.UnitTests {
 	using System;
 	using System.Diagnostics;
 	using System.Net;

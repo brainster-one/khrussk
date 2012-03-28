@@ -1,7 +1,8 @@
 ﻿
-namespace Khrussk.Tests.Realm {
+namespace Khrussk.Tests.UnitTests.Realm {
 	using System.Linq;
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
+	using Shared;
 
 	[TestClass] public class EntitySyncTests : ConnectionTests {
 		

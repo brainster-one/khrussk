@@ -1,5 +1,6 @@
 ﻿
-namespace Khrussk.Tests.Peers {
+
+namespace Khrussk.Tests.UnitTests.Peers {
 	using System.Collections.Generic;
 	using System.Linq;
 	using Khrussk.Peers;

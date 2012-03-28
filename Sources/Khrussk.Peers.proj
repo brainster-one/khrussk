@@ -9,6 +9,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<Exclude Include="ConnectionState.cs" />
+		<Exclude Include="Peers\IProtocol.cs" />
+		<Exclude Include="Peers\IPacketSerializer.cs" />
+		<Exclude Include="NetworkRealm\Protocol\IEntitySerializer.cs" />		
+	</ItemGroup>
+
+	<ItemGroup>
 		<Reference Include="System" />
 		<Reference Include="System.Net" />
 		<Reference Include="Khrussk.Interfaces">
@@ -16,7 +23,7 @@
 		</Reference>
 
 		<Compile Include="Sockets\**\*.cs" />
-		<Compile Include="Peers\**\*.cs" />
+		<Compile Include="Peers\**\*.cs" Exclude="@(Exclude)" />
 	</ItemGroup>
 
 	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
