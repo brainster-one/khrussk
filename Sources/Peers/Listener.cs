@@ -11,7 +11,7 @@ namespace Khrussk.Peers {
 		public Listener(IProtocol protocol) {
 			_protocol = protocol;
 			_socket = new Socket();
-			_socket.ConnectionAccepted += _socket_ClientSocketAccepted;
+			_socket.ConnectionAccepted += OnSocketClientSocketAccepted;
 		}
 
 		
@@ -34,9 +34,10 @@ namespace Khrussk.Peers {
 		/// <summary>On peer connected.</summary>
 		public event EventHandler<PeerEventArgs> PeerConnected;
 
-		/// <summary>On peer connected.</summary>
-		/// <param name="client">Client's peer.</param>
-		void _socket_ClientSocketAccepted(object sender, SocketEventArgs e) {
+		/// <summary>On connection accepted.</summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
+		void OnSocketClientSocketAccepted(object sender, SocketEventArgs e) {
 			var evnt = PeerConnected;
 			if (evnt != null) evnt(this, new PeerEventArgs(new Peer(e.Socket, _protocol), ConnectionState.Connected));
 		}
@@ -45,6 +46,6 @@ namespace Khrussk.Peers {
 		readonly IProtocol _protocol;
 
 		/// <summary>Underlying socket.</summary>
-		Socket _socket;
+		readonly Socket _socket;
 	}
 }

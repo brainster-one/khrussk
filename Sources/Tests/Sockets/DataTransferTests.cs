@@ -35,7 +35,7 @@ namespace Khrussk.Tests.Sockets {
 		}
 
 		[TestMethod] public void BigDataChunkTest() {
-			byte[] buffer = new byte[1024 * 1024];
+			var buffer = new byte[1024 * 1024];
 			_context.ClientSocket.Send(buffer, 0, buffer.Length);
 
 			_context.WaitFor(() => false, 1000);
@@ -44,8 +44,8 @@ namespace Khrussk.Tests.Sockets {
 		}
 
 		[TestMethod] public void LotOfSmallDataChunksTest() {
-			for (int i = 0; i < 2048; ++i) {
-				byte[] buffer = new byte[3];
+			for (var i = 0; i < 2048; ++i) {
+				var buffer = new byte[3];
 				_context.ClientSocket.Send(buffer, 0, buffer.Length);
 			}
 

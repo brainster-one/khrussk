@@ -2,8 +2,8 @@
 namespace Khrussk.NetworkRealm {
 	using System;
 	using System.Net;
-	using Khrussk.NetworkRealm.Protocol;
-	using Khrussk.Peers;
+	using Peers;
+	using Protocol;
 
 	/// <summary>Realm client.</summary>
 	public sealed class RealmClient {
@@ -11,7 +11,7 @@ namespace Khrussk.NetworkRealm {
 		/// <param name="protocol">Protocol.</param>
 		public RealmClient(RealmProtocol protocol) {
 			_peer = new Peer(protocol);
-			_peer.ConnectionStateChanged += OnConnected;
+			_peer.ConnectionStateChanged += OnConnectionStateChanged;
 			_peer.PacketReceived += OnPacketReceived;
 		}
 
@@ -40,26 +40,12 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Just connected to remote service. Send handshake packet.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
-		void OnConnected(object sender, PeerEventArgs e) {
-			_peer.Send(new HandshakePacket(Guid.Empty));
-		}
-
-		/// <summary>On connection failed.</summary>
-		/// <param name="sender">Event sender.</param>
-		/// <param name="e">Event args.</param>
-		void OnConnectionFailed(object sender, PeerEventArgs e) {
-			_connectionState = ConnectionState.Failed;
+		void OnConnectionStateChanged(object sender, PeerEventArgs e) {
 			var evnt = ConnectionStateChanged;
-			if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, ConnectionState = _connectionState });
-		}
-
-		/// <summary>Connection with remote service has been closed.</summary>
-		/// <param name="sender">Event sender.</param>
-		/// <param name="e">Event args.</param>
-		void OnDisconnected(object sender, PeerEventArgs e) {
-			_connectionState = ConnectionState.Disconnected;
-			var evnt = ConnectionStateChanged;
-			if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, ConnectionState = _connectionState });
+			if (e.ConnectionState == ConnectionState.Connected)
+				_peer.Send(new HandshakePacket(Guid.Empty));
+			else if (evnt != null)
+				evnt(this, new RealmClientEventArgs { ConnectionState = e.ConnectionState, Session = _session });
 		}
 
 		/// <summary>New packet has been received.</summary>
@@ -88,10 +74,10 @@ namespace Khrussk.NetworkRealm {
 		}
 
 		/// <summary>Session.</summary>
-		private Guid _session;
-		private ConnectionState _connectionState;
+		Guid _session;
+		ConnectionState _connectionState;
 
 		/// <summary>Underlaying peer.</summary>
-		private Peer _peer;
+		readonly Peer _peer;
 	}
 }

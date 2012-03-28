@@ -5,7 +5,6 @@ namespace Khrussk.Tests.Sockets {
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
 	using System.Collections.Generic;
 	using Khrussk.Sockets;
-	using System.Diagnostics;
 
 	/// <summary>Connections test.</summary>
 	[TestClass] public class ConnectionsTests {
@@ -32,20 +31,20 @@ namespace Khrussk.Tests.Sockets {
 		/// <summary>Connection should be closed after disconnection on local site.</summary>
 		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnectionOnLocalSiteTest() {
 			_context.ClientSocket.Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 0, _context.WaitingPeriod));
+			Assert.IsTrue(_context.WaitFor(() => !_context.ClientSockets.Any(), _context.WaitingPeriod));
 		}
 
 		/// <summary>Connection should be closed after disconnection on remote site.</summary>
 		[TestMethod] public void ConnectionShouldBeClosedAfterDisconnectionOnRemoteSiteTest() {
 			_context.AcceptedSockets.First().Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => _context.AcceptedSockets.Count() == 0, _context.WaitingPeriod));
+			Assert.IsTrue(_context.WaitFor(() => !_context.AcceptedSockets.Any(), _context.WaitingPeriod));
 		}
 
 		/// <summary>Socket can be disconnected serveral times.</summary>
 		[TestMethod] public void ConnectionCanBeClosedSeveralTimesTest() {
 			_context.ClientSocket.Disconnect();
 			_context.ClientSocket.Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 0, _context.WaitingPeriod));
+			Assert.IsTrue(_context.WaitFor(() => !_context.ClientSockets.Any(), _context.WaitingPeriod));
 		}
 
 		/// <summary>Listener can handle multiple connections.</summary>
@@ -67,7 +66,7 @@ namespace Khrussk.Tests.Sockets {
 		[TestMethod] public void ConnectionCanBeReusedTest() {
 			var socket = _context.ClientSocket;
 			socket.Disconnect();
-			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 0, _context.WaitingPeriod));
+			Assert.IsTrue(_context.WaitFor(() => !_context.ClientSockets.Any(), _context.WaitingPeriod));
 			socket.Connect(_context.EndPoint);
 			Assert.IsTrue(_context.WaitFor(() => _context.ClientSockets.Count() == 1, _context.WaitingPeriod));
 		}
@@ -80,8 +79,8 @@ namespace Khrussk.Tests.Sockets {
 
 		///
 		[TestMethod] public void ConnectionStressTest() {
-			List<Socket> sockets = new List<Socket>();
-			for (int i = 0; i < 100; ++i) { sockets.Add(_context.NewSocket()); }
+			var sockets = new List<Socket>();
+			for (var i = 0; i < 100; ++i) { sockets.Add(_context.NewSocket()); }
 			
 			sockets.ForEach(x => x.Connect(_context.EndPoint));
 			_context.WaitFor(() => _context.AcceptedSockets.Count == 100 + 1 /* connected before */, 1500);

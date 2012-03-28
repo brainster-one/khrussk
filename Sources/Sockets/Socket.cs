@@ -3,7 +3,6 @@ namespace Khrussk.Sockets {
 	using System;
 	using System.Net;
 	using System.Net.Sockets;
-	using System.Diagnostics;
 
 	/// <summary>Socket.</summary>
 	public sealed partial class Socket : IDisposable {
@@ -118,9 +117,9 @@ namespace Khrussk.Sockets {
 		}
 		
 		/// <summary>Underlaying socket.</summary>
-		System.Net.Sockets.Socket _socket;
+		readonly System.Net.Sockets.Socket _socket;
 
 		/// <summary>Receive buffer.</summary>
-		byte[] _receiveBuffer = new byte[1024 * 8];
+		readonly byte[] _receiveBuffer = new byte[1024 * 8];
 	}
 }

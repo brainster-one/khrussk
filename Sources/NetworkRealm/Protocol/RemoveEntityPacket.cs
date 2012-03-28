@@ -2,12 +2,12 @@
 namespace Khrussk.NetworkRealm.Protocol {
 	using System;
 	using System.IO;
-	using Khrussk.Peers;
+	using Peers;
 
 	/// <summary>Add entity packet.</summary>
 	sealed class RemoveEntityPacket {
 		/// <summary>Initializes a new instance of the AddEntityPacket class.</summary>
-		/// <param name="entity">Entity.</param>
+		/// <param name="entityId">Id of entity.</param>
 		public RemoveEntityPacket(int entityId) {
 			EntityId = entityId;
 		}

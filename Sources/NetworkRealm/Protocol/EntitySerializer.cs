@@ -10,10 +10,9 @@ namespace Khrussk.NetworkRealm.Protocol {
 	/// <summary>Basic entity serializer.</summary>
 	public sealed class EntitySerializer {
 		/// <summary>Registers entity serializer.</summary>
-		/// <param name="entityType">Entity type.</param>
 		/// <param name="serializer">Entity serializer.</param>
 		public void Register<T>(IEntitySerializer<T> serializer) {
-			_factory.Register<T>(serializer);
+			_factory.Register(serializer);
 			_idToType[++_currId] = typeof(T);
 		}
 
@@ -25,7 +24,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 			var method = typeof(EntitySerializer)
 				.GetMethod("write", BindingFlags.NonPublic | BindingFlags.Instance)
 				.MakeGenericMethod(entity.GetType())
-				.Invoke(this, new object[] { writer, entity });
+				.Invoke(this, new[] { writer, entity });
 		}
 
 		/// <summary>Deserializes entity from stream.</summary>
@@ -37,16 +36,16 @@ namespace Khrussk.NetworkRealm.Protocol {
 			entity = typeof(EntitySerializer)
 				.GetMethod("read", BindingFlags.NonPublic | BindingFlags.Instance)
 				.MakeGenericMethod(_idToType[entityTypeId])
-				.Invoke(this, new object[] { reader, entity });
+				.Invoke(this, new[] { reader, entity });
 		}
 
-		private void write<T>(BinaryWriter writer, object entity) {
+		private void Write<T>(BinaryWriter writer, object entity) {
 			var serializer = _factory.Get<T>();
 			if (serializer == null) throw new InvalidOperationException("No serializer registered for " + entity.GetType());
 			serializer.Serialize(writer, (T)entity);
 		}
 
-		private T read<T>(BinaryReader reader, object entity) {
+		private T Read<T>(BinaryReader reader, object entity) {
 			var serializer = _factory.Get<T>();
 			var res = (T)entity;
 			if (serializer == null) throw new InvalidOperationException("No serializer registered for ");

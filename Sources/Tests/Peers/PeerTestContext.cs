@@ -3,7 +3,7 @@ namespace Khrussk.Tests.Peers {
 	using System.Collections.Generic;
 	using System.Linq;
 	using Khrussk.Peers;
-	using Khrussk.Tests.Peers.Protocol;
+	using Protocol;
 
 	/// <summary>Context for tests.</summary>
 	sealed class PeerTestContext : BasicTestContext {

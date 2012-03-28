@@ -3,7 +3,7 @@ namespace Khrussk.NetworkRealm.Helpers {
 	using System;
 	using System.Linq;
 	using System.Collections.Generic;
-	using Khrussk.Peers;
+	using Peers;
 
 	/// <summary>Stores peeruser/peer map.</summary>
 	class UserPeerMap {
@@ -44,6 +44,6 @@ namespace Khrussk.NetworkRealm.Helpers {
 		}
 
 		/// <summary>Dictionary stores object-id map.</summary>
-		private Dictionary<User, Peer> _map = new Dictionary<User, Peer>();
+		readonly Dictionary<User, Peer> _map = new Dictionary<User, Peer>();
 	}
 }

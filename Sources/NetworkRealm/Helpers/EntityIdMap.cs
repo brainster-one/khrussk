@@ -57,9 +57,9 @@ namespace Khrussk.NetworkRealm.Helpers {
 		}
 
 		/// <summary>Dictionary stores object-id map.</summary>
-		private Dictionary<object, int> _map = new Dictionary<object, int>();
+		readonly Dictionary<object, int> _map = new Dictionary<object, int>();
 
 		/// <summary>Entity ids pool.</summary>
-		private Queue<int> _ids = new Queue<int>();
+		readonly Queue<int> _ids = new Queue<int>();
 	}
 }

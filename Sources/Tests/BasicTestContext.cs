@@ -24,7 +24,7 @@ namespace Khrussk.Tests {
 		public bool WaitFor(WaitForThreadHandler handler, int timeout) {
 			var evt = new ManualResetEvent(false);
 
-			new System.Threading.Thread(x => {
+			new Thread(x => {
 				while (handler() == false) { }
 				evt.Set();
 			}).Start();

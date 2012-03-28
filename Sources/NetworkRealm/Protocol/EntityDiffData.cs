@@ -14,7 +14,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 			_serializer.Deserialize(_reader, ref entity);
 		}
 
-		private EntitySerializer _serializer;
-		private BinaryReader _reader;
+		readonly EntitySerializer _serializer;
+		readonly BinaryReader _reader;
 	}
 }

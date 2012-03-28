@@ -2,7 +2,7 @@
 namespace Khrussk.NetworkRealm.Protocol {
 	using System;
 	using System.IO;
-	using Khrussk.Peers; 
+	using Peers; 
 
 	/// <summary>Handshake packet.</summary>
 	public sealed class HandshakePacket {

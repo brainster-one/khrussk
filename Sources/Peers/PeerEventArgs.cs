@@ -13,8 +13,8 @@ namespace Khrussk.Peers {
 		}
 
 		/// <summary>Initializes a new instance of the PeerEventArgs class using the specified peer and packet.</summary>
-		/// <param name="socket">Peer.</param>
-		/// <param name="buffer">Packet.</param>
+		/// <param name="peer">Peer.</param>
+		/// <param name="packet">Packet.</param>
 		internal PeerEventArgs(Peer peer, object packet) {
 			Peer = peer;
 			Packet = packet;

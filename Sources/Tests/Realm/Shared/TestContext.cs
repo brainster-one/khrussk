@@ -2,9 +2,8 @@
 namespace Khrussk.Tests.Realm {
 	using System.Linq;
 	using System.Collections.Generic;
-	using Khrussk.NetworkRealm;
-	using Khrussk.Tests.Realm.Shared;
-	using Khrussk.Peers;
+	using NetworkRealm;
+	using Shared;
 
 	/// <summary>Test context.</summary>
 	public sealed class TestContext : BasicTestContext {
@@ -37,10 +36,7 @@ namespace Khrussk.Tests.Realm {
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnConnectionStateChanged(object sender, RealmClientEventArgs e) {
-			if (e.ConnectionState == ConnectionState.Connected)
-				IsClientConnected = true;
-			else 
-				IsClientConnected = false;
+			IsClientConnected = e.ConnectionState == ConnectionState.Connected;
 		}
 
 		/// <summary>User connected to service.</summary>

@@ -1,4 +1,6 @@
 ﻿
+using System.Globalization;
+
 namespace Khrussk.Tests.Sockets {
 	using System.Collections.Generic;
 	using System.Linq;
@@ -93,7 +95,7 @@ namespace Khrussk.Tests.Sockets {
 		/// <param name="e">Event args.</param>
 		void OnDataReceived(object sender, SocketEventArgs e) {
 			DataReceived.Add(e.Buffer);
-			Debug.Print(e.Buffer.Length.ToString());
+			Debug.Print(e.Buffer.Length.ToString(CultureInfo.InvariantCulture));
 		}
 	}
 }

@@ -5,13 +5,13 @@ namespace Khrussk.Peers {
 
 	sealed class PacketSerializerFactory {
 		public void Register<T>(IPacketSerializer<T> serializer) {
-			_serializers.Add(typeof(T), (object)serializer);
+			_serializers.Add(typeof(T), serializer);
 		}
 
 		public IPacketSerializer<T> Get<T>() {
 			return _serializers[typeof(T)] as IPacketSerializer<T>;
 		}
 
-		Dictionary<Type, object> _serializers = new Dictionary<Type, object>();
+		readonly Dictionary<Type, object> _serializers = new Dictionary<Type, object>();
 	}
 }

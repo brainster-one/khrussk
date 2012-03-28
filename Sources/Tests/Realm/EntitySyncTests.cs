@@ -17,7 +17,7 @@ namespace Khrussk.Tests.Realm {
 			Context.Service.AddEntity(serviceEntity);
 			Assert.IsTrue(Context.WaitFor(() => Context.Entities.Count() == 1, Context.WaitingPeriod));
 			Context.Service.RemoveEntity(serviceEntity);
-			Assert.IsTrue(Context.WaitFor(() => Context.Entities.Count() == 0, Context.WaitingPeriod));
+			Assert.IsTrue(Context.WaitFor(() => !Context.Entities.Any(), Context.WaitingPeriod));
 		}
 
 		/// <summary>Entity should be synced properly.</summary>

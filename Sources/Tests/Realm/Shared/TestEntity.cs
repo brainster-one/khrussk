@@ -2,7 +2,7 @@
 namespace Khrussk.Tests.Realm {
 	using System;
 	using System.IO;
-	using Khrussk.NetworkRealm.Protocol;
+	using NetworkRealm.Protocol;
 
 	/// <summary>TestEntity</summary>
 	sealed class TestEntity {
@@ -28,7 +28,7 @@ namespace Khrussk.Tests.Realm {
 		/// <param name="reader">Reader to deserialize entity by.</param>
 		/// <param name="entity">Entity.</param>
 		public void Deserialize(BinaryReader reader, ref TestEntity entity) {
-			var ent = (entity == null ? new TestEntity() : (TestEntity)entity); 
+			var ent = (entity ?? new TestEntity()); 
 			ent.Name = reader.ReadString();
 			entity = ent;
 		}

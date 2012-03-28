@@ -20,7 +20,7 @@ namespace Khrussk.Tests.Realm {
 		/// <summary>UserDisconnected event should be triggered when connection closed.</summary>
 		[TestMethod] public void UserDisconnectedEventShouldBeTriggeredThenConnectionClosedTest() {
 			Context.Client.Disconnect();
-			Assert.IsTrue(Context.WaitFor(() => Context.ConnectedUsers.Count() == 0, Context.WaitingPeriod));
+			Assert.IsTrue(Context.WaitFor(() => !Context.ConnectedUsers.Any(), Context.WaitingPeriod));
 		}
 
 		/// <summary>Realm server can handle  multiple connections.</summary>
@@ -42,8 +42,6 @@ namespace Khrussk.Tests.Realm {
 
 		/// <summary>Related user should be passed via event then connection closed.</summary>
 		[TestMethod] public void RelatedUserShouldBePassedViaEventThenConnectionClosedTest() {
-			var user = Context.ConnectedUsers.First();
-			
 			// Second client
 			var client = Context.NewRealmClient();
 			client.Connect(Context.EndPoint);

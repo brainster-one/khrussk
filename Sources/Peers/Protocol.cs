@@ -12,10 +12,9 @@ namespace Khrussk.Peers {
 	/// </summary>
 	public class Protocol : IProtocol {
 		/// <summary>Registres packet type serializer.</summary>
-		/// <param name="packetType">Type of packet.</param>
 		/// <param name="packetSerializer">Serializer.</param>
 		public void Register<T>(IPacketSerializer<T> packetSerializer) {
-			_factory.Register<T>(packetSerializer);
+			_factory.Register(packetSerializer);
 			_idToType[++_curPacketId] = typeof(T);
 		}
 
@@ -69,7 +68,7 @@ namespace Khrussk.Peers {
 			var method = typeof(Protocol)
 				.GetMethod("Serialize", BindingFlags.NonPublic | BindingFlags.Instance)
 				.MakeGenericMethod(packet.GetType())
-				.Invoke(this, new object[] { new BinaryWriter(tempStream), packet });
+				.Invoke(this, new[] { new BinaryWriter(tempStream), packet });
 			
 			// Write packet's type id, size and data to stream
 			var writer = new BinaryWriter(stream);
@@ -87,9 +86,9 @@ namespace Khrussk.Peers {
 			serializer.Serialize(writer, (T)packet);
 		}
 
-		private T Deserialize<T>(BinaryReader reader, Type _type) {
+		private T Deserialize<T>(BinaryReader reader, Type type) {
 			var serializer = _factory.Get<T>();
-			if (serializer == null) throw new InvalidOperationException("No serializer registered for " + _type);
+			if (serializer == null) throw new InvalidOperationException("No serializer registered for " + type);
 			return serializer.Deserialize(reader);
 		}
 
@@ -97,6 +96,6 @@ namespace Khrussk.Peers {
 		readonly PacketSerializerFactory _factory = new PacketSerializerFactory();
 		readonly Dictionary<int, Type> _idToType = new Dictionary<int, Type>();
 		readonly Dictionary<Stream, BinaryReader> _readers = new Dictionary<Stream, BinaryReader>();
-		private int _curPacketId = 0;
+		private int _curPacketId;
 	}
 }

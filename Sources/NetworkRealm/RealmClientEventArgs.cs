@@ -1,8 +1,7 @@
 ﻿
 namespace Khrussk.NetworkRealm {
 	using System;
-	using Khrussk.NetworkRealm.Protocol;
-	using Khrussk.Peers;
+	using Protocol;
 
 	public enum EntityNetworkAction {
 		Added,

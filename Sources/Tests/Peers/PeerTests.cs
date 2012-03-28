@@ -1,10 +1,8 @@
 ﻿
 namespace Khrussk.Tests.Peers {
-	using System;
-	using Khrussk.Tests;
 	using Microsoft.VisualStudio.TestTools.UnitTesting;
 	using System.Linq;
-	using Khrussk.Tests.Peers.Protocol;
+	using Protocol;
 
 	[TestClass] public class PeerTests {
 		readonly PeerTestContext _context = new PeerTestContext();

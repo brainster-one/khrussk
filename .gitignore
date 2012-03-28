@@ -11,3 +11,4 @@ Binaries/*.pdb
 Binaries/*/*.dll
 Binaries/*/*.pdb
 Sources/*/packages
+_ReSharper.Khrussk

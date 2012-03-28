@@ -2,9 +2,9 @@
 namespace Khrussk.NetworkRealm {
 	using System;
 	using System.Net;
-	using Khrussk.NetworkRealm.Helpers;
-	using Khrussk.NetworkRealm.Protocol;
-	using Khrussk.Peers;
+	using Helpers;
+	using Peers;
+	using Protocol;
 
 	/// <summary>Realm service.</summary>
 	public sealed class RealmService {
@@ -13,10 +13,10 @@ namespace Khrussk.NetworkRealm {
 		public RealmService(RealmProtocol protocol) {
 			_protocol = protocol;
 			_peer = new Listener(_protocol);
-			_peer.PeerConnected += new EventHandler<PeerEventArgs>(_peer_PeerConnected);
+			_peer.PeerConnected += OnPeerPeerConnected;
 		}
 
-		void _peer_PeerConnected(object sender, PeerEventArgs e) {
+		void OnPeerPeerConnected(object sender, PeerEventArgs e) {
 			e.Peer.PacketReceived += OnPacketReceived;
 			e.Peer.ConnectionStateChanged += OnConnectionStateChanged;
 		}
@@ -96,7 +96,7 @@ namespace Khrussk.NetworkRealm {
 
 			if (e.Packet is HandshakePacket) {
 				peer.Send(new HandshakePacket(Guid.NewGuid()));
-				var session = (packet as HandshakePacket).Session;
+				var session = ((HandshakePacket)packet).Session;
 				var user = new User(session);
 				_users.Map(user, peer);
 				
@@ -117,15 +117,15 @@ namespace Khrussk.NetworkRealm {
 		}
 	
 		/// <summary>Underlaying service.</summary>
-		Listener _peer;
+		readonly Listener _peer;
 
 		/// <summary>Gets protocol.</summary>
-		RealmProtocol _protocol;
+		readonly RealmProtocol _protocol;
 
 		/// <summary>Peer to user map.</summary>
-		UserPeerMap _users = new UserPeerMap();
+		readonly UserPeerMap _users = new UserPeerMap();
 
 		/// <summary>Stores entity and ids.</summary>
-		EntityIdMap _entities = new EntityIdMap();
+		readonly EntityIdMap _entities = new EntityIdMap();
 	}
 }

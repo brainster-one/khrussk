@@ -2,11 +2,12 @@
 namespace Khrussk.NetworkRealm.Protocol {
 	using System;
 	using System.IO;
-	using Khrussk.Peers;
+	using Peers;
 
 	/// <summary>Add entity packet.</summary>
 	sealed class SyncEntityPacket {
 		/// <summary>Initializes a new instance of the AddEntityPacket class.</summary>
+		/// <param name="entityId">Id of entity.</param>
 		/// <param name="entity">Entity.</param>
 		public SyncEntityPacket(int entityId, object entity) {
 			EntityId = entityId;

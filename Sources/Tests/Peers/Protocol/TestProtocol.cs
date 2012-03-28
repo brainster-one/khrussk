@@ -4,7 +4,7 @@ namespace Khrussk.Tests.Peers.Protocol {
 
 	class TestProtocol : Protocol {
 		public TestProtocol() {
-			Register<Packet>(new PacketSerializer());
+			Register(new PacketSerializer());
 		}
 	}
 

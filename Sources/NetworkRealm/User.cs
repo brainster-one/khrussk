@@ -28,6 +28,6 @@ namespace Khrussk.NetworkRealm {
 		public Guid Session { get; private set; }
 
 		/// <summary>Related to user objects.</summary>
-		private Dictionary<string, object> _objects = new Dictionary<string, object>();
+		readonly Dictionary<string, object> _objects = new Dictionary<string, object>();
 	}
 }

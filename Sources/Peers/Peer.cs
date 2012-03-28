@@ -15,7 +15,7 @@ namespace Khrussk.Peers {
 			_socket = socket;
 			_protocol = protocol;
 			_socket.ConnectionStateChanged += OnSocketConnectionStateChanged;
-			_socket.DataReceived += _socket_DataReceived;
+			_socket.DataReceived += OnSocketDataReceived;
 		}
 
 		/// <summary>Initializes a new instance of the Peer class using the specified protocol.</summary>
@@ -24,7 +24,7 @@ namespace Khrussk.Peers {
 			_protocol = protocol;
 			_socket = new Socket();
 			_socket.ConnectionStateChanged += OnSocketConnectionStateChanged;
-			_socket.DataReceived += _socket_DataReceived;
+			_socket.DataReceived += OnSocketDataReceived;
 		}
 		
 		/// <summary>Releases the unmanaged resources used by the current peer, and optionally releases the managed resources also.</summary>
@@ -70,7 +70,7 @@ namespace Khrussk.Peers {
 			evnt(this, new PeerEventArgs(this, e.ConnectionState));
 		}
 
-		void _socket_DataReceived(object sender, SocketEventArgs e) {
+		void OnSocketDataReceived(object sender, SocketEventArgs e) {
 			lock (_receiveLock) {
 				try {
 					// Stores data into temporary stream
@@ -92,7 +92,7 @@ namespace Khrussk.Peers {
 			}
 		}
 		/// <summary>Underlying socket.</summary>
-		Socket _socket;
+		readonly Socket _socket;
 
 		/// <summary>Protocol.</summary>
 		readonly IProtocol _protocol;
@@ -100,7 +100,7 @@ namespace Khrussk.Peers {
 		/// <summary>Stream handles data to write to socket.</summary>
 		readonly MemoryStream _receiveStream = new MemoryStream();
 
-		bool _disconnected = false;
-		object _receiveLock = new object();
+		bool _disconnected;
+		readonly object _receiveLock = new object();
 	}
 }

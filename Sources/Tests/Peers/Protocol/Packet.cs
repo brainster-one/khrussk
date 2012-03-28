@@ -15,7 +15,7 @@ namespace Khrussk.Tests.Peers.Protocol {
 		}
 
 		public void Serialize(BinaryWriter writer, Packet packet) {
-			writer.Write((byte)packet.Data);
+			writer.Write(packet.Data);
 		}
 	}
 }
