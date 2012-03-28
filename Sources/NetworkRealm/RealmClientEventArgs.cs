@@ -20,5 +20,6 @@ namespace Khrussk.NetworkRealm {
 		public Guid Session { get; set; }
 		public EntityInfo EntityInfo { get; set; }
 		public ConnectionState ConnectionState { get; set; }
+		public object Packet { get; set; }
 	}
 }

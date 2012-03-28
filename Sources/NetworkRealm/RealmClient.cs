@@ -37,6 +37,9 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Entity state has been changed.</summary>
 		public event EventHandler<RealmClientEventArgs> EntityStateChanged;
 
+		/// <summary>Packet has been received.</summary>
+		public event EventHandler<RealmClientEventArgs> PacketReceived;
+
 		/// <summary>Just connected to remote service. Send handshake packet.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
@@ -70,6 +73,9 @@ namespace Khrussk.NetworkRealm {
 				var packet = (SyncEntityPacket)e.Packet;
 				var evnt = EntityStateChanged;
 				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Diff = packet.Diff, Action = EntityNetworkAction.Modified } });
+			} else {
+				var evnt = PacketReceived;
+				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, Packet = e.Packet });
 			}
 		}
 
