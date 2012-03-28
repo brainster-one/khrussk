@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace Khrussk.NetworkRealm {
 	using System;
 	using System.Net;
@@ -63,16 +65,21 @@ namespace Khrussk.NetworkRealm {
 				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, ConnectionState = _connectionState });
 			} else if (e.Packet is AddEntityPacket) {
 				var packet = (AddEntityPacket)e.Packet;
+				_entities.Add(packet.EntityId, packet.Entity);
 				var evnt = EntityStateChanged;
 				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Entity = packet.Entity, Action = EntityNetworkAction.Added } });
 			} else if (e.Packet is RemoveEntityPacket) {
 				var packet = (RemoveEntityPacket)e.Packet;
+				var entity = _entities[packet.EntityId];
+				_entities.Remove(packet.EntityId);
 				var evnt = EntityStateChanged;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Action = EntityNetworkAction.Removed } });
+				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Action = EntityNetworkAction.Removed, Entity = entity } });
 			} else if (e.Packet is SyncEntityPacket) {
 				var packet = (SyncEntityPacket)e.Packet;
+				var entity = _entities[packet.EntityId];
+				packet.Diff.ApplyChanges(entity);
 				var evnt = EntityStateChanged;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Diff = packet.Diff, Action = EntityNetworkAction.Modified } });
+				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Entity = entity, /*Diff = packet.Diff,*/ Action = EntityNetworkAction.Modified } });
 			} else {
 				var evnt = PacketReceived;
 				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, Packet = e.Packet });
@@ -85,5 +92,6 @@ namespace Khrussk.NetworkRealm {
 
 		/// <summary>Underlaying peer.</summary>
 		readonly Peer _peer;
+		readonly Dictionary<int, object> _entities = new Dictionary<int,object>();
 	}
 }

@@ -2,7 +2,7 @@
 namespace Khrussk.NetworkRealm.Protocol {
 	using System.IO;
 
-	public class EntityDiffData {
+	class EntityDiffData {
 		internal EntityDiffData(EntitySerializer serializer, BinaryReader reader) {
 			_serializer = serializer;
 			_reader = reader;

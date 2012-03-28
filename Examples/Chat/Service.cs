@@ -19,21 +19,24 @@ namespace Khrussk.Examples.Chat {
 		}
 
 		void OnUserConnected(object sender, RealmServiceEventArgs e) {
-			var player = new Player { Name = DateTime.Now.Millisecond.ToString(CultureInfo.InvariantCulture) };
+			var player = new Player { Name = "plr_" + DateTime.Now.Millisecond.ToString(CultureInfo.InvariantCulture) };
 			e.User["player"] = player;
 			_service.AddEntity(player);
-			Console.WriteLine("Service: User '{0}' connected. Player '{1}' created.", e.User.Session, player.Name);
+			Console.WriteLine("'{0}' connected", player.Name);
 		}
 
 		void OnUserDisconnected(object sender, RealmServiceEventArgs e) {
 			var player = (Player)e.User["player"];
-			Console.WriteLine("Service: User '{0}' disconnected. Player '{1}' removed.", e.User.Session, player.Name);
+			_service.RemoveEntity(player);
+			Console.WriteLine("'{0}' disconnected", player.Name);
 		}
 
 		void OnPacketReceived(object sender, RealmServiceEventArgs e) {
 			var packet = (MessagePacket)e.Packet;
-			Console.WriteLine("Service: Message '{0}' received. Sending to all connected clients.", packet.Content);
-			_service.SendAll(e.Packet);
+			var player = (Player)e.User["player"];
+			var text = string.Format("{0}: {1}", player.Name, packet.Content);
+			Console.WriteLine(text);
+			_service.SendAll(new MessagePacket { Content = text });
 		}
 
 		readonly RealmService _service = new RealmService(new ChatProtocol());

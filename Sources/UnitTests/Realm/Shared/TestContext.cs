@@ -2,7 +2,6 @@
 
 namespace Khrussk.Tests.UnitTests.Realm.Shared {
 	using System.Collections.Generic;
-	using System.Linq;
 	using NetworkRealm;
 
 	/// <summary>Test context.</summary>
@@ -61,8 +60,8 @@ namespace Khrussk.Tests.UnitTests.Realm.Shared {
 				Entities.Add(e.EntityInfo.Id, e.EntityInfo.Entity);
 			else if (e.EntityInfo.Action == EntityNetworkAction.Removed)
 				Entities.Remove(e.EntityInfo.Id);
-			else if (e.EntityInfo.Action == EntityNetworkAction.Modified)
-				e.EntityInfo.Diff.ApplyChanges(Entities.First(x => x.Key == e.EntityInfo.Id).Value);
+			/*else if (e.EntityInfo.Action == EntityNetworkAction.Modified)
+				e.EntityInfo.Diff.ApplyChanges(Entities.First(x => x.Key == e.EntityInfo.Id).Value);*/
 		}
 
 		/// <summary>Gets service.</summary>

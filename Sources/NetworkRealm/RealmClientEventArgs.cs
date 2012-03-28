@@ -12,7 +12,7 @@ namespace Khrussk.NetworkRealm {
 	public class EntityInfo {
 		public int Id { get; set; }
 		public object Entity { get; set; }
-		public EntityDiffData Diff { get; set; }
+		//public EntityDiffData Diff { get; set; }
 		public EntityNetworkAction Action { get; set; }
 	}
 
