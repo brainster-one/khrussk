@@ -22,7 +22,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		public void Serialize(BinaryWriter writer, object entity) {
 			writer.Write((byte)_idToType.First(x => x.Value == entity.GetType()).Key);
 			var method = typeof(EntitySerializer)
-				.GetMethod("write", BindingFlags.NonPublic | BindingFlags.Instance)
+				.GetMethod("Write", BindingFlags.NonPublic | BindingFlags.Instance)
 				.MakeGenericMethod(entity.GetType())
 				.Invoke(this, new[] { writer, entity });
 		}
@@ -34,7 +34,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 			// Looking for serializer
 			var entityTypeId = reader.ReadByte();
 			entity = typeof(EntitySerializer)
-				.GetMethod("read", BindingFlags.NonPublic | BindingFlags.Instance)
+				.GetMethod("Read", BindingFlags.NonPublic | BindingFlags.Instance)
 				.MakeGenericMethod(_idToType[entityTypeId])
 				.Invoke(this, new[] { reader, entity });
 		}
