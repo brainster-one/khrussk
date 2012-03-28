@@ -13,12 +13,7 @@ namespace Khrussk.NetworkRealm {
 		public RealmService(RealmProtocol protocol) {
 			_protocol = protocol;
 			_peer = new Listener(_protocol);
-			_peer.PeerConnected += OnPeerPeerConnected;
-		}
-
-		void OnPeerPeerConnected(object sender, PeerEventArgs e) {
-			e.Peer.PacketReceived += OnPacketReceived;
-			e.Peer.ConnectionStateChanged += OnConnectionStateChanged;
+			_peer.PeerConnected += OnPeerConnectionAccepted;
 		}
 
 		/// <summary>Starts service.</summary>
@@ -76,15 +71,25 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Custom packet received.</summary>
 		public event EventHandler<RealmServiceEventArgs> PacketReceived;
 
+		/// <summary>New peer connected to service.</summary>
+		/// <param name="sender">Event sender.</param>
+		/// <param name="e">event args.</param>
+		void OnPeerConnectionAccepted(object sender, PeerEventArgs e) {
+			e.Peer.PacketReceived += OnPacketReceived;
+			e.Peer.ConnectionStateChanged += OnPeerConnectionStateChanged;
+		}
+
 		/// <summary>Client disconnected from service.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
-		void OnConnectionStateChanged(object sender, PeerEventArgs e) {
-			if (e.ConnectionState == ConnectionState.Disconnected) {
-				e.Peer.ConnectionStateChanged -= OnConnectionStateChanged;
-				var evnt = UserDisconnected;
-				if (evnt != null) evnt(this, new RealmServiceEventArgs { User = _users.GetUser(e.Peer) });
-			}
+		void OnPeerConnectionStateChanged(object sender, PeerEventArgs e) {
+			if (e.ConnectionState != ConnectionState.Disconnected) return;
+			if (!_users.IsPeerStored(e.Peer)) return;
+
+			e.Peer.PacketReceived -= OnPacketReceived;
+			e.Peer.ConnectionStateChanged -= OnPeerConnectionStateChanged;
+			var evnt = UserDisconnected;
+			if (evnt != null) evnt(this, new RealmServiceEventArgs { User = _users.GetUser(e.Peer) });
 		}
 		
 		/// <summary>Packet received from client.</summary>

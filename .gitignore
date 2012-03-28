@@ -12,4 +12,3 @@ Binaries/*/*.dll
 Binaries/*/*.pdb
 Sources/*/packages
 _ReSharper.Khrussk
-Examples

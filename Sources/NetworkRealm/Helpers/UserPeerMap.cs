@@ -28,7 +28,7 @@ namespace Khrussk.NetworkRealm.Helpers {
 
 			return _map[user];
 		}
-		
+
 		/// <summary>Returns user by peer.</summary>
 		/// <param name="peer">Peer to find user.</param>
 		/// <returns>User.</returns>
@@ -37,6 +37,10 @@ namespace Khrussk.NetworkRealm.Helpers {
 			if (!_map.ContainsValue(peer)) throw new InvalidOperationException(string.Format("Peer '{0}' is not stored.", peer));
 
 			return _map.First(x => x.Value == peer).Key;
+		}
+
+		public bool IsPeerStored(Peer peer) {
+			return _map.ContainsValue(peer);
 		}
 
 		public IEnumerable<object> Peers {
