@@ -57,6 +57,7 @@
     <Compile Include="UnitTests\Realm\Shared\TestContext.cs" />
     <Compile Include="UnitTests\Realm\Shared\TestEntity.cs" />
     <Compile Include="UnitTests\Realm\Shared\TestProtocol.cs" />
+    <Compile Include="UnitTests\Realm\SimpleProtocol.cs" />
     <Compile Include="UnitTests\Sockets\ConnectionTests.cs" />
     <Compile Include="UnitTests\Sockets\DataTransferTests.cs" />
     <Compile Include="UnitTests\Sockets\SocketTestContext.cs" />
@@ -69,6 +70,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Shadow Include="Test References\Khrussk.accessor" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
