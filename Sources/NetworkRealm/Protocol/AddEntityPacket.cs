@@ -5,7 +5,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 	using Peers;
 
 	/// <summary>Add entity packet.</summary>
-	public sealed class AddEntityPacket {
+	sealed class AddEntityPacket {
 		/// <summary>Initializes a new instance of the AddEntityPacket class.</summary>
 		/// <param name="entityId">Id of entity.</param>
 		/// <param name="entity">Entity.</param>
