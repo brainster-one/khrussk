@@ -1,6 +1,3 @@
-Khrussk
-=======
-
 Khrussk is network engine for games based on .net technology
 
 Installation
@@ -9,7 +6,6 @@ To install Khrussk, run the following command in the Package Manager Console
 ```
 PM> Install-Package Khrussk
 ```
-
 
 Usage
 =====
