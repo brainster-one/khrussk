@@ -13,6 +13,7 @@ PM> Install-Package Khrussk
 Usage
 -----
 Let's define our first entity.
+
 ```c#
 class Player {
   public string X { get; set; }
@@ -20,7 +21,8 @@ class Player {
 }
 ```
 
-Server side
+### Server side
+
 ```c#
 var protocol = new SimpleRealmProtocol(new[] { typeof(Player) });
 var service = new RealmService(protocol);
@@ -32,7 +34,7 @@ service.UserStateChanged += (s, a) => {
 service.Start(new IPEndPoint(IPAddress.Any, 9876));
 ```
 
-Client side
+### Client side
 ```c#
 var client = new RealmClient(protocol);
 client.EntityStateChanged += (s, a) => {
