@@ -22,7 +22,7 @@ namespace Khrussk.Examples.Chat {
 		}
 
 		void OnConnectionStateChanged(object sender, ConnectionEventArgs e) {
-			Console.WriteLine("Connection state is '{0}'", e.ConnectionState);
+			Console.WriteLine("Connection state is '{0}'", e.State);
 		}
 
 		void OnPacketReceived(object sender, PacketEventArgs e) {

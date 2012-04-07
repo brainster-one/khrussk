@@ -20,17 +20,16 @@ namespace Khrussk.NetworkRealm {
 
 		/// <summary>Gets or sets packet.</summary>
 		public object Packet { get; private set; }
-
 		public User User { get; private set; }
 	}
 
 	public class ConnectionEventArgs : EventArgs {
-		internal ConnectionEventArgs(User user, ConnectionState connectionState) {
+		internal ConnectionEventArgs(User user, ConnectionState state) {
 			User = user;
-			ConnectionState = connectionState;
+			State = state;
 		}
 
-		public ConnectionState ConnectionState { get; private set; }
+		public ConnectionState State { get; private set; }
 		public User User { get; private set; }
 	}
 
@@ -42,12 +41,4 @@ namespace Khrussk.NetworkRealm {
 		public object Entity { get; private set; }
 		public EntityState State { get; private set; }
 	}
-
-	/*public class RealmClientEventArgs : EventArgs {
-		public Guid Session { get; set; }
-		public ConnectionState ConnectionState { get; set; }
-		public object Packet { get; set; }
-	}*/
-
-
 }

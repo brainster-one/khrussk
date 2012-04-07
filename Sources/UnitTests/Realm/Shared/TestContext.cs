@@ -33,16 +33,16 @@ namespace Khrussk.Tests.UnitTests.Realm.Shared {
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnConnectionStateChanged(object sender, ConnectionEventArgs e) {
-			IsClientConnected = e.ConnectionState == ConnectionState.Connected;
+			IsClientConnected = e.State == ConnectionState.Connected;
 		}
 
 		/// <summary>User connected to service.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnUserConnectionStateChanged(object sender, ConnectionEventArgs e) {
-			if (e.ConnectionState == ConnectionState.Connected)
+			if (e.State == ConnectionState.Connected)
 				ConnectedUsers.Add(e.User);
-			else if (e.ConnectionState == ConnectionState.Disconnected)
+			else if (e.State == ConnectionState.Disconnected)
 				ConnectedUsers.Remove(e.User);
 		}
 

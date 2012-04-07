@@ -18,12 +18,12 @@ namespace Khrussk.Examples.Chat {
 		}
 
 		void OnUserConnectionStateChanged(object sender, ConnectionEventArgs e) {
-			if (e.ConnectionState == ConnectionState.Connected) {
+			if (e.State == ConnectionState.Connected) {
 				var player = new Player { Name = "plr_" + DateTime.Now.Millisecond.ToString(CultureInfo.InvariantCulture) };
 				e.User["player"] = player;
 				_service.AddEntity(player);
 				Console.WriteLine("'{0}' connected", player.Name);
-			} else if (e.ConnectionState == ConnectionState.Disconnected) {
+			} else if (e.State == ConnectionState.Disconnected) {
 				var player = (Player)e.User["player"];
 				_service.RemoveEntity(player);
 				Console.WriteLine("'{0}' disconnected", player.Name);

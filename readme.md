@@ -28,8 +28,8 @@ var protocol = new SimpleRealmProtocol(new[] { typeof(Player) });
 var service = new RealmService(protocol);
 service.UserStateChanged += (s, a) => {
   var player = a.User["player"] ?? new Player();
-  if (a.State == UserState.Connected) service.AddEntity(player);
-  if (a.State == UserState.Disconnected) service.RemoveEntity(player);
+  if (a.State == ConnectionState.Connected) service.AddEntity(player);
+  if (a.State == ConnectionState.Disconnected) service.RemoveEntity(player);
 };
 service.Start(new IPEndPoint(IPAddress.Any, 9876));
 ```
@@ -38,8 +38,8 @@ service.Start(new IPEndPoint(IPAddress.Any, 9876));
 ```c#
 var client = new RealmClient(protocol);
 client.EntityStateChanged += (s, a) => {
-  if (a.EntityInfo.Action == EntityNetworkAction.Added) _realm.AddEntity(a.EntityInfo.Entity);
-  if (a.EntityInfo.Action == EntityNetworkAction.Removed) _realm.RemoveEntity(a.EntityInfo.Entity);
+  if (a.State == EntityState.Added) _realm.AddEntity(a.Entity);
+  if (a.State == EntityState.Removed) _realm.RemoveEntity(a.Entity);
 };
 client.Connect(new IPEndPoint(IPAddress.Loopback, 9876));
 ```
