@@ -36,8 +36,14 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <param name="property">Property to serialize.</param>
 		static void SerializeProperty(BinaryWriter writer, T entity, PropertyInfo property) {
 			try {
-				dynamic value = property.GetValue(entity, null);
-				writer.Write(value);
+				var value = property.GetValue(entity, null);
+				if (property.PropertyType == typeof(Int64)) writer.Write((Int64)value);
+				if (property.PropertyType == typeof(Int32)) writer.Write((Int32)value);
+				if (property.PropertyType == typeof(Int16)) writer.Write((Int16)value);
+				if (property.PropertyType == typeof(Double)) writer.Write((Double)value);
+				if (property.PropertyType == typeof(Single)) writer.Write((Single)value);
+				if (property.PropertyType == typeof(String)) writer.Write((String)value);
+				if (value == null) throw new InvalidOperationException(String.Format("{0} type is not supported", property.PropertyType.Name));
 			} catch (Exception ex) {
 				throw new InvalidOperationException(string.Format("Unable to serialize property {0}", property.Name), ex);
 			}

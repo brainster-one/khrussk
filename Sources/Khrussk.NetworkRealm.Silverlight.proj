@@ -33,8 +33,10 @@
 		<Compile Include="NetworkRealm\Protocol\RealmProtocol.cs" />
 		<Compile Include="NetworkRealm\Protocol\RemoveEntityPacket.cs" />
 		<Compile Include="NetworkRealm\Protocol\SyncEntityPacket.cs" />
+		<Compile Include="NetworkRealm\Protocol\SimpleEntitySerializer.cs" />
+		<Compile Include="NetworkRealm\Protocol\SimpleProtocol.cs" />
 		<Compile Include="NetworkRealm\RealmClient.cs" />
-		<Compile Include="NetworkRealm\RealmClientEventArgs.cs" />
+		<Compile Include="NetworkRealm\RealmEventArgs.cs" />
 		<Compile Include="NetworkRealm\User.cs" />
 		<Compile Include="Peers\PacketSerializerFactory.cs" />
 		<Compile Include="Peers\Peer.cs" />

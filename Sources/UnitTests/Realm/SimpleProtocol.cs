@@ -37,7 +37,7 @@ namespace Khrussk.Tests.UnitTests.Realm {
 			var strm = new MemoryStream();
 			var ent = new TestEntity2();
 
-			var prot = new SimpleRealmProtocol(new[] { typeof(TestEntity2) });
+			var prot = new SimpleProtocol(new[] { typeof(TestEntity2) });
 			prot.Write(strm, new AddEntityPacket(1, ent));
 
 			strm.Position = 0;

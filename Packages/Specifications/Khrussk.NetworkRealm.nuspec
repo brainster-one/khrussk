@@ -6,8 +6,8 @@
     <owners />
     <projectUrl>https://github.com/brainster-one/khrussk</projectUrl>
     <dependencies>
-      <dependency id="Khrussk.Interfaces" version="0.0.32" />
-      <dependency id="Khrussk.Peers" version="0.0.32" />
+      <dependency id="Khrussk.Interfaces" version="0.0.33" />
+      <dependency id="Khrussk.Peers" version="0.0.33" />
     </dependencies>
     <id>Khrussk.NetworkRealm</id>
     <title />
