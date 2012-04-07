@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Khrussk by brainster-one</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Khrussk</h1>
+<p>.net game network engine</p>
+        <p class="view"><a href="https://github.com/brainster-one/khrussk">View the Project on GitHub <small>brainster-one/khrussk</small></a></p>
+        <ul>
+          <li><a href="https://github.com/brainster-one/khrussk/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/brainster-one/khrussk/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/brainster-one/khrussk">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <p>Khrussk is network engine for games based on .net technology</p>
+
+<h2>Installation</h2>
+
+<p>To install Khrussk, run the following command in the Package Manager Console</p>
+
+<pre><code>PM&gt; Install-Package Khrussk
+</code></pre>
+
+<h2>Usage</h2>
+
+<p>Let's define our first entity.</p>
+
+<div class="highlight">
+<pre><span class="k">class</span> <span class="nc">Player</span> <span class="p">{</span>
+  <span class="k">public</span> <span class="kt">string</span> <span class="n">X</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+  <span class="k">public</span> <span class="kt">string</span> <span class="n">Y</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</pre>
+</div>
+
+
+<h3>Server side</h3>
+
+<div class="highlight">
+<pre><span class="kt">var</span> <span class="n">protocol</span> <span class="p">=</span> <span class="k">new</span> <span class="n">SimpleRealmProtocol</span><span class="p">(</span><span class="k">new</span><span class="p">[]</span> <span class="p">{</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Player</span><span class="p">)</span> <span class="p">});</span>
+<span class="kt">var</span> <span class="n">service</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RealmService</span><span class="p">(</span><span class="n">protocol</span><span class="p">);</span>
+<span class="n">service</span><span class="p">.</span><span class="n">UserStateChanged</span> <span class="p">+=</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="kt">var</span> <span class="n">player</span> <span class="p">=</span> <span class="n">a</span><span class="p">.</span><span class="n">User</span><span class="p">[</span><span class="s">"player"</span><span class="p">]</span> <span class="p">??</span> <span class="k">new</span> <span class="n">Player</span><span class="p">();</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="n">ConnectionState</span><span class="p">.</span><span class="n">Connected</span><span class="p">)</span> <span class="n">service</span><span class="p">.</span><span class="n">AddEntity</span><span class="p">(</span><span class="n">player</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="n">ConnectionState</span><span class="p">.</span><span class="n">Disconnected</span><span class="p">)</span> <span class="n">service</span><span class="p">.</span><span class="n">RemoveEntity</span><span class="p">(</span><span class="n">player</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="n">service</span><span class="p">.</span><span class="n">Start</span><span class="p">(</span><span class="k">new</span> <span class="n">IPEndPoint</span><span class="p">(</span><span class="n">IPAddress</span><span class="p">.</span><span class="n">Any</span><span class="p">,</span> <span class="m">9876</span><span class="p">));</span>
+</pre>
+</div>
+
+
+<h3>Client side</h3>
+
+<div class="highlight">
+<pre><span class="kt">var</span> <span class="n">client</span> <span class="p">=</span> <span class="k">new</span> <span class="n">RealmClient</span><span class="p">(</span><span class="n">protocol</span><span class="p">);</span>
+<span class="n">client</span><span class="p">.</span><span class="n">EntityStateChanged</span> <span class="p">+=</span> <span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">a</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="n">EntityState</span><span class="p">.</span><span class="n">Added</span><span class="p">)</span> <span class="n">_realm</span><span class="p">.</span><span class="n">AddEntity</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">Entity</span><span class="p">);</span>
+  <span class="k">if</span> <span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">State</span> <span class="p">==</span> <span class="n">EntityState</span><span class="p">.</span><span class="n">Removed</span><span class="p">)</span> <span class="n">_realm</span><span class="p">.</span><span class="n">RemoveEntity</span><span class="p">(</span><span class="n">a</span><span class="p">.</span><span class="n">Entity</span><span class="p">);</span>
+<span class="p">};</span>
+<span class="n">client</span><span class="p">.</span><span class="n">Connect</span><span class="p">(</span><span class="k">new</span> <span class="n">IPEndPoint</span><span class="p">(</span><span class="n">IPAddress</span><span class="p">.</span><span class="n">Loopback</span><span class="p">,</span> <span class="m">9876</span><span class="p">));</span>
+</pre>
+</div>
+
+
+<p>Entity synchronization will be done automatically.</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/brainster-one">brainster-one</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+  </body>
+</html>
