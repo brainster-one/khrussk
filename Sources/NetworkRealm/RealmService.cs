@@ -63,13 +63,10 @@ namespace Khrussk.NetworkRealm {
 		}
 
 		/// <summary>New user connected to realm.</summary>
-		public event EventHandler<RealmServiceEventArgs> UserConnected;
-
-		/// <summary>User disconnected.</summary>
-		public event EventHandler<RealmServiceEventArgs> UserDisconnected;
+		public event EventHandler<ConnectionEventArgs> UserConnectionStateChanged;
 
 		/// <summary>Custom packet received.</summary>
-		public event EventHandler<RealmServiceEventArgs> PacketReceived;
+		public event EventHandler<PacketEventArgs> PacketReceived;
 
 		/// <summary>New peer connected to service.</summary>
 		/// <param name="sender">Event sender.</param>
@@ -88,8 +85,8 @@ namespace Khrussk.NetworkRealm {
 
 			e.Peer.PacketReceived -= OnPacketReceived;
 			e.Peer.ConnectionStateChanged -= OnPeerConnectionStateChanged;
-			var evnt = UserDisconnected;
-			if (evnt != null) evnt(this, new RealmServiceEventArgs { User = _users.GetUser(e.Peer) });
+			var evnt = UserConnectionStateChanged;
+			if (evnt != null) evnt(this, new ConnectionEventArgs(_users.GetUser(e.Peer), ConnectionState.Disconnected));
 		}
 		
 		/// <summary>Packet received from client.</summary>
@@ -112,12 +109,13 @@ namespace Khrussk.NetworkRealm {
 				}
 				//
 
-				var evnt = UserConnected;
-				if (evnt != null) evnt(this, new RealmServiceEventArgs { User = user });
+				var evnt = UserConnectionStateChanged;
+				if (evnt != null) evnt(this, new ConnectionEventArgs(user, ConnectionState.Connected));
+			
 			} else {
 				var user = _users.GetUser(peer);
 				var evnt = PacketReceived;
-				if (evnt != null) evnt(this, new RealmServiceEventArgs { User = user, Packet = packet });
+				if (evnt != null) evnt(this, new PacketEventArgs(packet, user));
 			}
 		}
 	

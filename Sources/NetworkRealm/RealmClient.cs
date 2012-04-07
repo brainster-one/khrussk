@@ -1,8 +1,7 @@
 ﻿
-using System.Collections.Generic;
-
 namespace Khrussk.NetworkRealm {
 	using System;
+	using System.Collections.Generic;
 	using System.Net;
 	using Peers;
 	using Protocol;
@@ -12,6 +11,8 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Initializes a new instance of the RealmClient class using the specified protocol.</summary>
 		/// <param name="protocol">Protocol.</param>
 		public RealmClient(RealmProtocol protocol) {
+			if (protocol == null) throw new ArgumentNullException("protocol", "Protocol can not be null");
+
 			_peer = new Peer(protocol);
 			_peer.ConnectionStateChanged += OnConnectionStateChanged;
 			_peer.PacketReceived += OnPacketReceived;
@@ -34,23 +35,27 @@ namespace Khrussk.NetworkRealm {
 		}
 
 		/// <summary>Connection state has been changed.</summary>
-		public event EventHandler<RealmClientEventArgs> ConnectionStateChanged;
+		public event EventHandler<ConnectionEventArgs> ConnectionStateChanged;
 
 		/// <summary>Entity state has been changed.</summary>
-		public event EventHandler<RealmClientEventArgs> EntityStateChanged;
+		public event EventHandler<EntityEventArgs> EntityStateChanged;
 
 		/// <summary>Packet has been received.</summary>
-		public event EventHandler<RealmClientEventArgs> PacketReceived;
+		public event EventHandler<PacketEventArgs> PacketReceived;
 
 		/// <summary>Just connected to remote service. Send handshake packet.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnConnectionStateChanged(object sender, PeerEventArgs e) {
 			var evnt = ConnectionStateChanged;
-			if (e.ConnectionState == ConnectionState.Connected)
+
+			if (e.ConnectionState == ConnectionState.Connected) {
 				_peer.Send(new HandshakePacket(Guid.Empty));
-			else if (evnt != null)
-				evnt(this, new RealmClientEventArgs { ConnectionState = e.ConnectionState, Session = _session });
+				return; // Do not raise ConnectionStateChanged when connected. (Wait for HandshakePacket)
+			}
+
+			// Failed to connect/Disconnected
+			if (evnt != null) evnt(this, new ConnectionEventArgs(null, e.ConnectionState));
 		}
 
 		/// <summary>New packet has been received.</summary>
@@ -59,39 +64,37 @@ namespace Khrussk.NetworkRealm {
 		void OnPacketReceived(object sender, PeerEventArgs e) {
 			// TODO Refactor this shit.
 			if (e.Packet is HandshakePacket) {
-				_connectionState = ConnectionState.Connected;
-				_session = ((HandshakePacket)e.Packet).Session;
 				var evnt = ConnectionStateChanged;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, ConnectionState = _connectionState });
+				var packet = (HandshakePacket)e.Packet;
+				if (evnt != null) evnt(this, new ConnectionEventArgs(new User(packet.Session), ConnectionState.Connected));
+
 			} else if (e.Packet is AddEntityPacket) {
+				var evnt = EntityStateChanged;
 				var packet = (AddEntityPacket)e.Packet;
 				_entities.Add(packet.EntityId, packet.Entity);
-				var evnt = EntityStateChanged;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Entity = packet.Entity, Action = EntityNetworkAction.Added } });
+				if (evnt != null) evnt(this, new EntityEventArgs(packet.Entity, EntityNetworkAction.Added));
+
 			} else if (e.Packet is RemoveEntityPacket) {
+				var evnt = EntityStateChanged;
 				var packet = (RemoveEntityPacket)e.Packet;
 				var entity = _entities[packet.EntityId];
 				_entities.Remove(packet.EntityId);
-				var evnt = EntityStateChanged;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Action = EntityNetworkAction.Removed, Entity = entity } });
+				if (evnt != null) evnt(this, new EntityEventArgs(entity, EntityNetworkAction.Removed));
+
 			} else if (e.Packet is SyncEntityPacket) {
+				var evnt = EntityStateChanged;
 				var packet = (SyncEntityPacket)e.Packet;
 				var entity = _entities[packet.EntityId];
 				packet.Diff.ApplyChanges(entity);
-				var evnt = EntityStateChanged;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, EntityInfo = new EntityInfo { Id = packet.EntityId, Entity = entity, /*Diff = packet.Diff,*/ Action = EntityNetworkAction.Modified } });
+				if (evnt != null) evnt(this, new EntityEventArgs(entity, EntityNetworkAction.Modified));
+
 			} else {
 				var evnt = PacketReceived;
-				if (evnt != null) evnt(this, new RealmClientEventArgs { Session = _session, Packet = e.Packet });
+				if (evnt != null) evnt(this, new PacketEventArgs(e.Packet));
 			}
 		}
 
-		/// <summary>Session.</summary>
-		Guid _session;
-		ConnectionState _connectionState;
-
-		/// <summary>Underlaying peer.</summary>
 		readonly Peer _peer;
-		readonly Dictionary<int, object> _entities = new Dictionary<int,object>();
+		readonly Dictionary<int, object> _entities = new Dictionary<int, object>();
 	}
 }

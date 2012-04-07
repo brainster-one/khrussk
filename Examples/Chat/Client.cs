@@ -21,18 +21,18 @@ namespace Khrussk.Examples.Chat {
 			_client.Send(new MessagePacket { Content = msg });
 		}
 
-		void OnConnectionStateChanged(object sender, RealmClientEventArgs e) {
+		void OnConnectionStateChanged(object sender, ConnectionEventArgs e) {
 			Console.WriteLine("Connection state is '{0}'", e.ConnectionState);
 		}
 
-		void OnPacketReceived(object sender, RealmClientEventArgs e) {
+		void OnPacketReceived(object sender, PacketEventArgs e) {
 			var packet = e.Packet as MessagePacket;
 			if (packet != null) Console.WriteLine(packet.Content);
 		}
 
-		void OnEntityStateChanged(object sender, RealmClientEventArgs e) {
-			var entity = (Player)e.EntityInfo.Entity;
-			Console.WriteLine("'{0}' state is {1}", entity.Name, e.EntityInfo.Action);
+		void OnEntityStateChanged(object sender, EntityEventArgs e) {
+			var entity = (Player)e.Entity;
+			Console.WriteLine("'{0}' state is {1}", entity.Name, e.Action);
 		}
 
 		readonly RealmClient _client = new RealmClient(new ChatProtocol());

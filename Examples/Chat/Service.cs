@@ -9,8 +9,7 @@ namespace Khrussk.Examples.Chat {
 
 	class Service {
 		public Service() {
-			_service.UserConnected += OnUserConnected;
-			_service.UserDisconnected += OnUserDisconnected;
+			_service.UserConnectionStateChanged += OnUserConnectionStateChanged;
 			_service.PacketReceived += OnPacketReceived;
 		}
 
@@ -18,20 +17,20 @@ namespace Khrussk.Examples.Chat {
 			_service.Start(endpoint);
 		}
 
-		void OnUserConnected(object sender, RealmServiceEventArgs e) {
-			var player = new Player { Name = "plr_" + DateTime.Now.Millisecond.ToString(CultureInfo.InvariantCulture) };
-			e.User["player"] = player;
-			_service.AddEntity(player);
-			Console.WriteLine("'{0}' connected", player.Name);
+		void OnUserConnectionStateChanged(object sender, ConnectionEventArgs e) {
+			if (e.ConnectionState == ConnectionState.Connected) {
+				var player = new Player { Name = "plr_" + DateTime.Now.Millisecond.ToString(CultureInfo.InvariantCulture) };
+				e.User["player"] = player;
+				_service.AddEntity(player);
+				Console.WriteLine("'{0}' connected", player.Name);
+			} else if (e.ConnectionState == ConnectionState.Disconnected) {
+				var player = (Player)e.User["player"];
+				_service.RemoveEntity(player);
+				Console.WriteLine("'{0}' disconnected", player.Name);
+			}
 		}
 
-		void OnUserDisconnected(object sender, RealmServiceEventArgs e) {
-			var player = (Player)e.User["player"];
-			_service.RemoveEntity(player);
-			Console.WriteLine("'{0}' disconnected", player.Name);
-		}
-
-		void OnPacketReceived(object sender, RealmServiceEventArgs e) {
+		void OnPacketReceived(object sender, PacketEventArgs e) {
 			var packet = (MessagePacket)e.Packet;
 			var player = (Player)e.User["player"];
 			var text = string.Format("{0}: {1}", player.Name, packet.Content);

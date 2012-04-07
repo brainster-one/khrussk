@@ -26,7 +26,7 @@ namespace Khrussk.Tests.UnitTests.Realm {
 			Context.Service.AddEntity(new TestEntity { Name = "player_name" });
 
 			Assert.IsTrue(Context.WaitFor(() => Context.Entities.Count() == 1, Context.WaitingPeriod));
-			Assert.AreEqual("player_name", ((TestEntity)Context.Entities.First().Value).Name);
+			Assert.AreEqual("player_name", ((TestEntity)Context.Entities.First()).Name);
 		}
 		
 		/// <summary>Entity changed should be synced properly.</summary>
@@ -39,7 +39,7 @@ namespace Khrussk.Tests.UnitTests.Realm {
 
 			// Check changes
 			Assert.IsTrue(Context.WaitFor(() => Context.Entities.Count() == 1, Context.WaitingPeriod));
-			Assert.IsTrue(Context.WaitFor(() => ((TestEntity)Context.Entities.First().Value).Name == "changed", Context.WaitingPeriod));
+			Assert.IsTrue(Context.WaitFor(() => ((TestEntity)Context.Entities.First()).Name == "changed", Context.WaitingPeriod));
 		}
 
 		/// <summary>EntityAdded event should be triggered when entity added.</summary>
