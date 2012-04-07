@@ -72,21 +72,21 @@ namespace Khrussk.NetworkRealm {
 				var evnt = EntityStateChanged;
 				var packet = (AddEntityPacket)e.Packet;
 				_entities.Add(packet.EntityId, packet.Entity);
-				if (evnt != null) evnt(this, new EntityEventArgs(packet.Entity, EntityNetworkAction.Added));
+				if (evnt != null) evnt(this, new EntityEventArgs(packet.Entity, EntityState.Added));
 
 			} else if (e.Packet is RemoveEntityPacket) {
 				var evnt = EntityStateChanged;
 				var packet = (RemoveEntityPacket)e.Packet;
 				var entity = _entities[packet.EntityId];
 				_entities.Remove(packet.EntityId);
-				if (evnt != null) evnt(this, new EntityEventArgs(entity, EntityNetworkAction.Removed));
+				if (evnt != null) evnt(this, new EntityEventArgs(entity, EntityState.Removed));
 
 			} else if (e.Packet is SyncEntityPacket) {
 				var evnt = EntityStateChanged;
 				var packet = (SyncEntityPacket)e.Packet;
 				var entity = _entities[packet.EntityId];
 				packet.Diff.ApplyChanges(entity);
-				if (evnt != null) evnt(this, new EntityEventArgs(entity, EntityNetworkAction.Modified));
+				if (evnt != null) evnt(this, new EntityEventArgs(entity, EntityState.Modified));
 
 			} else {
 				var evnt = PacketReceived;

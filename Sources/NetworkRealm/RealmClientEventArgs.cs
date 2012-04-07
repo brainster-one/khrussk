@@ -2,7 +2,7 @@
 namespace Khrussk.NetworkRealm {
 	using System;
 
-	public enum EntityNetworkAction {
+	public enum EntityState {
 		Added,
 		Removed,
 		Modified
@@ -35,12 +35,12 @@ namespace Khrussk.NetworkRealm {
 	}
 
 	public class EntityEventArgs : EventArgs {
-		internal EntityEventArgs(object entity, EntityNetworkAction state) {
+		internal EntityEventArgs(object entity, EntityState state) {
 			Entity = entity;
-			Action = state;
+			State = state;
 		}
 		public object Entity { get; private set; }
-		public EntityNetworkAction Action { get; private set; }
+		public EntityState State { get; private set; }
 	}
 
 	/*public class RealmClientEventArgs : EventArgs {

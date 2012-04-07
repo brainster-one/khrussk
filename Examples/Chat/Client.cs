@@ -32,7 +32,7 @@ namespace Khrussk.Examples.Chat {
 
 		void OnEntityStateChanged(object sender, EntityEventArgs e) {
 			var entity = (Player)e.Entity;
-			Console.WriteLine("'{0}' state is {1}", entity.Name, e.Action);
+			Console.WriteLine("'{0}' state is {1}", entity.Name, e.State);
 		}
 
 		readonly RealmClient _client = new RealmClient(new ChatProtocol());

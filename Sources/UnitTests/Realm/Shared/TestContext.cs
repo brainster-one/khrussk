@@ -50,9 +50,9 @@ namespace Khrussk.Tests.UnitTests.Realm.Shared {
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
 		void OnEntityStateChanged(object sender, EntityEventArgs e) {
-			if (e.Action == EntityNetworkAction.Added)
+			if (e.State == EntityState.Added)
 				Entities.Add(e.Entity);
-			else if (e.Action == EntityNetworkAction.Removed)
+			else if (e.State == EntityState.Removed)
 				Entities.Remove(e.Entity);
 		}
 
