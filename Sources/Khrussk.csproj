@@ -37,7 +37,7 @@
   <ItemGroup>
     <Compile Include="NetworkRealm\Protocol\IEntitySerializer.cs" />
     <Compile Include="NetworkRealm\Protocol\SimpleEntitySerializer.cs" />
-    <Compile Include="NetworkRealm\Protocol\SimpleRealmProtocol.cs" />
+    <Compile Include="NetworkRealm\Protocol\SimpleProtocol.cs" />
     <Compile Include="Peers\IPacketSerializer.cs" />
     <Compile Include="Peers\IProtocol.cs" />
     <Compile Include="ConnectionState.cs" />
