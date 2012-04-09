@@ -33,6 +33,11 @@ namespace Khrussk.NetworkRealm {
 			_users.GetPeer(user).Disconnect();
 		}
 
+		public void Send(User user, object packet) {
+			var peer = _users.GetPeer(user);
+			peer.Send(packet);
+		}
+
 		/// <summary>Sends packet to all connected clients.</summary>
 		/// <param name="packet">Packet to send.</param>
 		public void SendAll(object packet) {
@@ -88,7 +93,7 @@ namespace Khrussk.NetworkRealm {
 			var evnt = UserConnectionStateChanged;
 			if (evnt != null) evnt(this, new ConnectionEventArgs(_users.GetUser(e.Peer), ConnectionState.Disconnected));
 		}
-		
+
 		/// <summary>Packet received from client.</summary>
 		/// <param name="sender">Event sender.</param>
 		/// <param name="e">Event args.</param>
@@ -101,7 +106,7 @@ namespace Khrussk.NetworkRealm {
 				var session = ((HandshakePacket)packet).Session;
 				var user = new User(session);
 				_users.Map(user, peer);
-				
+
 				// TODO Move it to another place
 				foreach (var entity in _entities.Entities) {
 					var id = _entities.GetId(entity);
@@ -111,14 +116,14 @@ namespace Khrussk.NetworkRealm {
 
 				var evnt = UserConnectionStateChanged;
 				if (evnt != null) evnt(this, new ConnectionEventArgs(user, ConnectionState.Connected));
-			
+
 			} else {
 				var user = _users.GetUser(peer);
 				var evnt = PacketReceived;
 				if (evnt != null) evnt(this, new PacketEventArgs(packet, user));
 			}
 		}
-	
+
 		/// <summary>Underlaying service.</summary>
 		readonly Listener _peer;
 
