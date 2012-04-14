@@ -102,9 +102,10 @@ namespace Khrussk.NetworkRealm {
 			var packet = e.Packet;
 
 			if (e.Packet is HandshakePacket) {
-				peer.Send(new HandshakePacket(Guid.NewGuid()));
 				var session = ((HandshakePacket)packet).Session;
+				if (session == Guid.Empty) session = Guid.NewGuid();
 				var user = new User(session);
+				peer.Send(new HandshakePacket(session));
 				_users.Map(user, peer);
 
 				// TODO Move it to another place
