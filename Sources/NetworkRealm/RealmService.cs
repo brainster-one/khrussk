@@ -41,30 +41,38 @@ namespace Khrussk.NetworkRealm {
 		/// <summary>Sends packet to all connected clients.</summary>
 		/// <param name="packet">Packet to send.</param>
 		public void SendAll(object packet) {
-			foreach (Peer peer in _users.Peers) {
-				peer.Send(packet);
+			lock (_users) {
+				foreach (Peer peer in _users.Peers) {
+					peer.Send(packet);
+				}
 			}
 		}
 
 		/// <summary>Adds antity to realm.</summary>
 		/// <param name="entity">Entity to add.</param>
 		public void AddEntity(object entity) {
-			var id = _entities.Add(entity);
-			SendAll(new AddEntityPacket(id, entity));
+			lock (_entities) {
+				var id = _entities.Add(entity);
+				SendAll(new AddEntityPacket(id, entity));
+			}
 		}
 
 		/// <summary>Removes entity from realm.</summary>
 		/// <param name="entity">Entity to remove.</param>
 		public void RemoveEntity(object entity) {
-			var id = _entities.Remove(entity);
-			SendAll(new RemoveEntityPacket(id));
+			lock (_entities) {
+				var id = _entities.Remove(entity);
+				SendAll(new RemoveEntityPacket(id));
+			}
 		}
 
 		/// <summary>Syncs entities for all users.</summary>
 		/// <param name="entity">Entity to sync.</param>
 		public void ModifyEntity(object entity) {
-			var id = _entities.GetId(entity);
-			SendAll(new SyncEntityPacket(id, entity));
+			lock (_entities) {
+				var id = _entities.GetId(entity);
+				SendAll(new SyncEntityPacket(id, entity));
+			}
 		}
 
 		/// <summary>New user connected to realm.</summary>
@@ -106,14 +114,17 @@ namespace Khrussk.NetworkRealm {
 				if (session == Guid.Empty) session = Guid.NewGuid();
 				var user = new User(session);
 				peer.Send(new HandshakePacket(session));
-				_users.Map(user, peer);
 
 				// TODO Move it to another place
-				foreach (var entity in _entities.Entities) {
-					var id = _entities.GetId(entity);
-					e.Peer.Send(new AddEntityPacket(id, entity));
+				lock (_entities) {
+					foreach (var entity in _entities.Entities) {
+						var id = _entities.GetId(entity);
+						e.Peer.Send(new AddEntityPacket(id, entity));
+					}
 				}
 				//
+
+				lock (_users) { _users.Map(user, peer); }
 
 				var evnt = UserConnectionStateChanged;
 				if (evnt != null) evnt(this, new ConnectionEventArgs(user, ConnectionState.Connected));

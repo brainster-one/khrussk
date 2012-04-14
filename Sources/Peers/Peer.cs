@@ -26,18 +26,18 @@ namespace Khrussk.Peers {
 			_socket.ConnectionStateChanged += OnSocketConnectionStateChanged;
 			_socket.DataReceived += OnSocketDataReceived;
 		}
-		
+
 		/// <summary>Releases the unmanaged resources used by the current peer, and optionally releases the managed resources also.</summary>
 		public void Dispose() {
 			_socket.Dispose();
 			_receiveStream.Dispose();
 		}
-		
+
 		/// <summary>Connects client to service.</summary>
 		public void Connect(EndPoint host) {
 			_socket.Connect(host);
 		}
-		
+
 		/// <summary>Sends packet to service.</summary>
 		/// <param name="packet">Packet to send.</param>
 		public void Send(object packet) {
@@ -77,17 +77,23 @@ namespace Khrussk.Peers {
 					var oldPos = _receiveStream.Position;
 					_receiveStream.Write(e.Buffer, 0, e.Buffer.Length);
 					_receiveStream.Position = oldPos;
+				} catch (Exception ex) {
+					Debug.WriteLine(ex.Message);
+					Disconnect();
+				}
 
-					while (true) {
-						var packet = _protocol.Read(_receiveStream);
+				while (true) {
+					object packet = null;
+					try {
+						packet = _protocol.Read(_receiveStream);
 						if (packet == null) break;
 
 						var evnt = PacketReceived;
 						if (evnt != null) evnt(this, new PeerEventArgs(this, packet));
+					} catch (Exception ex) {
+						Debug.WriteLine(packet + ": " + ex.Message);
+						Disconnect();
 					}
-				} catch (Exception ex) {
-					Debug.WriteLine(ex.Message);
-					Disconnect();
 				}
 			}
 		}
