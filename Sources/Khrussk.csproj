@@ -35,7 +35,9 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="NetworkRealm\EntityState.cs" />
     <Compile Include="NetworkRealm\Protocol\IEntitySerializer.cs" />
+    <Compile Include="NetworkRealm\Protocol\SerializationInfo.cs" />
     <Compile Include="NetworkRealm\Protocol\SimpleEntitySerializer.cs" />
     <Compile Include="NetworkRealm\Protocol\SimpleProtocol.cs" />
     <Compile Include="Peers\IPacketSerializer.cs" />

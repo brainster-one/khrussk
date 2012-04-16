@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <version>0.0.35</version>
+    <version>0.0.36</version>
     <authors>brainster</authors>
     <owners />
     <projectUrl>https://github.com/brainster-one/khrussk</projectUrl>
     <dependencies>
-      <dependency id="Khrussk.Interfaces" version="0.0.34" />
+      <dependency id="Khrussk.Interfaces" version="0.0.35" />
     </dependencies>
     <id>Khrussk.Peers</id>
     <title />

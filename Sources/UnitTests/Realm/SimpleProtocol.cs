@@ -18,11 +18,11 @@ namespace Khrussk.Tests.UnitTests.Realm {
 			var writer = new BinaryWriter(stream);
 
 			var serializer = new SimpleEntitySerializer<TestEntity2>();
-			serializer.Serialize(writer, new TestEntity2());
+			serializer.Serialize(writer, new TestEntity2(), new SerializationInfo());
 
 			var ent = new TestEntity2(); // TODO: CREATE EMPTY ENTITY
 			stream.Position = 0;
-			serializer.Deserialize(reader, ref ent);
+			serializer.Deserialize(reader, ref ent, new SerializationInfo());
 
 			Assert.AreEqual(Int64.MaxValue, ent.Int64);
 			Assert.AreEqual(Int32.MaxValue, ent.Int32);

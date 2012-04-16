@@ -18,37 +18,39 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <summary>Serializes entity to stream.</summary>
 		/// <param name="writer">Writer to serialize entity by.</param>
 		/// <param name="entity">Entity to serialize.</param>
-		public void Serialize(BinaryWriter writer, object entity) {
+		/// <param name="info">Serialzation info.</param>
+		public void Serialize(BinaryWriter writer, object entity, SerializationInfo info) {
 			writer.Write((byte)_idToType.First(x => x.Value == entity.GetType()).Key);
 			var method = typeof(EntitySerializer)
 				.GetMethod("Write", BindingFlags.NonPublic | BindingFlags.Instance)
 				.MakeGenericMethod(entity.GetType())
-				.Invoke(this, new[] { writer, entity });
+				.Invoke(this, new[] { writer, entity, info });
 		}
 
 		/// <summary>Deserializes entity from stream.</summary>
 		/// <param name="reader">Reader to deserialize entity by.</param>
 		/// <param name="entity">Entity.</param>
-		public void Deserialize(BinaryReader reader, ref object entity) {
+		/// <param name="info">Serialization info.</param>
+		public void Deserialize(BinaryReader reader, ref object entity, SerializationInfo info) {
 			// Looking for serializer
 			var entityTypeId = reader.ReadByte();
 			entity = typeof(EntitySerializer)
 				.GetMethod("Read", BindingFlags.NonPublic | BindingFlags.Instance)
 				.MakeGenericMethod(_idToType[entityTypeId])
-				.Invoke(this, new[] { reader, entity });
+				.Invoke(this, new[] { reader, entity, info });
 		}
 
-		private void Write<T>(BinaryWriter writer, object entity) {
+		private void Write<T>(BinaryWriter writer, object entity, SerializationInfo info) {
 			var serializer = _factory.Get<T>();
 			if (serializer == null) throw new InvalidOperationException("No serializer registered for " + entity.GetType());
-			serializer.Serialize(writer, (T)entity);
+			serializer.Serialize(writer, (T)entity, info);
 		}
 
-		private T Read<T>(BinaryReader reader, object entity) {
+		private T Read<T>(BinaryReader reader, object entity, SerializationInfo info) {
 			var serializer = _factory.Get<T>();
 			var res = (T)entity;
 			if (serializer == null) throw new InvalidOperationException("No serializer registered for ");
-			serializer.Deserialize(reader, ref res);
+			serializer.Deserialize(reader, ref res, info);
 			return res;
 		}
 

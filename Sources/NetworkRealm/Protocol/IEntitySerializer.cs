@@ -7,11 +7,12 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <summary>Serializes entity to stream.</summary>
 		/// <param name="writer">Writer to serialize entity by.</param>
 		/// <param name="entity">Entity to serialize.</param>
-		void Serialize(BinaryWriter writer, T entity);
+		/// <param name="info">Serialization info.</param>
+		void Serialize(BinaryWriter writer, T entity, SerializationInfo info);
 
 		/// <summary>Deserializes entity from stream.</summary>
 		/// <param name="reader">Reader to deserialize entity by.</param>
 		/// <param name="entity">Entity.</param>
-		void Deserialize(BinaryReader reader, ref T entity);
+		void Deserialize(BinaryReader reader, ref T entity, SerializationInfo info);
 	}
 }

@@ -2,12 +2,6 @@
 namespace Khrussk.NetworkRealm {
 	using System;
 
-	public enum EntityState {
-		Added,
-		Removed,
-		Modified
-	}
-
 	public class PacketEventArgs : EventArgs {
 		internal PacketEventArgs(object packet) {
 			Packet = packet;

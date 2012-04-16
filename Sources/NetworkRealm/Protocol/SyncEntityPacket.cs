@@ -49,7 +49,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <returns>Packet.</returns>
 		public void Serialize(BinaryWriter writer, SyncEntityPacket packet) {
 			writer.Write((Int16)packet.EntityId);
-			_serializer.Serialize(writer, packet.Entity);
+			_serializer.Serialize(writer, packet.Entity, new SerializationInfo { State = EntityState.Modified });
 		}
 
 		/// <summary>Entity serializer.</summary>

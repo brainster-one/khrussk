@@ -33,7 +33,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		public AddEntityPacket Deserialize(BinaryReader reader) {
 			object entity = null;
 			var entityId = reader.ReadInt16();
-			_serializer.Deserialize(reader, ref entity);
+			_serializer.Deserialize(reader, ref entity, new SerializationInfo { State = EntityState.Added });
 			return new AddEntityPacket(entityId, entity);
 		}
 
@@ -43,7 +43,7 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <returns>Packet.</returns>
 		public void Serialize(BinaryWriter writer, AddEntityPacket packet) {
 			writer.Write((Int16)packet.EntityId);
-			_serializer.Serialize(writer, packet.Entity);
+			_serializer.Serialize(writer, packet.Entity, new SerializationInfo { State = EntityState.Added });
 		}
 
 		/// <summary>Entity serializer.</summary>

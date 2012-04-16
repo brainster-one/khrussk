@@ -12,7 +12,9 @@
 		<Exclude Include="ConnectionState.cs" />
 		<Exclude Include="Peers\IProtocol.cs" />
 		<Exclude Include="Peers\IPacketSerializer.cs" />
-		<Exclude Include="NetworkRealm\Protocol\IEntitySerializer.cs" />		
+		<Exclude Include="NetworkRealm\Protocol\IEntitySerializer.cs" />
+		<Exclude Include="NetworkRealm\Protocol\SerializationInfo.cs" />
+		<Exclude Include="NetworkRealm\EntityState.cs" />
 	</ItemGroup>
 
 	<ItemGroup>

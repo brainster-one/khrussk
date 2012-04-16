@@ -21,10 +21,12 @@
 		<Reference Include="System.Core" />
 		<Reference Include="System.Net" />
 		
+		<Compile Include="NetworkRealm\EntityState.cs" />
 		<Compile Include="NetworkRealm\Protocol\IEntitySerializer.cs" />
 		<Compile Include="Peers\IPacketSerializer.cs" />
 		<Compile Include="Peers\IProtocol.cs" />
 		<Compile Include="ConnectionState.cs" />
+		<Compile Include="NetworkRealm\Protocol\SerializationInfo.cs" />
 		<Compile Include="NetworkRealm\Protocol\AddEntityPacket.cs" />
 		<Compile Include="NetworkRealm\Protocol\EntityDiffData.cs" />
 		<Compile Include="NetworkRealm\Protocol\EntitySerializer.cs" />

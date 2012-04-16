@@ -40,14 +40,14 @@ namespace Khrussk.Tests.UnitTests.Realm.Shared {
 		/// <summary>Serializes entity to stream.</summary>
 		/// <param name="writer">Writer to serialize entity by.</param>
 		/// <param name="entity">Entity to serialize.</param>
-		public void Serialize(BinaryWriter writer, TestEntity entity) {
+		public void Serialize(BinaryWriter writer, TestEntity entity, SerializationInfo info) {
 			writer.Write(entity.Name);
 		}
 
 		/// <summary>Deserializes entity from stream.</summary>
 		/// <param name="reader">Reader to deserialize entity by.</param>
 		/// <param name="entity">Entity.</param>
-		public void Deserialize(BinaryReader reader, ref TestEntity entity) {
+		public void Deserialize(BinaryReader reader, ref TestEntity entity, SerializationInfo info) {
 			var ent = (entity ?? new TestEntity());
 			ent.Name = reader.ReadString();
 			entity = ent;

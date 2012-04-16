@@ -12,7 +12,8 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <summary>Serializes entity to stream.</summary>
 		/// <param name="writer">Writer to serialize entity by.</param>
 		/// <param name="entity">Entity to serialize.</param>
-		public void Serialize(BinaryWriter writer, T entity) {
+		/// <param name="info">Serialization info.</param>
+		public void Serialize(BinaryWriter writer, T entity, SerializationInfo info) {
 			foreach (var prop in GetProperties(entity.GetType())) {
 				SerializeProperty(writer, entity, prop);
 			}
@@ -21,7 +22,8 @@ namespace Khrussk.NetworkRealm.Protocol {
 		/// <summary>Deserializes entity from stream.</summary>
 		/// <param name="reader">Reader to deserialize entity by.</param>
 		/// <param name="entity">Entity.</param>
-		public void Deserialize(BinaryReader reader, ref T entity) {
+		/// <param name="info">Serialization info.</param>
+		public void Deserialize(BinaryReader reader, ref T entity, SerializationInfo info) {
 			//entity = entity ?? CreateEntity();
 			if (entity == null) entity = CreateEntity();
 
