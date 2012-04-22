@@ -5,7 +5,7 @@
 		<OutputPath>..\Binaries\</OutputPath>
 		<OutputType>Library</OutputType>
 		<RootNamespace>Khrussk.NetworkRealm</RootNamespace>
-		<AssemblyName>Khrussk.NetworkRealm.Silverlight</AssemblyName>
+		<AssemblyName>Khrussk.Silverlight</AssemblyName>
 		<TargetFrameworkIdentifier>Silverlight</TargetFrameworkIdentifier>
 		<TargetFrameworkVersion>v5.0</TargetFrameworkVersion>
 		<SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>

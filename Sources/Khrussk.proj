@@ -1,0 +1,21 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+	ToolsVersion="4.0">
+
+	<PropertyGroup>
+		<OutputPath>..\Binaries\</OutputPath>
+		<OutputType>Library</OutputType>
+		<RootNamespace>Khrussk</RootNamespace>
+		<AssemblyName>Khrussk</AssemblyName>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Reference Include="System" />
+		<Reference Include="System.Net" />
+		<Compile Include="ConnectionState.cs" />
+		<Compile Include="NetworkRealm\**\*.cs" />
+		<Compile Include="Peers\**\*.cs" />
+		<Compile Include="Sockets\**\*.cs" />
+	</ItemGroup>
+
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+</Project>

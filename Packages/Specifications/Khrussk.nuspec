@@ -1,16 +1,17 @@
 <?xml version="1.0"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <version>0.0.43</version>
+    <version>0.0.50</version>
     <authors>brainster</authors>
     <owners />
     <projectUrl>https://github.com/brainster-one/khrussk</projectUrl>
-    <id>Khrussk.NetworkRealm.Silverlight</id>
+    <id>Khrussk</id>
     <title />
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Khrussk is a network library for games.</description>
   </metadata>
   <files>
-    <file src="..\..\Binaries\Khrussk.NetworkRealm.Silverlight.dll" target="lib\sl5\Khrussk.NetworkRealm.Silverlight.dll" />
+    <file src="..\..\Binaries\Khrussk.dll" target="lib\net40\Khrussk.dll" />
+    <file src="..\..\Binaries\Khrussk.Silverlight.dll" target="lib\sl5\Khrussk.Silverlight.dll" />
   </files>
 </package>
